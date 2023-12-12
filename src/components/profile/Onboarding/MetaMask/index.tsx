@@ -5,11 +5,12 @@ import { ReactComponent as Arrow } from '../../../../assets/images/arrow.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 import { ReactComponent as Welcome } from '../../../../assets/images/welcome.svg'
 import Accordion from '../../../common/Accordion'
-import useFetch from '../../../common/hooks/useFetch'
+import useFetch, { FetchStatus } from '../../../common/hooks/useFetch'
 import Alert from '../../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
 import { ethers, BrowserProvider } from 'ethers'
 import { useAuthContext } from '../../../common/contexts/UserContext'
+import { UserResponse } from './interface'
 
 interface OnboardingProps {
   handleLogin: (userAddress: string) => void
@@ -23,6 +24,8 @@ enum PluginState {
 
 const AUTH_API = 'auth/create_jwt_authentication'
 const INVITE_CODE_API = 'auth/check_invite_code'
+const GET_USER_API = 'auth/get_user'
+
 export default function Onboarding({ handleLogin }: OnboardingProps) {
   const context = useAuthContext()
   const [infoExpanded, setInfoExpanded] = useState(false)
@@ -33,9 +36,13 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [provider, setProvider] = useState<any>(null)
   const [signer, setSigner] = useState<any>(null)
   const [account, setAccount] = useState<string | null>(null)
-  const [token, setToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InB1YmxpY0FkZHJlc3MiOiIweDU3ZTdiN2YxYzFhODc4MmFjOWQzYzRkNzMwMDUxYmQ2MDA2OGFlZWUifX0.ji7cqTRiPYsPUipbkl06PoKQX_GhHf1mnP-whgMnA5I")
+  const [token, setToken] = useState<string | null>(
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InB1YmxpY0FkZHJlc3MiOiIweDU3ZTdiN2YxYzFhODc4MmFjOWQzYzRkNzMwMDUxYmQ2MDA2OGFlZWUifX0.ji7cqTRiPYsPUipbkl06PoKQX_GhHf1mnP-whgMnA5I'
+  )
 
-  const [message, setMessage] = useState<string>('Sign in to Kleo')
+  const [message, setMessage] = useState<string>(
+    'I am signing my one-time nonce: {nonce}'
+  )
   const [signedData, setSignedData] = useState<{
     signature: Uint8Array
     publicKey: string
@@ -43,6 +50,11 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
 
   const { fetchData, error: loginError, data: loginData } = useFetch<any>()
   const { fetchData: fetchInviteCheck } = useFetch<any>()
+  const {
+    fetchData: fetchUser,
+    status: fetchUserStatus,
+    data: user
+  } = useFetch<any>()
   const [login, setLogin] = useState(false)
 
   const connectMetaMask = async () => {
@@ -55,6 +67,8 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
         setSigner(newSigner)
         const accounts = await newProvider.send('eth_requestAccounts', [])
         setAccount(accounts[0])
+        const user: UserResponse = await fetchUserFromDB(accounts[0])
+        setMessage((message) => message.replace('{nonce}', user.nonce))
         setIsWalletConnected(true)
       } catch (error) {
         console.error('Could not get accounts', error)
@@ -62,6 +76,23 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     } else {
       console.error('Please install MetaMask!')
     }
+  }
+
+  const fetchUserFromDB = async (address: string): Promise<UserResponse> => {
+    return new Promise<UserResponse>((resolve) => {
+      fetchInviteCheck(GET_USER_API, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          address
+        }),
+        onSuccessfulFetch(data) {
+          return resolve(data)
+        }
+      })
+    })
   }
 
   const inviteCodeNextStep = async () => {
@@ -77,33 +108,38 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     })
   }
   const handleSign = async () => {
-    if (message && signer) {
-      console.log(signer)
-      const signature = await signer.signMessage(message)
-      console.log('signature', signature)
-      if (account)
-        setSignedData({
-          signature: signature,
-          publicKey: account
-        })
+    try {
+      if (message && signer) {
+        console.log(signer)
+        const signature = await signer.signMessage(message)
+        console.log('signature', signature)
+        if (account)
+          setSignedData({
+            signature: signature,
+            publicKey: account
+          })
 
-      fetchData(AUTH_API, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          signature: signature,
-          publicAddress: account,
-          chain: 'ethereum'
-        }),
-        onSuccessfulFetch(data) {
-          //sessionStorage.setItem('token', data.accessToken)
-          // only to be called during signup, uploads previous history.
-          ;(window as any).kleoUploadHistory(account, data.accessToken)
-          setLogin(true)
-        }
-      })
+        fetchData(AUTH_API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            signature: signature,
+            publicAddress: account,
+            chain: 'ethereum'
+          }),
+          onSuccessfulFetch(data) {
+            sessionStorage.setItem('token', data.accessToken)
+            sessionStorage.setItem('userAddress', account!)
+            // only to be called during signup, uploads previous history.
+            // ;(window as any).kleoUploadHistory(account, data.accessToken)
+            setLogin(true)
+          }
+        })
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -139,37 +175,54 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   }, [pluginState, signedData, login])
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start self-stretch">
       {currentStep == 1 && (
-        <div className="flex flex-col items-center justify-center self-stretch">
-          <div className="flex flex-col gap-2 p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200">
-            Invite Only! Did you bring out the coupon?.
-            <span className="text-gray-400 text-sm font-regular">STEP 1/2</span>
-          </div>
-          <div className="flex items-center justify-center self-stretch">
-            <Welcome className="w-96 h-96 -mt-16 -mb-16 ml-16" />
-          </div>
-          <div className="flex flex-col gap-3 self-stretch px-6 pb-8 justify-center items-center">
-            <input
-              style={{ float: 'right', marginTop: '5px' }}
-              onChange={(e) => setCode(e.target.value)}
-              type="text"
-              className="w-full bg-white rounded-lg border border-gray-300 px-6 py-2 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary"
-              placeholder="Enter your Invite Code here"
-            />
-
+        <div className="flex flex-col gap-4 self-stretch flex-1">
+          <div className="flex self-stretch flex-col items-center justify-center p-6 border bg-white shadow-lg border-gray-200 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-700">
+              Already a member?
+            </h3>
+            <p className="text-sm font-regular text-gray-500">
+              Launch the app directly
+            </p>
             <button
-              className="px-4 py-3 bg-primary text-white rounded-lg shadow"
-              onClick={() => inviteCodeNextStep()}
+              className="px-4 py-3 mt-3 bg-primary text-white rounded-lg shadow-lg"
+              onClick={connectMetaMask}
             >
-              Invite Code
+              Connect Metamask
             </button>
+          </div>
+          <div className="flex self-stretch flex-col items-center justify-center border bg-white shadow-lg border-gray-200 rounded-lg">
+            <div className="flex flex-col gap-2 p-6 text-lg w-full font-medium text-gray-900 ">
+              Invite Only! Did you bring out the coupon?.
+              <span className="text-gray-400 text-sm font-regular">
+                STEP 1/2
+              </span>
+            </div>
+            <div className="flex items-center justify-center self-stretch">
+              <Welcome className="w-80 h-80 -mt-16 -mb-16 ml-16" />
+            </div>
+            <div className="flex flex-col gap-3 self-stretch px-6 pb-8 justify-center items-center">
+              <input
+                onChange={(e) => setCode(e.target.value)}
+                type="text"
+                className="w-full bg-white rounded-lg border border-gray-300 px-6 py-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary"
+                placeholder="Enter your Invite Code here"
+              />
+
+              <button
+                className="px-4 py-3 bg-primary text-white rounded-lg shadow"
+                onClick={() => inviteCodeNextStep()}
+              >
+                Invite Code
+              </button>
+            </div>
           </div>
         </div>
       )}
       {currentStep == 2 && (
-        <>
-          <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200">
+        <div className="flex flex-col items-start justify-center bg-white shadow-lg rounded-lg ">
+          <div className="p-6 text-lg w-full font-medium text-gray-900 border-b  border-gray-200">
             Connect these to get started! <br />
             <span className="text-gray-400 text-sm font-regular">STEP 2/2</span>
           </div>
@@ -231,24 +284,27 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                   Connect Metamask Wallet
                 </span>
                 <span className="text-gray-400 text-sm font-regular">
-                  Connect with your Phantom wallet to get started
+                  Connect with your Metamask wallet to get started
                 </span>
                 <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
                   <button
+                    disabled={fetchUserStatus === FetchStatus.LOADING}
                     className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
                     onClick={connectMetaMask}
                   >
-                    Connect
+                    {fetchUserStatus === FetchStatus.LOADING
+                      ? 'Loading...'
+                      : 'Connect'}
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="w-full flex flex-col">
+              <div className="w-full flex flex-col self-stretch">
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Enter message to sign"
-                  className="p-2 border rounded mb-4"
+                  className="p-2 border rounded mb-4  "
                 />
                 <button
                   onClick={handleSign}
@@ -290,7 +346,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
               body={accordionBody()}
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   )
