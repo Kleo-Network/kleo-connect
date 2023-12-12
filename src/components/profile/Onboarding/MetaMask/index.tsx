@@ -169,10 +169,42 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       const user = context!.user
       context?.setUser({
         ...user,
-        address: account || ''
+        address: account || '',
+        userId: account || ''
       })
     }
   }, [pluginState, signedData, login])
+
+  const SignMessage = () => {
+    return (
+      <div className="w-full flex flex-col self-stretch">
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Enter message to sign"
+          className="p-2 border rounded mb-4  "
+        />
+        <button
+          onClick={handleSign}
+          className="px-4 py-2 bg-primary text-white rounded mb-4"
+        >
+          Sign Message
+        </button>
+        {signedData && (
+          <div className="bg-white p-2 rounded">
+            {/* <p className="mb-2 font-semibold">Signature:</p>
+          <code className="text-sm bg-gray-200 p-2 rounded">
+            {Array.from(signedData.signature).join(', ')}
+          </code> */}
+            <p className="mt-4 mb-2 font-semibold">Public Key:</p>
+            <code className="text-sm bg-gray-200 p-2 rounded">
+              {signedData.publicKey.toString()}
+            </code>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col items-start self-stretch">
@@ -185,16 +217,22 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
             <p className="text-sm font-regular text-gray-500">
               Launch the app directly
             </p>
-            <button
-              className="px-4 py-3 mt-3 bg-primary text-white rounded-lg shadow-lg"
-              onClick={connectMetaMask}
-            >
-              Connect Metamask
-            </button>
+            {!isWalletConnected ? (
+              <button
+                className="px-4 py-3 mt-3 bg-primary text-white rounded-lg shadow-lg"
+                onClick={connectMetaMask}
+              >
+                {fetchUserStatus === FetchStatus.LOADING
+                  ? 'Loading...'
+                  : 'Connect Metamask'}
+              </button>
+            ) : (
+              <SignMessage />
+            )}
           </div>
           <div className="flex self-stretch flex-col items-center justify-center border bg-white shadow-lg border-gray-200 rounded-lg">
             <div className="flex flex-col gap-2 p-6 text-lg w-full font-medium text-gray-900 ">
-              Invite Only! Did you bring out the coupon?.
+              Invite Only! Do you have the golden key?.
               <span className="text-gray-400 text-sm font-regular">
                 STEP 1/2
               </span>
@@ -299,32 +337,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                 </div>
               </div>
             ) : (
-              <div className="w-full flex flex-col self-stretch">
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Enter message to sign"
-                  className="p-2 border rounded mb-4  "
-                />
-                <button
-                  onClick={handleSign}
-                  className="px-4 py-2 bg-primary text-white rounded mb-4"
-                >
-                  Sign Message
-                </button>
-                {signedData && (
-                  <div className="bg-white p-2 rounded">
-                    {/* <p className="mb-2 font-semibold">Signature:</p> 
-                  <code className="text-sm bg-gray-200 p-2 rounded">
-                    {Array.from(signedData.signature).join(', ')}
-                  </code> */}
-                    <p className="mt-4 mb-2 font-semibold">Public Key:</p>
-                    <code className="text-sm bg-gray-200 p-2 rounded">
-                      {signedData.publicKey.toString()}
-                    </code>
-                  </div>
-                )}
-              </div>
+              <SignMessage />
             )}
           </div>
           {loginError && (

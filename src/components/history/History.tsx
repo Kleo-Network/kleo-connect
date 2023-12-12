@@ -30,7 +30,7 @@ const DELETE_HISTORY = `history/delete_history_items`
 export default function History() {
   const context = useAuthContext()
   const [search, setSearch] = useState('')
-  const debouncedSearchTerm = useDebounce(search, 500)
+  const debouncedSearchTerm = useDebounce(search, 1000)
   const [pageNo, setPageNo] = useState(1)
   const pageSize = 50
   const [fetchedItems, setFetchedItems] = useState<UrlData[]>([])
@@ -243,7 +243,7 @@ export default function History() {
   }
   return (
     <div className="py-12 px-24 flex flex-col items-start justify-center">
-      <div className="flex flex-row justify-between mb-4 w-full">
+      <div className="flex flex-col lg:flex-row justify-between mb-4 self-stretch">
         <h1 className="text-xl font-medium text-gray-900">History</h1>
         <div className="flex flex-row justify-center items-center">
           <div className="relative">

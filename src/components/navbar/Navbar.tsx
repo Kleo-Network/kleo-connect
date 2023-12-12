@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
 import { ReactComponent as Settings } from '../../assets/images/privacy.svg'
 import { ReactComponent as Notifications } from '../../assets/images/logout.svg'
@@ -17,12 +17,19 @@ interface NavbarProps {
 enum Tab {
   HOME = 'Home',
   PROFILE = 'Profile',
-  HISTORY = 'History'
+  HISTORY = 'History',
+  PRIVACY = 'PRIVACY'
 }
 
 const Navbar = ({ avatar }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState(Tab.PROFILE)
   const { pathname } = useLocation()
+  const [userId, setUserId] = useState<string>()
+
+  useEffect(() => {
+    const user = sessionStorage.getItem('userAddress') || ''
+    setUserId(user)
+  }, [userId])
 
   React.useEffect(() => {
     if (pathname === '/') {
@@ -32,7 +39,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
     } else if (pathname === '/history') {
       setSelectedTab(Tab.HISTORY)
     } else if (pathname === '/privacy') {
-      setSelectedTab('Privacy')
+      setSelectedTab(Tab.PRIVACY)
     }
   }, [pathname])
 
@@ -77,7 +84,8 @@ const Navbar = ({ avatar }: NavbarProps) => {
           >
             {Object.values(Tab).map((tab, i) => {
               return (
-                tab !== Tab.HOME && (
+                tab !== Tab.HOME &&
+                tab !== Tab.PRIVACY && (
                   <li
                     key={i}
                     className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
@@ -91,7 +99,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
                       }`}
                       href={`/${
                         tab === Tab.PROFILE
-                          ? 'profile/0x57e7b7f1c1a8782ac9d3c4d730051bd60068aeee'
+                          ? `profile/${userId}`
                           : tab.toLowerCase()
                       }`}
                       data-te-nav-link-ref
