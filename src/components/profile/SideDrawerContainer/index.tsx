@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ReactComponent as PinIcon } from '../../../assets/images/pin.svg'
 import { ReactComponent as CloseIcon } from '../../../assets/images/cross.svg'
 import { SelectedHistoryTabData } from './SelectedHistoryTabData'
@@ -38,6 +38,12 @@ const ProfileSideDrawer = React.memo(
     const [selectedTab, setSelectedTab] = useState(OwnProfileTabs.SUMMARY)
     const { fetchData } = useFetch<WebsiteProps[]>()
     const { id } = useParams()
+    const [userId, setUserId] = useState<string>()
+
+    useEffect(() => {
+      const user = sessionStorage.getItem('userAddress') || ''
+      setUserId(user)
+    }, [userId])
 
     const onUnpin = () => {
       fetchData(UNPIN_URL, {
@@ -98,27 +104,27 @@ const ProfileSideDrawer = React.memo(
               role="tablist"
               data-te-nav-ref
             >
-              {Object.values(
-                id === context!.user.userId ? OwnProfileTabs : ProfileTabs
-              ).map((tab, i) => (
-                <li
-                  key={i}
-                  role="presentation"
-                  className="flex text-center px-6"
-                >
-                  <a
-                    className={`block py-2 cursor-pointer hover:text-purple-700 focus:outline-none ${
-                      selectedTab === tab
-                        ? 'text-purple-700 border-b-2 border-purple-700'
-                        : ''
-                    }`}
-                    role="tab"
-                    onClick={() => setSelectedTab(tab)}
+              {Object.values(id === userId ? OwnProfileTabs : ProfileTabs).map(
+                (tab, i) => (
+                  <li
+                    key={i}
+                    role="presentation"
+                    className="flex text-center px-6"
                   >
-                    {tab}
-                  </a>
-                </li>
-              ))}
+                    <a
+                      className={`block py-2 cursor-pointer hover:text-purple-700 focus:outline-none ${
+                        selectedTab === tab
+                          ? 'text-purple-700 border-b-2 border-purple-700'
+                          : ''
+                      }`}
+                      role="tab"
+                      onClick={() => setSelectedTab(tab)}
+                    >
+                      {tab}
+                    </a>
+                  </li>
+                )
+              )}
             </ul>
 
             <div className="m-6">
