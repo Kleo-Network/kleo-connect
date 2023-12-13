@@ -39,7 +39,7 @@ export default function Onboarding({ closeModal }: OnboardingProps) {
   const { fetchData, error: loginError, data: loginData } = useFetch<any>()
   const [login, setLogin] = useState(false)
 
-  const handleSign = async () => {
+  const handleSign = async (signup: false) => {
     if (message) {
       const result = await signMessage(message)
       setSignedData(result)

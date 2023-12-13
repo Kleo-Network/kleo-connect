@@ -36,9 +36,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [provider, setProvider] = useState<any>(null)
   const [signer, setSigner] = useState<any>(null)
   const [account, setAccount] = useState<string | null>(null)
-  const [token, setToken] = useState<string | null>(
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InB1YmxpY0FkZHJlc3MiOiIweDU3ZTdiN2YxYzFhODc4MmFjOWQzYzRkNzMwMDUxYmQ2MDA2OGFlZWUifX0.ji7cqTRiPYsPUipbkl06PoKQX_GhHf1mnP-whgMnA5I'
-  )
+  const [token, setToken] = useState<string | null>('')
 
   const [message, setMessage] = useState<string>(
     'I am signing my one-time nonce: {nonce}'
@@ -107,7 +105,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       }
     })
   }
-  const handleSign = async () => {
+  const handleSign = async (signup: boolean) => {
     try {
       if (message && signer) {
         console.log(signer)
@@ -132,8 +130,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           onSuccessfulFetch(data) {
             sessionStorage.setItem('token', data.accessToken)
             sessionStorage.setItem('userAddress', account!)
-            // only to be called during signup, uploads previous history.
-            // ;(window as any).kleoUploadHistory(account, data.accessToken)
+            alert(signup)
+            if (signup === true) {
+              ;(window as any).kleoUploadHistory(account, data.accessToken)
+            }
             setLogin(true)
           }
         })
@@ -146,10 +146,9 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
-        if (
-          (window as any).kleoConnect &&
-          (window as any).kleoConnect.extension
-        ) {
+        alert('hello')
+        if ((window as any).kleoConnect) {
+          alert('isntalled?')
           setPluginState(PluginState.INSTALLED)
         } else {
           setPluginState(PluginState.NOT_INSTALLED)
@@ -175,7 +174,11 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     }
   }, [pluginState, signedData, login])
 
-  const SignMessage = () => {
+  type SignMessageProps = {
+    signup: boolean
+  }
+
+  const SignMessage: React.FC<SignMessageProps> = ({ signup }) => {
     return (
       <div className="w-full flex flex-col self-stretch">
         <textarea
@@ -185,7 +188,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           className="p-2 border rounded mb-4  "
         />
         <button
-          onClick={handleSign}
+          onClick={() => handleSign(signup)}
           className="px-4 py-2 bg-primary text-white rounded mb-4"
         >
           Sign Message
@@ -227,7 +230,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                   : 'Connect Metamask'}
               </button>
             ) : (
-              <SignMessage />
+              <SignMessage signup={false} />
             )}
           </div>
           <div className="flex self-stretch flex-col items-center justify-center border bg-white shadow-lg border-gray-200 rounded-lg">
@@ -337,7 +340,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                 </div>
               </div>
             ) : (
-              <SignMessage />
+              <SignMessage signup={true} />
             )}
           </div>
           {loginError && (
