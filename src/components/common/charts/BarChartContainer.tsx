@@ -113,7 +113,7 @@ export function BarChartContainer({
           }}
           content={() => null}
           trigger="click"
-          active={activeTooltipIndex === 1 || activeTooltipIndex === 2}
+          // active={activeTooltipIndex === 1 || activeTooltipIndex === 2}
         />
         {allCategories.map((category, index) => (
           <Bar

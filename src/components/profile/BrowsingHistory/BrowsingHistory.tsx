@@ -106,25 +106,6 @@ export default function BrowsingHistory() {
     return name.replace('Category: ', '')
   }
 
-  // const domainsMap = new Map()
-
-  // selectedBarData
-  //   .filter(({ type }) => (filter ? type === filter : true))
-  //   .flatMap((category: { domains: DomainData[] }) => category.domains)
-  //   .forEach((domainData) => {
-  //     const key = domainData.domain
-  //     const val = Number(domainData.visitCounterTimeRange)
-  //     if (!domainsMap.has(key)) {
-  //       domainsMap.set(key, { ...domainData, count: val })
-  //     } else {
-  //       const existingData = domainsMap.get(key)
-  //       domainsMap.set(key, {
-  //         ...existingData,
-  //         count: existingData.count + Number(val)
-  //       })
-  //     }
-  //   })
-
   const domainsMap = new Map()
 
   selectedBarData
@@ -148,18 +129,6 @@ export default function BrowsingHistory() {
     })
 
   const domains = Array.from(domainsMap.values())
-
-  // const domains = Array.from(domainsMap.values()).sort(
-  //   ({ visitCounterTimeRange: v1 }, { visitCounterTimeRange: v2 }) =>
-  //     sortOrder === 'desc' ? v2 - v1 : v1 - v2
-  // )
-
-  // const domains: DomainData[] = selectedBarData
-  //   .filter(({ type }) => (filter ? type === filter : true))
-  //   .flatMap((category: { domains: DomainData[] }) => category.domains)
-  //   .sort(({ visitCounterTimeRange: v1 }, { visitCounterTimeRange: v2 }) =>
-  //     sortOrder === 'desc' ? v2 - v1 : v1 - v2
-  //   )
 
   const onFilterChange = (currentFilter: string) => {
     if (currentFilter === filter) {
