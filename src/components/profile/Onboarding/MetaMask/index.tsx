@@ -3,7 +3,7 @@ import { ReactComponent as Kleo } from '../../../../assets/images/kleoWithBg.svg
 import { ReactComponent as MetaMaskLogo } from '../../../../assets/images/metamask.svg'
 import { ReactComponent as Arrow } from '../../../../assets/images/arrow.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
-import { ReactComponent as Welcome } from '../../../../assets/images/welcome.svg'
+import animationDataProcessing from '../../../../assets/images/welcome.json'
 import Accordion from '../../../common/Accordion'
 import useFetch, { FetchStatus } from '../../../common/hooks/useFetch'
 import Alert from '../../../common/Alerts'
@@ -11,7 +11,16 @@ import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg
 import { ethers, BrowserProvider } from 'ethers'
 import { useAuthContext } from '../../../common/contexts/UserContext'
 import { UserResponse } from './interface'
+import Lottie from 'react-lottie'
 
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationDataProcessing,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
+}
 interface OnboardingProps {
   handleLogin: (userAddress: string) => void
 }
@@ -238,8 +247,8 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                 STEP 1/2
               </span>
             </div>
-            <div className="flex items-center justify-center self-stretch">
-              <Welcome className="w-80 h-80 -mt-16 -mb-16 ml-16" />
+            <div className="flex -mt-10 items-center justify-center self-stretch">
+              <Lottie options={defaultOptions} height={'100%'} width={'70%'} />
             </div>
             <div className="flex flex-col gap-3 self-stretch px-6 pb-8 justify-center items-center">
               <input
