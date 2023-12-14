@@ -130,7 +130,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           onSuccessfulFetch(data) {
             sessionStorage.setItem('token', data.accessToken)
             sessionStorage.setItem('userAddress', account!)
-            alert(signup)
             if (signup === true) {
               ;(window as any).kleoUploadHistory(account, data.accessToken)
             }
@@ -146,9 +145,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
-        alert('hello')
         if ((window as any).kleoConnect) {
-          alert('isntalled?')
           setPluginState(PluginState.INSTALLED)
         } else {
           setPluginState(PluginState.NOT_INSTALLED)
