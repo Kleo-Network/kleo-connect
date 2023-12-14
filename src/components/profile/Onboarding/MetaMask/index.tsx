@@ -134,6 +134,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
               ;(window as any).kleoUploadHistory(account, data.accessToken)
             }
             setLogin(true)
+            document.location = `/profile/${account}`
           }
         })
       }
