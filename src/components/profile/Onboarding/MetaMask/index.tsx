@@ -297,7 +297,12 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                 <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
                   <button
                     className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
-                    onClick={() => setPluginState(PluginState.INSTALLED)}
+                    onClick={() => {
+                      setPluginState(PluginState.INSTALLED)
+                      window.open(
+                        'https://drive.google.com/file/d/1FulX6OpWC-gcEsdjCbcReWItuAJYZUa0/view?usp=sharing'
+                      )
+                    }}
                   >
                     Install Plugin
                   </button>
