@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ZeroState from '../../common/ZeroState'
 import useFetch, { FetchStatus } from '../../common/hooks/useFetch'
 import { WebsiteListLoader } from './PinnedSectionLoader'
@@ -28,7 +28,7 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
   const { status, data, error, fetchData } = useFetch<SearchResult[]>()
   const debouncedSearchTerm = useDebounce(search, 500)
   const { data: pinned, fetchData: fetchData2 } = useFetch<any>()
-
+  const [userId, setUserId] = useState<any>()
   useEffect(() => {
     if (debouncedSearchTerm) {
       fetchData(
@@ -39,7 +39,10 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
       )
     }
   }, [debouncedSearchTerm])
-
+  useEffect(() => {
+    const user = sessionStorage.getItem('userAddress') || ''
+    setUserId(user)
+  }, [userId])
   const handlePin = (website: SearchResult) => {
     const url = website.pinned ? UNPIN_URL : PIN_URL
     fetchData2(url, {
@@ -63,9 +66,12 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
 
   return (
     <div className="flex flex-col items-start">
-      <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200">
-        Add Pinned Website
-      </div>
+      {userId == context!.user.userId && (
+        <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200">
+          Add Pinned Website
+        </div>
+      )}
+
       <div className="flex flex-col w-full  max-h-[80vh] overflow-scroll items-start gap-4 p-6">
         <input
           type="text"
@@ -77,6 +83,8 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
         {search.length === 0 && (
           <div className="flex w-full mb-6">
             <ZeroState
+              profileId={context!.user.userId}
+              userId={userId}
               subheader="Search and pin your favourite websites here"
               actionText=""
             />
@@ -86,6 +94,8 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
         {status === FetchStatus.SUCCESS && search && !data && (
           <div className="flex w-full mb-6">
             <ZeroState
+              profileId={context!.user.userId}
+              userId={userId}
               header="No results found"
               subheader={search}
               actionText="0 visits"
@@ -117,23 +127,25 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
                     </span>
                   )}
                 </div>
-                <button
-                  className={`px-3 py-2 flex flex-row items-center gap-2 min-w-[96px] shadow rounded-lg border border-gray-200 ${
-                    website.pinned
-                      ? 'bg-primary text-white'
-                      : 'bg-white text-gray-700'
-                  }`}
-                  onClick={() => handlePin(website)}
-                >
-                  <PinIcon
-                    className={`w-5 h-5 ${
-                      website.pinned ? 'stroke-white' : 'stroke-gray-700'
+                {userId == context!.user.userId && (
+                  <button
+                    className={`px-3 py-2 flex flex-row items-center gap-2 min-w-[96px] shadow rounded-lg border border-gray-200 ${
+                      website.pinned
+                        ? 'bg-primary text-white'
+                        : 'bg-white text-gray-700'
                     }`}
-                  />
-                  <span className="text-sm font-medium">
-                    {website.pinned ? 'Unpin' : 'Pin'}
-                  </span>
-                </button>
+                    onClick={() => handlePin(website)}
+                  >
+                    <PinIcon
+                      className={`w-5 h-5 ${
+                        website.pinned ? 'stroke-white' : 'stroke-gray-700'
+                      }`}
+                    />
+                    <span className="text-sm font-medium">
+                      {website.pinned ? 'Unpin' : 'Pin'}
+                    </span>
+                  </button>
+                )}
               </div>
             ))}
           </div>
