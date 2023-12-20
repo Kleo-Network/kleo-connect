@@ -13,7 +13,7 @@ function App(): ReactElement {
     avatar: 'https://avatars.githubusercontent.com/u/47280571?v=4',
     address: '',
     kleo: 100,
-    userId: '0x57e7b7f1c1a8782ac9d3c4d730051bd60068aeee'
+    userId: sessionStorage.getItem('userAddress') || ''
   })
 
   return (
