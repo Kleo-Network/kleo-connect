@@ -9,22 +9,33 @@ interface ZeroStateProps {
   header?: string
   subheader?: string
   actionText?: string
+  userId?: string
+  profileId?: string
 }
 
 export default function ZeroState({
   header = HEADER,
   subheader = SUBHEADER,
-  actionText = ACTION_TEXT
+  actionText = ACTION_TEXT,
+  userId,
+  profileId
 }: ZeroStateProps) {
   return (
-    <div className="flex flex-col items-center w-full justify-center gap-2 p-5">
-      <EmptyIcon className="w-30 h-30" />
-      <span className="text-sm text-gray-600 font-semibold">{header}</span>
-      <span className="text-sm text-gray-400 font-regular">{subheader}</span>
-      <span
-        dangerouslySetInnerHTML={{ __html: actionText }}
-        className="text-sm text-gray-400 font-regular"
-      ></span>
-    </div>
+    <>
+      {profileId == userId && (
+        <div className="flex flex-col items-center w-full justify-center gap-2 p-5">
+          <EmptyIcon className="w-30 h-30" />
+          <span className="text-sm text-gray-600 font-semibold">{header}</span>
+          <span className="text-sm text-gray-400 font-regular">
+            {subheader}
+          </span>
+
+          <span
+            dangerouslySetInnerHTML={{ __html: actionText }}
+            className="text-sm text-gray-400 font-regular"
+          ></span>
+        </div>
+      )}
+    </>
   )
 }

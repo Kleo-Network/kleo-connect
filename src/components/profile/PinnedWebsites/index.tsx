@@ -35,7 +35,11 @@ export default function PinnedWebsites() {
   )
   const [websites, setWebsites] = useState<WebsiteProps[] | null>(data)
   const [isModalOpen, setIsModalOpen] = useState(false)
-
+  const [userId, setUserId] = useState<any>()
+  useEffect(() => {
+    const user = sessionStorage.getItem('userAddress') || ''
+    setUserId(user)
+  }, [userId])
   function makeApiUrl() {
     return API_URL.replace('{userId}', context!.user.userId)
   }
@@ -84,13 +88,15 @@ export default function PinnedWebsites() {
             Showcase
           </span>
         </div>
-        <button
-          className="flex flex-row gap-2 items-center shadow border border-gray-200 rounded-lg py-2 px-3 hover:bg-gray-50 active:bg-gray-100"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <AddIcon className="w-5 h-5 stroke-gray-700" />
-          <span className="text-sm text-gray-700">Add new</span>
-        </button>
+        {userId == context!.user.userId && (
+          <button
+            className="flex flex-row gap-2 items-center shadow border border-gray-200 rounded-lg py-2 px-3 hover:bg-gray-50 active:bg-gray-100"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <AddIcon className="w-5 h-5 stroke-gray-700" />
+            <span className="text-sm text-gray-700">Add new</span>
+          </button>
+        )}
       </header>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <AddPinWebsite onPinHandler={handlePin} />

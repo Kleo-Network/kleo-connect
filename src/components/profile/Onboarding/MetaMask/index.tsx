@@ -114,6 +114,12 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       }
     })
   }
+
+  const checkKleo = async () => {
+    if ((window as any).kleoConnect) {
+      setPluginState(PluginState.INSTALLED)
+    }
+  }
   const handleSign = async (signup: boolean) => {
     try {
       if (message && signer) {
@@ -307,15 +313,18 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                   <button
                     className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
                     onClick={() => {
-                      setPluginState(PluginState.INSTALLED)
+                      // setPluginState(PluginState.INSTALLED)
                       window.open(
-                        'https://drive.google.com/file/d/1FulX6OpWC-gcEsdjCbcReWItuAJYZUa0/view?usp=sharing'
+                        'https://chromewebstore.google.com/detail/kleo-connect/jimpblheogbjfgajkccdoehjfadmimoo?hl=en'
                       )
                     }}
                   >
                     Install Plugin
                   </button>
-                  <button className="px-4 py-3 ml-1 rounded-lg shadow border border-gray-200 text-gray-700">
+                  <button
+                    className="px-4 py-3 ml-1 rounded-lg shadow border border-gray-200 text-gray-700"
+                    onClick={() => checkKleo()}
+                  >
                     I have already installed
                   </button>
                 </div>
