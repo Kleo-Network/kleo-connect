@@ -352,65 +352,61 @@ export function SelectedHistoryTabData({
         )}
 
         {historyStatus === FetchStatus.LOADING && <HistoryListLoader />}
-        {historyStatus === FetchStatus.SUCCESS &&
-          historyData!.map((data, index) => (
-            <div
-              key={index}
-              className="flex flex-col mt-4 self-stretch items-start justify-start border border-gray-200 rounded-lg"
-            >
-              <div className="text-xs self-stretch text-gray-400 font-semibold p-4 border-b border-gray-200 capitalize">
-                {/* {data} */}
-                History Items
-              </div>
-              <div className="flex flex-col self-stretch mx-6">
-                {historyData!.map(
-                  ({ visitTime, title, url, favourite, hidden }, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-row gap-4 justify-between items-center self-stretch py-3 border-b border-gray-200 last:border-b-0"
-                    >
-                      <div className="text-xs text-gray-500 font-regular pt-1">
-                        {getVisitTime(visitTime.toString())}
-                      </div>
-                      <div className="flex flex-col flex-1 items-start justify-center max-w-xs overflow-hidden overflow-ellipsis whitespace-nowrap">
-                        <span
-                          title={title}
-                          className="text-sm text-gray-800 font-medium"
-                        >
-                          {title}
-                        </span>
-                        <a
-                          href={url}
-                          title={url}
-                          target="_blank"
-                          className="text-xs text-gray-400 font-regular hover:text-purple-700 hover:underline"
-                        >
-                          {url}
-                        </a>
-                        {/* <span className="text-xs pt-1 text-gray-500 font-medium">
+        {historyStatus === FetchStatus.SUCCESS && (
+          <div className="flex flex-col mt-4 self-stretch items-start justify-start border border-gray-200 rounded-lg">
+            <div className="text-xs self-stretch text-gray-400 font-semibold p-4 border-b border-gray-200 capitalize">
+              {/* {data} */}
+              History Items
+            </div>
+            <div className="flex flex-col self-stretch mx-6">
+              {historyData!.map(
+                ({ visitTime, title, url, favourite, hidden }, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-row gap-4 justify-between items-center self-stretch py-3 border-b border-gray-200 last:border-b-0"
+                  >
+                    <div className="text-xs text-gray-500 font-regular pt-1">
+                      {getVisitTime(visitTime.toString())}
+                    </div>
+                    <div className="flex flex-col flex-1 items-start justify-center max-w-xs overflow-hidden overflow-ellipsis whitespace-nowrap">
+                      <span
+                        title={title}
+                        className="text-sm text-gray-800 font-medium"
+                      >
+                        {title}
+                      </span>
+                      <a
+                        href={url}
+                        title={url}
+                        target="_blank"
+                        className="text-xs text-gray-400 font-regular hover:text-purple-700 hover:underline"
+                      >
+                        {url}
+                      </a>
+                      {/* <span className="text-xs pt-1 text-gray-500 font-medium">
                       {visits} visits
                     </span> */}
-                      </div>
-                      <StarIcon
-                        className={`${
-                          favourite && 'fill-yellow-500 stroke-yellow-500'
-                        } w-6 h-6 cursor-pointer stroke-gray-300 hover:fill-yellow-200 hover:stroke-yellow-200`}
-                        onClick={() =>
-                          handleFavourites(visitTime, url, favourite)
-                        }
-                      />
-                      <EyeIcon
-                        className={`
+                    </div>
+                    <StarIcon
+                      className={`${
+                        favourite && 'fill-yellow-500 stroke-yellow-500'
+                      } w-6 h-6 cursor-pointer stroke-gray-300 hover:fill-yellow-200 hover:stroke-yellow-200`}
+                      onClick={() =>
+                        handleFavourites(visitTime, url, favourite)
+                      }
+                    />
+                    <EyeIcon
+                      className={`
                         ${hidden && 'stroke-purple-700'}
                         w-6 h-6 cursor-pointer stroke-gray-300 hover:stroke-purple-700`}
-                        onClick={() => handleUrlHide([visitTime], hidden)}
-                      />
-                    </div>
-                  )
-                )}
-              </div>
+                      onClick={() => handleUrlHide([visitTime], hidden)}
+                    />
+                  </div>
+                )
+              )}
             </div>
-          ))}
+          </div>
+        )}
 
         {historyStatus === FetchStatus.ERROR && (
           <div className="m-3">
