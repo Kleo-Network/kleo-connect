@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
-import { ReactComponent as Settings } from '../../assets/images/privacy.svg'
-import { ReactComponent as Notifications } from '../../assets/images/logout.svg'
+import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
+import { ReactComponent as Logout } from '../../assets/images/logout.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
 import { useLocation } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
+import { useNavigate } from 'react-router-dom'
 
 initTE({ Collapse, Dropdown })
 interface NavbarProps {
@@ -25,6 +26,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState(Tab.PROFILE)
   const { pathname } = useLocation()
   const [userId, setUserId] = useState<string>()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const user = sessionStorage.getItem('userAddress') || ''
@@ -42,6 +44,11 @@ const Navbar = ({ avatar }: NavbarProps) => {
       setSelectedTab(Tab.PRIVACY)
     }
   }, [pathname])
+
+  const handleLogout = () => {
+    sessionStorage.clear()
+    navigate('/')
+  }
 
   return (
     <nav
@@ -118,14 +125,15 @@ const Navbar = ({ avatar }: NavbarProps) => {
               data-te-ripple-init
               className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
             >
-              <Settings className="w-5 h-5 stroke-current" />
+              <Privacy className="w-5 h-5 stroke-current" />
             </a>
-            <a
+            <button
               data-te-ripple-init
               className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
+              onClick={handleLogout}
             >
-              <Notifications className="w-5 h-5 stroke-current" />
-            </a>
+              <Logout className="w-5 h-5 stroke-current" />
+            </button>
             {/* <button className="p-2 rounded-full">
               <img
                 src={avatar.src}
