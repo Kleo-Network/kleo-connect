@@ -89,59 +89,62 @@ const Navbar = ({ avatar }: NavbarProps) => {
             className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
             data-te-navbar-nav-ref
           >
-            {Object.values(Tab).map((tab, i) => {
-              return (
-                tab !== Tab.HOME &&
-                tab !== Tab.PRIVACY && (
-                  <li
-                    key={i}
-                    className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
-                    data-te-nav-item-ref
-                  >
-                    <a
-                      className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
-                        selectedTab === tab
-                          ? 'text-purple-700 bg-purple-100'
-                          : ''
-                      }`}
-                      href={`/${
-                        tab === Tab.PROFILE
-                          ? `profile/${userId}`
-                          : tab.toLowerCase()
-                      }`}
-                      data-te-nav-link-ref
+            {sessionStorage.getItem('userAddress') &&
+              Object.values(Tab).map((tab, i) => {
+                return (
+                  tab !== Tab.HOME &&
+                  tab !== Tab.PRIVACY && (
+                    <li
+                      key={i}
+                      className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+                      data-te-nav-item-ref
                     >
-                      {tab}
-                    </a>
-                  </li>
+                      <a
+                        className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
+                          selectedTab === tab
+                            ? 'text-purple-700 bg-purple-100'
+                            : ''
+                        }`}
+                        href={`/${
+                          tab === Tab.PROFILE
+                            ? `profile/${userId}`
+                            : tab.toLowerCase()
+                        }`}
+                        data-te-nav-link-ref
+                      >
+                        {tab}
+                      </a>
+                    </li>
+                  )
                 )
-              )
-            })}
+              })}
           </ul>
           {/* <!-- Right elements --> */}
-          <div className="flex items-center">
-            <a
-              href="/privacy"
-              data-te-ripple-init
-              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
-            >
-              <Privacy className="w-5 h-5 stroke-current" />
-            </a>
-            <button
-              data-te-ripple-init
-              className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
-              onClick={handleLogout}
-            >
-              <Logout className="w-5 h-5 stroke-current" />
-            </button>
-            {/* <button className="p-2 rounded-full">
+          {sessionStorage.getItem('userAddress') && (
+            <div className="flex items-center">
+              <a
+                href="/privacy"
+                data-te-ripple-init
+                className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+              >
+                <Privacy className="w-5 h-5 stroke-current" />
+              </a>
+              <button
+                data-te-ripple-init
+                className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
+                onClick={handleLogout}
+              >
+                <Logout className="w-5 h-5 stroke-current" />
+              </button>
+              {/* <button className="p-2 rounded-full">
               <img
                 src={avatar.src}
                 alt={avatar.alt}
                 className="ml-4 w-10 h-10 rounded-full"
               />
             </button> */}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
