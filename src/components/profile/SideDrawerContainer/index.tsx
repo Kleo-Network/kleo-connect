@@ -83,13 +83,15 @@ const ProfileSideDrawer = React.memo(
                 {website.domain}
               </a>
             </div>
-            <button
-              onClick={onUnpin}
-              className="px-3 py-2 flex flex-row items-center gap-2 shadow rounded-lg border border-gray-200"
-            >
-              <PinIcon className="w-5 h-5 stroke-gray-700" />
-              <span className="text-sm text-gray-700 font-medium">Unpin</span>
-            </button>
+            {id === userId && (
+              <button
+                onClick={onUnpin}
+                className="px-3 py-2 flex flex-row items-center gap-2 shadow rounded-lg border border-gray-200"
+              >
+                <PinIcon className="w-5 h-5 stroke-gray-700" />
+                <span className="text-sm text-gray-700 font-medium">Unpin</span>
+              </button>
+            )}
             <button
               className="text-gray-500 hover:text-gray-700 focus:outline-none absolute top-2 right-2"
               onClick={onClose}

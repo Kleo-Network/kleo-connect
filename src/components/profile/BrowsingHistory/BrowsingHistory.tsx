@@ -49,7 +49,7 @@ const defaultOptionsNoData = {
 
 export default function BrowsingHistory() {
   const context = useAuthContext()
-  const [timeRange, setTimeRange] = useState<TimeRange>(TimeRange.MONTH)
+  const [timeRange, setTimeRange] = useState<TimeRange>(TimeRange.WEEK)
   const { status, data, fetchData } = useFetch<GraphData | ProcessingHistory>(
     makeApiUrl()
   )
