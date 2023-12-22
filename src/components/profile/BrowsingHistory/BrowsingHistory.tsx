@@ -20,6 +20,7 @@ import {
 import { transformBrowsingHistory, lightenColor } from './transformations'
 import {
   BrowsingHistory as GraphData,
+  ProcessItems,
   ProcessingHistory
 } from './API_interface'
 import { getKeyByValue } from '../../utils/utils'
@@ -27,7 +28,8 @@ import { useAuthContext } from '../../common/contexts/UserContext'
 
 const API_URL =
   'history/get_browsing_history_graph?user_id={userId}&from={from}&to={to}&filter={filter}'
-
+const PROCESS_URL = 'history/process_items'
+const mapped = { '24 Hours': 0, '7 days': 7, '30 days': 30, '6 months': 180 }
 const defaultOptions = {
   loop: true,
   autoplay: true,
@@ -51,6 +53,12 @@ export default function BrowsingHistory() {
   const { status, data, fetchData } = useFetch<GraphData | ProcessingHistory>(
     makeApiUrl()
   )
+  const {
+    status: _,
+    data: pData,
+    fetchData: processData
+  } = useFetch<ProcessItems>()
+
   const [graphData, setGraphData] = useState<BrowserHistoryCategory[]>([])
   const [selectedBarData, setSelectedBarData] = useState<CategoryData[]>([])
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
@@ -83,6 +91,20 @@ export default function BrowsingHistory() {
   }, [data])
 
   useEffect(() => {
+    processData(PROCESS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user_id: sessionStorage.getItem('userAddress'),
+        signup: true,
+        days: mapped[timeRange]
+      }),
+      onSuccessfulFetch: () => {
+        console.log('fetch success!')
+      }
+    })
     fetchData(makeApiUrl())
   }, [timeRange])
 
