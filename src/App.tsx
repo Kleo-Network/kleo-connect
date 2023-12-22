@@ -1,5 +1,5 @@
-import React, { ReactElement, useState, useEffect } from 'react'
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
+import { ReactElement, useState } from 'react'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import Profile from './components/profile/Profile'
 import Navbar from './components/navbar/Navbar'
 import History from './components/history/History'
@@ -8,7 +8,8 @@ import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
 
 function App(): ReactElement {
-  const navigate = useNavigate()
+  const userAddress = sessionStorage.getItem('userAddress');
+
 
   const [user, setUser] = useState({
     name: '',
@@ -17,12 +18,6 @@ function App(): ReactElement {
     kleo: 100,
     userId: sessionStorage.getItem('userAddress') || ''
   })
-  useEffect(() => {
-    const userAddress = sessionStorage.getItem('userAddress')
-    if (userAddress) {
-      navigate(`/profile/${userAddress}`)
-    }
-  }, [navigate])
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -32,7 +27,17 @@ function App(): ReactElement {
             <Navbar avatar={{ src: user.avatar, alt: 'Profile' }} />
           </header>
           <Routes>
-            <Route path="/" element={<SignUp />} />
+            <Route
+              path="/"
+              element={
+                userAddress ? (
+                  <Navigate to={`/profile/${userAddress}`} />
+                ) : (
+                  <SignUp />
+                )
+              }
+            />
+
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/history" element={<History />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
