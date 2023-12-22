@@ -1,5 +1,5 @@
-import { ReactElement, useState } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import React, { ReactElement, useState, useEffect } from 'react'
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
 import Profile from './components/profile/Profile'
 import Navbar from './components/navbar/Navbar'
 import History from './components/history/History'
@@ -8,6 +8,8 @@ import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
 
 function App(): ReactElement {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState({
     name: '',
     avatar: 'https://avatars.githubusercontent.com/u/47280571?v=4',
@@ -15,6 +17,12 @@ function App(): ReactElement {
     kleo: 100,
     userId: sessionStorage.getItem('userAddress') || ''
   })
+  useEffect(() => {
+    const userAddress = sessionStorage.getItem('userAddress')
+    if (userAddress) {
+      navigate(`/profile/${userAddress}`)
+    }
+  }, [navigate])
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
