@@ -12,6 +12,11 @@ import { ethers, BrowserProvider } from 'ethers'
 import { useAuthContext } from '../../../common/contexts/UserContext'
 import { UserResponse } from './interface'
 import Lottie from 'react-lottie'
+import { ReactComponent as Solana } from '../../../../assets/images/sol-logo.svg'
+import { ReactComponent as Matic } from '../../../../assets/images/polygon.svg'
+import { ReactComponent as PhantomLogo } from '../../../../assets/images/phantom.svg'
+import { usePhantomWallet } from '../../../common/hooks/usePhantomWallet'
+import { PublicKey } from '@solana/web3.js'
 
 const defaultOptions = {
   loop: true,
@@ -46,14 +51,20 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [signer, setSigner] = useState<any>(null)
   const [account, setAccount] = useState<string | null>(null)
   const [token, setToken] = useState<string | null>('')
-
+  const [chain, setChain] = useState<string>('solana')
+  const {
+    connected: isWalletConnectedSolana,
+    connect: connectSolana,
+    signMessage: signMessageSolana,
+    publicKey
+  } = usePhantomWallet()
   const [message, setMessage] = useState<string>(
     'I am signing my one-time nonce: {nonce}'
   )
   const [signedData, setSignedData] = useState<{
     signature: Uint8Array
-    publicKey: string
-  }>()
+    publicKey: any
+  } | null>(null)
 
   const { fetchData, error: loginError, data: loginData } = useFetch<any>()
   const { fetchData: fetchInviteCheck } = useFetch<any>()
@@ -63,6 +74,27 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     data: user
   } = useFetch<any>()
   const [login, setLogin] = useState(false)
+
+  const connectPhantom = async () => {
+    if ((window as any).solana) {
+      try {
+        const phantom = (window as any).solana
+        if (phantom && phantom.isPhantom) {
+          const isConnected = await phantom.connect()
+          const publickey = new PublicKey(phantom.publicKey)
+          setAccount(publickey.toString())
+          const user: UserResponse = await fetchUserFromDB(publickey.toString())
+          setMessage((message) => message.replace('{nonce}', user.nonce))
+          setIsWalletConnected(isConnected)
+
+        }
+      } catch (error) {
+        console.error('Could not get accounts', error)
+      }
+    } else {
+      console.error('Please install Phantom!')
+    }
+  }
 
   const connectMetaMask = async () => {
     if ((window as any).ethereum) {
@@ -120,7 +152,34 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       setPluginState(PluginState.INSTALLED)
     }
   }
-  const handleSign = async (signup: boolean) => {
+
+  const handleSignSolana = async (signup: boolean) => {
+    try {
+      if (message) {
+        const result = await signMessageSolana(message)
+        setSignedData(result)
+        console.log('result', result)
+        fetchData(AUTH_API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            signature: Array.from(result.signature),
+            publicAddress: result.publicKey.toString(),
+            chain: 'solana'
+          }),
+          onSuccessfulFetch(data) {
+            sessionStorage.setItem('token', data.accessToken)
+            setLogin(true)
+          }
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  const handleSignPolygon = async (signup: boolean) => {
     try {
       if (message && signer) {
         console.log(signer)
@@ -201,7 +260,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           className="p-2 border rounded mb-4  "
         />
         <button
-          onClick={() => handleSign(signup)}
+          onClick={() => handleSignSolana(signup)}
           className="px-4 py-2 bg-primary text-white rounded mb-4"
         >
           Sign Message
@@ -236,11 +295,11 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
             {!isWalletConnected ? (
               <button
                 className="px-4 py-3 mt-3 bg-primary text-white rounded-lg shadow-lg"
-                onClick={connectMetaMask}
+                onClick={connectPhantom}
               >
                 {fetchUserStatus === FetchStatus.LOADING
                   ? 'Loading...'
-                  : 'Connect Metamask'}
+                  : 'Connect Phantom'}
               </button>
             ) : (
               <SignMessage signup={false} />
@@ -331,28 +390,65 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
               )}
             </div>
           </div>
-          <div className="flex flex-row items-start gap-4 p-6">
+          <div className="flex flex-row items-start gap-4 p-6 w-full">
             <div className="relative">
               {isWalletConnected && (
                 <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white">
                   <Tick className="w-3 h-3 fill-white" />
                 </div>
               )}
-              <MetaMaskLogo className="w-16 h-16 fill-[#FFE6D5]" />
+              {chain === 'solana' ? (
+                <PhantomLogo className="w-16 h-16 fill-[#ab9ff2]" />
+              ) : (
+                <MetaMaskLogo className="w-16 h-16 fill-[#FFE6D5]" />
+              )}
             </div>
             {!isWalletConnected ? (
-              <div className="flex flex-col items-start justify-center">
-                <span className="text-gray-900 text-base font-medium">
-                  Connect Metamask Wallet
-                </span>
-                <span className="text-gray-400 text-sm font-regular">
-                  Connect with your Metamask wallet to get started
-                </span>
+              <div className="w-9/12">
+                <div className="flex items-start justify-between w-full">
+                  <div className="flex flex-col items-start justify-center">
+                    <span className="text-gray-900 text-base font-medium">
+                      Connect {chain == 'solana' ? 'Phantom' : 'Metamask'}{' '}
+                      Wallet
+                    </span>
+                    <span className="text-gray-400 text-sm font-regular">
+                      Connect with your{' '}
+                      {chain == 'solana' ? 'Phantom' : 'Metamask'} wallet to get
+                      started
+                    </span>
+                  </div>
+
+                  {/* <span>
+                    <div className="flex items-start justify-center">
+                      <button
+                        onClick={() => setChain('solana')}
+                        className={`p-2 ${
+                          chain === 'solana'
+                            ? 'ring-2 ring-offset-1 ring-primary'
+                            : ''
+                        }`}
+                      >
+                        <Solana className="w-6 h-6 stroke-current" />
+                      </button>
+
+                      <button
+                        onClick={() => setChain('polygon')}
+                        className={`p-2 ${
+                          chain === 'polygon'
+                            ? 'ring-2 ring-offset-1 ring-primary'
+                            : ''
+                        }`}
+                      >
+                        <Matic className="w-6 h-6 stroke-current" />
+                      </button>
+                    </div>
+                  </span> */}
+                </div>
                 <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
                   <button
                     disabled={fetchUserStatus === FetchStatus.LOADING}
                     className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
-                    onClick={connectMetaMask}
+                    onClick={connectPhantom}
                   >
                     {fetchUserStatus === FetchStatus.LOADING
                       ? 'Loading...'

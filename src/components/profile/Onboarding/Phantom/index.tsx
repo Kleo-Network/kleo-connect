@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { ReactComponent as Kleo } from '../../../assets/images/kleoWithBg.svg'
-import { ReactComponent as PhantomLogo } from '../../../assets/images/phantom.svg'
-import { ReactComponent as Arrow } from '../../../assets/images/arrow.svg'
-import { ReactComponent as Tick } from '../../../assets/images/check.svg'
+import { ReactComponent as Kleo } from '../../../../assets/images/kleoWithBg.svg'
+
+import { ReactComponent as PhantomLogo } from '../../../../assets/images/phantom.svg'
+import { ReactComponent as Arrow } from '../../../../assets/images/arrow.svg'
+import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 import Accordion from '../../../common/Accordion'
 import useFetch from '../../../common/hooks/useFetch'
 import { usePhantomWallet } from '../../../common/hooks/usePhantomWallet'
 import { PublicKey } from '@solana/web3.js'
 import Alert from '../../../common/Alerts'
-import { ReactComponent as AlertIcon } from '../../../assets/images/alert.svg'
+import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
+
+interface UserResponse {
+  gitcoin_passport: boolean
+  id: string
+  nonce: string
+}
 
 interface OnboardingProps {
-  closeModal: () => void
+  handleLogin: (userAddress: string) => void
 }
 
 enum PluginState {
@@ -21,29 +28,60 @@ enum PluginState {
 }
 
 const AUTH_API = 'auth/create_jwt_authentication'
+const GET_USER_API = 'auth/get_user'
 
-export default function Onboarding({ closeModal }: OnboardingProps) {
+export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [infoExpanded, setInfoExpanded] = useState(false)
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
   const {
     connected: isWalletConnected,
     connect,
-    signMessage
+    signMessage,
+    publicKey
   } = usePhantomWallet()
 
-  const [message, setMessage] = useState<string>('Sign in to Kleo')
+  const [message, setMessage] = useState<string>(
+    'I am signing my one-time nonce: {nonce}'
+  )
   const [signedData, setSignedData] = useState<{
     signature: Uint8Array
     publicKey: PublicKey
   } | null>(null)
   const { fetchData, error: loginError, data: loginData } = useFetch<any>()
   const [login, setLogin] = useState(false)
+  const [account, setAccount] = useState<string | null>(null)
+  const { fetchData: fetchInviteCheck } = useFetch<any>()
 
-  const handleSign = async (signup: false) => {
+  const fetchUserFromDB = async (address: string): Promise<UserResponse> => {
+    return new Promise<UserResponse>((resolve) => {
+      fetchInviteCheck(GET_USER_API, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          address
+        }),
+        onSuccessfulFetch(data) {
+          return resolve(data)
+        }
+      })
+    })
+  }
+
+  const connectPhantom = async () => {
+    const connection = await connect()
+    console.log('conn', connection)
+    const user: UserResponse = await fetchUserFromDB(
+      publicKey?.toString() || ''
+    )
+    setMessage((message) => message.replace('{nonce}', user.nonce))
+  }
+  const handleSign = async (signup: boolean) => {
     if (message) {
       const result = await signMessage(message)
       setSignedData(result)
-      console.log('result', result)
+      setAccount(result.publicKey.toString())
       fetchData(AUTH_API, {
         method: 'POST',
         headers: {
@@ -56,6 +94,10 @@ export default function Onboarding({ closeModal }: OnboardingProps) {
         }),
         onSuccessfulFetch(data) {
           sessionStorage.setItem('token', data.accessToken)
+
+          if (signup === true) {
+            ;(window as any).kleoUploadHistory(account, data.accessToken)
+          }
           setLogin(true)
         }
       })
@@ -85,7 +127,7 @@ export default function Onboarding({ closeModal }: OnboardingProps) {
       signedData.publicKey &&
       login
     ) {
-      closeModal()
+      handleLogin(account || '')
     }
   }, [pluginState, isWalletConnected, signedData, login])
 
@@ -157,7 +199,7 @@ export default function Onboarding({ closeModal }: OnboardingProps) {
             <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
               <button
                 className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
-                onClick={connect}
+                onClick={connectPhantom}
               >
                 Connect
               </button>
@@ -172,7 +214,7 @@ export default function Onboarding({ closeModal }: OnboardingProps) {
               className="p-2 border rounded mb-4"
             />
             <button
-              onClick={() => closeModal()}
+              onClick={() => handleSign(true)}
               className="px-4 py-2 bg-primary text-white rounded mb-4"
             >
               Sign Message
