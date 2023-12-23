@@ -10,7 +10,7 @@ const SignUp = () => {
   }
 
   return (
-    <div className="flex flex-col self-stretch flex-1 items-center justify-center py-12 px-6 md:px-32 lg:px-80 bg-gray-100 ">
+    <div className="flex flex-col self-stretch flex-1 items-center justify-center py-12 px-6 md:px-60 lg:px-96 bg-gray-100 ">
       <Onboarding handleLogin={handleLogin} />
     </div>
   )
