@@ -171,6 +171,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           }),
           onSuccessfulFetch(data) {
             sessionStorage.setItem('token', data.accessToken)
+            sessionStorage.setItem('userAddress', result.publicKey.toString())
+            if (signup === true) {
+              ;(window as any).kleoUploadHistory(account, data.accessToken)
+            }
             setLogin(true)
           }
         })

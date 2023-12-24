@@ -8,15 +8,14 @@ import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
 
 function App(): ReactElement {
-  const userAddress = sessionStorage.getItem('userAddress');
-
+  const userAddress = sessionStorage.getItem('userAddress')
 
   const [user, setUser] = useState({
     name: '',
     avatar: 'https://avatars.githubusercontent.com/u/47280571?v=4',
     address: '',
     kleo: 100,
-    userId: sessionStorage.getItem('userAddress') || ''
+    userId: userAddress || ''
   })
 
   return (
