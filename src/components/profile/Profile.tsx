@@ -8,10 +8,14 @@ import Modal from '../common/Modal'
 import SocialShare from './Onboarding/SocialSharePopUp'
 import { useAuthContext } from '../common/contexts/UserContext'
 import { useParams } from 'react-router-dom'
+import { EventContext } from '../common/contexts/EventContext'
+import { NavbarEvents } from '../constants/Events'
+import Settings from './Settings'
 
 export default function Profile() {
   const context = useAuthContext()
   const { id } = useParams()
+  const { event, updateEvent } = useContext(EventContext)
 
   context!.user.userId = id || ''
 
@@ -50,6 +54,15 @@ export default function Profile() {
         >
           <div className="container mx-auto p-8">
             <SocialShare profileUrl={kleoProfileUrl + id} />
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={event === NavbarEvents.SETTINGS}
+          onClose={() => updateEvent(null)}
+        >
+          <div className="container">
+            <Settings user={context!.user} />
           </div>
         </Modal>
       </div>
