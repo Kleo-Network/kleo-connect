@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
 import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
 import { ReactComponent as Logout } from '../../assets/images/logout.svg'
+import { ReactComponent as Settings } from '../../assets/images/settings.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
 import { useLocation } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
 import { useNavigate } from 'react-router-dom'
+import { EventContext } from '../common/contexts/EventContext'
+import { NavbarEvents } from '../constants/Events'
 
-initTE({ Collapse, Dropdown })
 interface NavbarProps {
   avatar: {
     src: string
@@ -27,10 +29,12 @@ const Navbar = ({ avatar }: NavbarProps) => {
   const { pathname } = useLocation()
   const [userId, setUserId] = useState<string>()
   const navigate = useNavigate()
+  const { updateEvent } = useContext(EventContext)
 
   useEffect(() => {
     const user = sessionStorage.getItem('userAddress') || ''
     setUserId(user)
+    initTE({ Collapse, Dropdown })
   }, [userId])
 
   React.useEffect(() => {
@@ -48,6 +52,10 @@ const Navbar = ({ avatar }: NavbarProps) => {
   const handleLogout = () => {
     sessionStorage.clear()
     navigate('/')
+  }
+
+  const handleSettingsClick = () => {
+    updateEvent(NavbarEvents.SETTINGS)
   }
 
   return (
@@ -122,6 +130,13 @@ const Navbar = ({ avatar }: NavbarProps) => {
           {/* <!-- Right elements --> */}
           {sessionStorage.getItem('userAddress') && (
             <div className="flex items-center">
+              <button
+                data-te-ripple-init
+                onClick={handleSettingsClick}
+                className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+              >
+                <Settings className="w-5 h-5 stroke-current" />
+              </button>
               <a
                 href="/privacy"
                 data-te-ripple-init
