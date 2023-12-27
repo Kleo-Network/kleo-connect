@@ -46,7 +46,7 @@ export default function Privacy() {
               value=""
               onChange={handleSelectChange}
               //   multiple
-              className="border border-gray-300 rounded-md"
+              className="border border-gray-300 rounded-md text-sm"
             >
               <option value="" disabled>
                 Select a category...
