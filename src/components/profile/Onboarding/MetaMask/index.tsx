@@ -86,7 +86,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           const user: UserResponse = await fetchUserFromDB(publickey.toString())
           setMessage((message) => message.replace('{nonce}', user.nonce))
           setIsWalletConnected(isConnected)
-
         }
       } catch (error) {
         console.error('Could not get accounts', error)

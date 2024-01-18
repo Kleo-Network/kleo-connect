@@ -48,7 +48,8 @@ export const transformBrowsingHistory = (
         type: key,
         value: value.totalCategoryVisits,
         color: color,
-        domains: value.domains
+        domains: value.domains,
+        hidden: value.hidden
       }
     })
     return {

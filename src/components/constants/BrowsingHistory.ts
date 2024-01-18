@@ -8,6 +8,7 @@ export interface CategoryData {
   value: number
   color: string
   type: string
+  hidden: boolean
 }
 
 export interface DomainData {

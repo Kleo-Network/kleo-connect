@@ -2,6 +2,8 @@ import { BarChartContainer } from '../../common/charts/BarChartContainer'
 import MultiProgressBar from '../../common/charts/MultiProgressBar'
 import { ReactComponent as SortIcon } from '../../../assets/images/sort.svg'
 import { ReactComponent as AlertIcon } from '../../../assets/images/alert.svg'
+import { ReactComponent as EyeSlashIcon } from '../../../assets/images/eye-off-svgrepo-com.svg'
+
 import animationDataProcessing from '../../../assets/images/processing.json'
 import noDataAnimation from '../../../assets/images/NoData.json'
 import Lottie from 'react-lottie'
@@ -9,6 +11,7 @@ import ChartLoader from './ChartLoader'
 import useFetch, { FetchStatus } from '../../common/hooks/useFetch'
 import { useContext, useEffect, useState } from 'react'
 import Alert from '../../common/Alerts'
+
 import {
   BrowserHistoryCategory,
   CategoryData,
@@ -81,7 +84,8 @@ export default function BrowsingHistory() {
   }
 
   useEffect(() => {
-    if (!data?.processing) {
+    console.log('data', data?.processing)
+    if (data?.processing !== true) {
       const transformedData = transformBrowsingHistory(
         data as GraphData,
         timeRange
@@ -192,109 +196,120 @@ export default function BrowsingHistory() {
             ))}
           </div>
         </div>
+        {status === FetchStatus.PROCESSING && 'hi'}
         {status === FetchStatus.LOADING && <ChartLoader />}
 
-        {status === FetchStatus.SUCCESS && graphData.length > 0 && (
-          <div className="md:flex  md:space-x-4">
-            <div className="md:w-3/5 h-[550px] p-6 border-b md:border-r border-gray-200">
-              <BarChartContainer
-                data={graphData}
-                xAxisLabel={timeRange}
-                yAxisLabel="Browser Visits"
-                handleBarClick={handleBarClick}
-              />
-            </div>
-            <div className="md:w-2/5 h-[550px] flex flex-col items-start overflow-auto">
-              <div className="flex flex-col justify-center items-start gap-3 p-5 self-stretch border-b border-gray-200 md:-ml-4">
-                <div className="flex flex-row flex-1 justify-between items-center gap-1 self-stretch">
-                  <h3 className="text-base font-bold text-gray-800">
-                    {timeRange} Summary
-                  </h3>
-                  <span className="text-xs text-gray-700 bg-gray-100 py-[2px] px-2 rounded-2xl">
-                    {totalVisits} visits
-                  </span>
-                </div>
-                <MultiProgressBar progressBars={selectedBarData} />
-                <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40 overflow-scroll">
-                  {selectedBarData.map(({ type, color }, i) => (
-                    <button
-                      key={i}
-                      className="flex items-center  gap-2 rounded-lg border border-gray-200 px-2 py-1"
-                      style={{
-                        backgroundColor:
-                          filter === type ? lightenColor(color) : '#fff'
-                      }}
-                      onClick={() => onFilterChange(type)}
-                    >
-                      <div
-                        className="w-2 h-2 flex-none rounded-full"
-                        style={{ backgroundColor: color }}
-                      ></div>
-                      <h3 className="text-sm font-medium text-gray-700">
-                        {formatCategoryName(type)}
-                      </h3>
-                    </button>
-                  ))}
-                </div>
+        {status === FetchStatus.SUCCESS &&
+          graphData.length > 0 &&
+          data?.processing !== true && (
+            <div className="md:flex  md:space-x-4">
+              <div className="md:w-3/5 h-[550px] p-6 border-b md:border-r border-gray-200">
+                <BarChartContainer
+                  data={graphData}
+                  xAxisLabel={timeRange}
+                  yAxisLabel="Browser Visits"
+                  handleBarClick={handleBarClick}
+                />
               </div>
-              <div
-                data-te-perfect-scrollbar-init
-                className="flex flex-col items-start self-stretch px-6 py-4 gap-4 md:-ml-4 overflow-scroll"
-              >
-                <div className="flex flex-row items-start self-stretch">
-                  <div className="flex flex-row flex-1 items-center justify-between">
-                    <div className="flex flex-col items-start">
-                      <div className="text-base text-gray-800 font-medium">
-                        {filter ? formatCategoryName(filter) : 'Top Visits'}
-                      </div>
-                      <div className="text-xs text-gray-400 font-regular">
-                        {totalCategoryVisits()} Visits
-                      </div>
-                    </div>
-                    <button
-                      className="border border-gray-200 rounded-lg p-2 hover:bg-gray-50 active:bg-gray-100"
-                      onClick={() =>
-                        setSortOrder((val) => (val === 'asc' ? 'desc' : 'asc'))
-                      }
-                    >
-                      <SortIcon className="w-5 h-5" />
-                    </button>
+              <div className="md:w-2/5 h-[550px] flex flex-col items-start overflow-auto">
+                <div className="flex flex-col justify-center items-start gap-3 p-5 self-stretch border-b border-gray-200 md:-ml-4">
+                  <div className="flex flex-row flex-1 justify-between items-center gap-1 self-stretch">
+                    <h3 className="text-base font-bold text-gray-800">
+                      {timeRange} Summary
+                    </h3>
+                    <span className="text-xs text-gray-700 bg-gray-100 py-[2px] px-2 rounded-2xl">
+                      {totalVisits} visits
+                    </span>
+                  </div>
+                  <MultiProgressBar progressBars={selectedBarData} />
+                  <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40 overflow-scroll">
+                    {selectedBarData.map(({ type, color, hidden }, i) => (
+                      <button
+                        key={i}
+                        className="flex items-center  gap-2 rounded-lg border border-gray-200 px-2 py-1"
+                        style={{
+                          backgroundColor:
+                            filter === type ? lightenColor(color) : '#fff'
+                        }}
+                        onClick={() => onFilterChange(type)}
+                      >
+                        {hidden ? (
+                          <EyeSlashIcon className="w-4 h-4 flex-none" />
+                        ) : (
+                          <div
+                            className="w-2 h-2 flex-none rounded-full"
+                            style={{ backgroundColor: color }}
+                          ></div> // Color circle for non-hidden items
+                        )}
+
+                        <h3 className="text-sm font-medium text-gray-700">
+                          {formatCategoryName(type)}
+                        </h3>
+                      </button>
+                    ))}
                   </div>
                 </div>
-                {domains.map(
-                  ({ domain, icon, visitCounterTimeRange, title }, i) => (
-                    <div key={i} className="flex flex-row self-stretch">
-                      <div className="flex flex-row items-center gap-6 self-stretch">
-                        <div className="flex flex-row flex-none items-center justify-center w-8 h-8 rounded-full">
-                          <img src={icon} className="w-8 h-8" />
+                <div
+                  data-te-perfect-scrollbar-init
+                  className="flex flex-col items-start self-stretch px-6 py-4 gap-4 md:-ml-4 overflow-scroll"
+                >
+                  <div className="flex flex-row items-start self-stretch">
+                    <div className="flex flex-row flex-1 items-center justify-between">
+                      <div className="flex flex-col items-start">
+                        <div className="text-base text-gray-800 font-medium">
+                          {filter ? formatCategoryName(filter) : 'Top Visits'}
                         </div>
-                        <div className="flex flex-col items-start">
-                          <div className="text-sm text-gray-800 font-medium">
-                            {domain}
+                        <div className="text-xs text-gray-400 font-regular">
+                          {totalCategoryVisits()} Visits
+                        </div>
+                      </div>
+                      <button
+                        className="border border-gray-200 rounded-lg p-2 hover:bg-gray-50 active:bg-gray-100"
+                        onClick={() =>
+                          setSortOrder((val) =>
+                            val === 'asc' ? 'desc' : 'asc'
+                          )
+                        }
+                      >
+                        <SortIcon className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                  {domains.map(
+                    ({ domain, icon, visitCounterTimeRange, title }, i) => (
+                      <div key={i} className="flex flex-row self-stretch">
+                        <div className="flex flex-row items-center gap-6 self-stretch">
+                          <div className="flex flex-row flex-none items-center justify-center w-8 h-8 rounded-full">
+                            <img src={icon} className="w-8 h-8" />
                           </div>
-                          <div className="flex flex-row gap-2 items-center text-xs text-gray-400 font-regular">
-                            <span>{visitCounterTimeRange} Visits</span>
-                            <div className="w-1 h-1 rounded-full bg-gray-300"></div>
-                            <a
-                              href={domain}
-                              target="_blank"
-                              className="hover:text-purple-700 hover:underline"
-                            >
+                          <div className="flex flex-col items-start">
+                            <div className="text-sm text-gray-800 font-medium">
                               {domain}
-                            </a>
+                            </div>
+                            <div className="flex flex-row gap-2 items-center text-xs text-gray-400 font-regular">
+                              <span>{visitCounterTimeRange} Visits</span>
+                              <div className="w-1 h-1 rounded-full bg-gray-300"></div>
+                              <a
+                                href={domain}
+                                target="_blank"
+                                className="hover:text-purple-700 hover:underline"
+                              >
+                                {domain}
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )
-                )}
+                    )
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {status === FetchStatus.SUCCESS && data?.processing && (
           <div className="flex flex-col items-center justify-center py-24 px-6 gap-2">
+            <MultiProgressBar progressBars={[{ value: 12, color: 'black' }]} />
             <div className="flex w-1/2 mb-8 md:w-1/3">
               <Lottie options={defaultOptions} height={'100%'} width={'100%'} />
             </div>

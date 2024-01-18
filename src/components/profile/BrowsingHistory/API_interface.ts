@@ -6,6 +6,7 @@ export interface Domain {
 }
 
 export interface Category {
+  hidden: boolean
   domains: Domain[]
   totalCategoryVisits: number
 }
