@@ -2,7 +2,6 @@ import React, { createContext, useContext } from 'react'
 
 interface UserContextProps {
   user: UserProps
-  setUser: (user: UserProps) => void
 }
 
 interface UserProps {
@@ -11,6 +10,8 @@ interface UserProps {
   address: string
   kleo: number
   userId: string
+  loggedIn: boolean
+  jwtToken: string
 }
 
 export const UserContext = createContext<UserContextProps | null>(null)

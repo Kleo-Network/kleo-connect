@@ -1,14 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
 import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
-import { ReactComponent as Logout } from '../../assets/images/logout.svg'
 import { ReactComponent as Settings } from '../../assets/images/settings.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
 import { useLocation } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
-import { useNavigate } from 'react-router-dom'
 import { EventContext } from '../common/contexts/EventContext'
 import { NavbarEvents } from '../constants/Events'
+import {
+  AccountButton,
+  KleoExtensionExists,
+  LoginButton
+} from '../profile/Onboarding/Particle/LoginButton'
+import { useAuthContext } from '../common/contexts/UserContext'
+import '@particle-network/connectkit/dist/index.css'
 
 interface NavbarProps {
   avatar: {
@@ -27,17 +32,14 @@ enum Tab {
 const Navbar = ({ avatar }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState(Tab.PROFILE)
   const { pathname } = useLocation()
-  const [userId, setUserId] = useState<string>()
-  const navigate = useNavigate()
   const { updateEvent } = useContext(EventContext)
+  const context = useAuthContext()
 
   useEffect(() => {
-    const user = sessionStorage.getItem('userAddress') || ''
-    setUserId(user)
     initTE({ Collapse, Dropdown })
-  }, [userId])
+  }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (pathname === '/') {
       setSelectedTab(Tab.HOME)
     } else if (pathname === '/profile') {
@@ -48,11 +50,6 @@ const Navbar = ({ avatar }: NavbarProps) => {
       setSelectedTab(Tab.PRIVACY)
     }
   }, [pathname])
-
-  const handleLogout = () => {
-    sessionStorage.clear()
-    navigate('/')
-  }
 
   const handleSettingsClick = () => {
     updateEvent(NavbarEvents.SETTINGS)
@@ -97,7 +94,8 @@ const Navbar = ({ avatar }: NavbarProps) => {
             className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
             data-te-navbar-nav-ref
           >
-            {sessionStorage.getItem('userAddress') &&
+            {localStorage.getItem('userAddress') &&
+              KleoExtensionExists() &&
               Object.values(Tab).map((tab, i) => {
                 return (
                   tab !== Tab.HOME &&
@@ -115,7 +113,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
                         }`}
                         href={`/${
                           tab === Tab.PROFILE
-                            ? `profile/${userId}`
+                            ? `profile/${localStorage.getItem('userAddress')}`
                             : tab.toLowerCase()
                         }`}
                         data-te-nav-link-ref
@@ -128,7 +126,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
               })}
           </ul>
           {/* <!-- Right elements --> */}
-          {sessionStorage.getItem('userAddress') && (
+          {localStorage.getItem('userAddress') && KleoExtensionExists() && (
             <div className="flex items-center">
               <button
                 data-te-ripple-init
@@ -144,13 +142,8 @@ const Navbar = ({ avatar }: NavbarProps) => {
               >
                 <Privacy className="w-5 h-5 stroke-current" />
               </a>
-              <button
-                data-te-ripple-init
-                className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
-                onClick={handleLogout}
-              >
-                <Logout className="w-5 h-5 stroke-current" />
-              </button>
+              <AccountButton />
+
               {/* <button className="p-2 rounded-full">
               <img
                 src={avatar.src}

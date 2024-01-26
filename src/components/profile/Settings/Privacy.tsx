@@ -3,7 +3,7 @@ import Tags, { Tag } from '../../common/Tags'
 import { Categories } from './Categories'
 import useFetch from '../../common/hooks/useFetch'
 import { Method } from 'axios'
-import { UserResponse } from '../Onboarding/MetaMask/interface'
+import { UserResponse } from '../Onboarding/Authentication/interface'
 
 export default function Privacy() {
   const [keywords, setKeywords] = useState<Tag[]>([])

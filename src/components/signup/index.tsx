@@ -1,4 +1,4 @@
-import Onboarding from '../profile/Onboarding/MetaMask'
+import Onboarding from '../profile/Onboarding/Authentication'
 import { useNavigate } from 'react-router-dom'
 
 const SignUp = () => {

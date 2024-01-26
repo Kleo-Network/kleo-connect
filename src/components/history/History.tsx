@@ -45,8 +45,11 @@ export default function History() {
   const observer = useRef<IntersectionObserver | null>(null)
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [isAllSelected, setIsAllSelected] = useState(false)
-  const globalCheckboxRef = useRef<HTMLInputElement>(null)
 
+  const globalCheckboxRef = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    console.log('user address', localStorage.getItem('userAddress'))
+  }, [])
   useEffect(() => {
     if (debouncedSearchTerm) {
       setPageNo(1)
@@ -95,10 +98,13 @@ export default function History() {
   }, [])
 
   function makeApiUrl(pageNo: number): string {
-    return API_URL.replace('{userId}', context!.user.userId)
-      .replace('{search}', search)
-      .replace('{pageNo}', pageNo.toString())
-      .replace('{pageSize}', pageSize.toString())
+    console.log(localStorage.getItem('userAddress'))
+    if (localStorage.getItem('userAddress')) {
+      return API_URL.replace('{userId}', localStorage.getItem('userAddress'))
+        .replace('{search}', search)
+        .replace('{pageNo}', pageNo.toString())
+        .replace('{pageSize}', pageSize.toString())
+    } else return API_URL
   }
 
   const handleFavourites = (
@@ -106,23 +112,25 @@ export default function History() {
     url: string,
     favourite: boolean
   ) => {
-    let apiUrl = STAR_URL_API.replace('{userId}', context!.user.userId).replace(
-      '{visitTime}',
-      String(visitTime)
-    )
-    if (favourite) {
-      apiUrl = UNSTAR_URL_API.replace('{userId}', context!.user.userId).replace(
-        '{url}',
-        url
-      )
-    }
-
-    fetchData2(apiUrl, {
-      method: 'POST',
-      onSuccessfulFetch: () => {
-        fetchData(makeApiUrl(pageNo))
+    if (localStorage.getItem('userAddress')) {
+      let apiUrl = STAR_URL_API.replace(
+        '{userId}',
+        localStorage.getItem('userAddress')
+      ).replace('{visitTime}', String(visitTime))
+      if (favourite) {
+        apiUrl = UNSTAR_URL_API.replace(
+          '{userId}',
+          localStorage.getItem('userAddress')
+        ).replace('{url}', url)
       }
-    })
+
+      fetchData2(apiUrl, {
+        method: 'POST',
+        onSuccessfulFetch: () => {
+          fetchData(makeApiUrl(pageNo))
+        }
+      })
+    }
   }
 
   const deleteSelectedHistory = () => {
@@ -133,7 +141,7 @@ export default function History() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        user_id: context!.user.userId,
+        user_id: account,
         visit_times: selectedItems
       }),
       onSuccessfulFetch: () => {
@@ -150,7 +158,7 @@ export default function History() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        user_id: context!.user.userId,
+        user_id: account,
         visit_times: visitTimes,
         hide: !hidden
       }),

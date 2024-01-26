@@ -101,7 +101,7 @@ export default function BrowsingHistory() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        user_id: sessionStorage.getItem('userAddress'),
+        user_id: context!.user.userId,
         signup: true,
         days: mapped[timeRange]
       }),

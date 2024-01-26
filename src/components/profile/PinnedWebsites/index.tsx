@@ -36,8 +36,9 @@ export default function PinnedWebsites() {
   const [websites, setWebsites] = useState<WebsiteProps[] | null>(data)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [userId, setUserId] = useState<any>()
+
   useEffect(() => {
-    const user = sessionStorage.getItem('userAddress') || ''
+    const user = context!.user.userId
     setUserId(user)
   }, [userId])
   function makeApiUrl() {
