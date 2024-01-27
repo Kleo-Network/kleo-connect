@@ -44,7 +44,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const context = useAuthContext()
   const [infoExpanded, setInfoExpanded] = useState(false)
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(2)
   const [code, setCode] = useState('')
   const [isWalletConnected, setIsWalletConnected] = useState(false)
   const [provider, setProvider] = useState<any>(null)
@@ -339,9 +339,31 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       )}
       {currentStep == 2 && (
         <div className="flex flex-col items-start justify-center bg-white shadow-lg rounded-lg ">
+           
+          <div className="flex self-stretch flex-col items-center justify-center p-6 border bg-white shadow-lg border-gray-200 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-700">
+              Already a member?
+            </h3>
+            <p className="text-sm font-regular text-gray-500">
+              Launch the app directly
+            </p>
+            {!isWalletConnected ? (
+              <button
+                className="px-4 py-3 mt-3 bg-primary text-white rounded-lg shadow-lg"
+                onClick={connectPhantom}
+              >
+                {fetchUserStatus === FetchStatus.LOADING
+                  ? 'Loading...'
+                  : 'Connect Phantom'}
+              </button>
+            ) : (
+              <SignMessage signup={false} />
+            )}
+          </div>
+          
           <div className="p-6 text-lg w-full font-medium text-gray-900 border-b  border-gray-200">
             Connect these to get started! <br />
-            <span className="text-gray-400 text-sm font-regular">STEP 2/2</span>
+            <span className="text-gray-400 text-sm font-regular">Signup on Kleo!</span>
           </div>
           <div className="flex flex-row items-start gap-4 p-6">
             <div className="relative">
