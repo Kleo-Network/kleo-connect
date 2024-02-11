@@ -1,4 +1,5 @@
 // TelehealthDashboard.tsx
+import { ReactComponent as Arrow } from '../../../assets/images/arrow2.svg'
 import React from 'react'
 import { ReactComponent as Like } from '../../../assets/images/like.svg'
 import { ReactComponent as Comment } from '../../../assets/images/comment.svg'
@@ -88,27 +89,32 @@ const TelehealthDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Card 2: Testimonial */}
+        {/* Card 4: Tags */}
         <div className="bg-white rounded-lg shadow-lg p-4">
-          <div className="flex items-center mt-4">
-            <img
-              src={dummyImage2}
-              alt="Sarah Murray"
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            <div>
-              <p className="text-sm font-semibold text-gray-800">
-                @ayeayecapt3n
-              </p>
-              <span className="bg-green-200 text-green-700 py-1 px-2 rounded-full text-xs">
-                Business
-              </span>
+          <div className="flex flex-col items-center gap-2 self-stretch mt-4 font-medium">
+            <div className="flex self-stretch items-center justify-center rounded-full px-3 py-2 bg-primary text-white">
+              Simply redefining
+            </div>
+            <div className="flex flex-row items-center self-stretch gap-1">
+              <div className="rounded-full px-2 py-2 border border-gray-600">
+                <Arrow className="w-5 h-5 fill-gray-800 stroke-gray-800" />
+              </div>
+              <div className="flex flex-1 justify-center rounded-full px-3 py-2 bg-orange-400 text-black">
+                telemedicine
+              </div>
+            </div>
+            <div className="flex flex-row items-center self-stretch gap-1">
+              <div className="flex flex-1 justify-center text-center rounded-full px-3 py-2 border border-gray-600">
+                one session
+              </div>
+              <div className="rounded-full px-3 py-2 bg-purple-200 text-xl text-white">
+                🎥
+              </div>
+            </div>
+            <div className="flex self-stretch justify-center items-center rounded-full px-3 py-2 bg-green-700 text-white">
+              <span>at a time</span>
             </div>
           </div>
-          <blockquote className="italic text-gray-600 mt-4">
-            Researched GST implications for software freelancers.
-          </blockquote>
         </div>
 
         {/* Card 3: Expert Insight */}
