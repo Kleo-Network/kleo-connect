@@ -5,6 +5,7 @@ import Navbar from './components/navbar/Navbar'
 import History from './components/history/History'
 import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
+import Feed from './components/home/sections/feed'
 import { EventProvider } from './components/common/contexts/EventContext'
 import { useAccountInfo } from '@particle-network/connectkit'
 import { useNavigate } from 'react-router-dom'
@@ -51,7 +52,7 @@ function App(): ReactElement {
               }
             />
             <Route path="/signup/:step" element={<SignUp />} />
-
+            <Route path="/feed" element={<Feed />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/history" element={<History />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
