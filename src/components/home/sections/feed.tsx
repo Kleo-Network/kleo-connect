@@ -1,5 +1,8 @@
 // TelehealthDashboard.tsx
 import React from 'react'
+import { ReactComponent as Like } from '../../../assets/images/like.svg'
+import { ReactComponent as Comment } from '../../../assets/images/comment.svg'
+import { ReactComponent as Digg } from '../../../assets/images/digg.svg'
 
 // Dummy image URLs
 const dummyImage1 = 'https://via.placeholder.com/150'
@@ -54,14 +57,38 @@ const TelehealthDashboard: React.FC = () => {
               <p className="text-sm font-semibold text-gray-800">
                 @ayeayecapt3n
               </p>
-              <p className="text-sm text-gray-500">Healthcare Professional</p>
+              <span className="bg-green-200 text-green-700 py-1 px-2 rounded-full text-xs">
+                Information Technology
+              </span>
             </div>
           </div>
           <blockquote className="italic text-gray-600 mt-4">
-            "Doxy.me helped me seamlessly pivot my practice to the virtual space
-            and has completely shifted my practice for the long term."
+            Delved into blockchain information on BRINC's website.
           </blockquote>
+             <div className="flex justify-between items-center mt-4">
+                <span className="text-sm text-gray-500">Posted on 11 Feb 2024</span>
+            </div>
+          <div className="flex justify-between items-center mt-4 pt-4 border-t">
+            <div className="flex space-x-3">
+              <button aria-label="Like" className="flex items-center space-x-1">
+                <Like className="w-6 h-6 text-gray-600" />
+                <span>23</span>
+              </button>
+              <button
+                aria-label="Comment"
+                className="flex items-center space-x-1"
+              >
+                <Comment className="w-6 h-6 text-gray-600" />
+                <span>Comment</span>
+              </button>
+              <button aria-label="Dig" className="flex items-center space-x-1">
+                <Digg className="w-6 h-6 text-gray-600" />
+                <span>Dig</span>
+              </button>
+            </div>
+          </div>
         </div>
+
         {/* Card 2: Testimonial */}
         <div className="bg-white rounded-lg shadow-lg p-4">
           <div className="flex items-center mt-4">
@@ -74,12 +101,13 @@ const TelehealthDashboard: React.FC = () => {
               <p className="text-sm font-semibold text-gray-800">
                 @ayeayecapt3n
               </p>
-              <p className="text-sm text-gray-500">Healthcare Professional</p>
+              <span className="bg-green-200 text-green-700 py-1 px-2 rounded-full text-xs">
+                Business
+              </span>
             </div>
           </div>
           <blockquote className="italic text-gray-600 mt-4">
-            "Doxy.me helped me seamlessly pivot my practice to the virtual space
-            and has completely shifted my practice for the long term."
+            Researched GST implications for software freelancers.
           </blockquote>
         </div>
 
@@ -89,7 +117,7 @@ const TelehealthDashboard: React.FC = () => {
             <h2 className="text-lg font-semibold text-gray-700 mr-2">
               Dr. Anna Karen
             </h2>
-            <span className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs">
+            <span className="bg-green-200 text-green-700 py-1 px-2 rounded-full text-xs">
               Family Therapist
             </span>
           </div>
