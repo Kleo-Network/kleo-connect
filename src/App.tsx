@@ -14,7 +14,8 @@ import { UserContext } from './components/common/contexts/UserContext'
 function App(): ReactElement {
   const [user, setUser] = useState({
     name: '',
-    avatar: 'https://avatars.githubusercontent.com/u/47280571?v=4',
+    avatar:
+      'https://pbs.twimg.com/profile_images/1590877918015926272/Xl2Bd-X2_400x400.jpg',
     address: '',
     kleo: 100,
     userId: '',

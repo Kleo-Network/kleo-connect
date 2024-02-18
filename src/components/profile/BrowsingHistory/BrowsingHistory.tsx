@@ -222,7 +222,7 @@ export default function BrowsingHistory() {
                     </span>
                   </div>
                   <MultiProgressBar progressBars={selectedBarData} />
-                  <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40 overflow-scroll">
+                  <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40 overflow-y-scroll">
                     {selectedBarData.map(({ type, color, hidden }, i) => (
                       <button
                         key={i}

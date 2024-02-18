@@ -84,12 +84,25 @@ export default function PinnedWebsites() {
     <div className="flex flex-col flex-1 self-stretch rounded-lg border border-gray-200">
       <header className="flex flex-row gap-2 justify-between items-center px-6 py-5 font-medium border-b border-gray-200">
         <div className="flex flex-row items-center gap-2">
-          <h3 className="text-lg text-gray-900 flex-grow-0">Pinned Websites</h3>
-          <span className="text-xs text-purple-700 bg-purple-100 py-[2px] px-2 rounded-2xl">
-            Showcase
-          </span>
+          <div>
+            <h3 className="text-lg text-gray-900 flex-grow-0">Profile Cards</h3>
+          </div>
+          <div className="flex-grow-0">
+            <span className="text-sm px-2 py-2 text-blue-700 bg-blue-100 cursor-pointer hover:bg-blue-200">
+              Pending Cards
+            </span>
+
+            <span className="text-xs text-green-700 bg-green-100 py-[2px] px-2 rounded-2xl cursor-pointer hover:bg-green-200 ml-2">
+              Published Cards
+            </span>
+
+            {/* Discarded Cards Pill */}
+            <span className="text-xs text-red-700 bg-red-100 py-[2px] px-2 rounded-2xl cursor-pointer hover:bg-red-200 ml-2">
+              Discarded Cards
+            </span>
+          </div>
         </div>
-        {userId == context!.user.userId && (
+        {/* {userId == context!.user.userId && (
           <button
             className="flex flex-row gap-2 items-center shadow border border-gray-200 rounded-lg py-2 px-3 hover:bg-gray-50 active:bg-gray-100"
             onClick={() => setIsModalOpen(true)}
@@ -97,7 +110,7 @@ export default function PinnedWebsites() {
             <AddIcon className="w-5 h-5 stroke-gray-700" />
             <span className="text-sm text-gray-700">Add new</span>
           </button>
-        )}
+        )} */}
       </header>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <AddPinWebsite onPinHandler={handlePin} />
@@ -137,13 +150,13 @@ export default function PinnedWebsites() {
           />
         </div>
       )}
-      <SideDrawer isOpen={!!selectedWebsite} onClose={closeDrawer}>
+      {/* <SideDrawer isOpen={!!selectedWebsite} onClose={closeDrawer}>
         <ProfileSideDrawer
           website={selectedWebsite}
           onClose={closeDrawer}
           handleUnpin={handleUnPin}
         />
-      </SideDrawer>
+      </SideDrawer> */}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import PinnedWebsites from './PinnedWebsites'
+import ProfileCards from './ProfileCards'
 import { ReactComponent as ShareSvg } from '../../assets/images/share.svg'
 // import { ReactComponent as AddSvg } from '../../assets/images/add.svg'
 import ProfileCard from './ProfileCard'
@@ -43,7 +43,7 @@ export default function Profile() {
           </div>
         </header>
         <div className="flex flex-col w-full items-start justify-between py-8 gap-6 md:flex-row">
-          <PinnedWebsites />
+          <ProfileCards />
           <ProfileCard user={context!.user} />
         </div>
         <BrowsingHistory />
