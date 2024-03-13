@@ -10,6 +10,9 @@ import { EventProvider } from './components/common/contexts/EventContext'
 import { useAccountInfo } from '@particle-network/connectkit'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from './components/common/contexts/UserContext'
+import ProfileV2 from './components/ProfileV2'
+import BadgesList from './components/BadgesList'
+import ProfileCards from './components/profile/ProfileCards'
 
 function App(): ReactElement {
   const [user, setUser] = useState({
@@ -57,6 +60,10 @@ function App(): ReactElement {
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/history" element={<History />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/profilev2" element={<ProfileV2 />} />
+            <Route path="/Badges" element={<BadgesList />} />
+            <Route path="/Profilecard" element={<ProfileCards />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </div>

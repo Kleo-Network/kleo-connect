@@ -29,7 +29,7 @@ export default function PinnedWebsites() {
   const initialCards: Card[] = [
     {
       id: 740,
-      user: '@ayeayecapt3n',
+      user: 'Nick Stark',
       content: "Delved into blockchain information on BRINC's website.",
       contentImage: '',
       date: '11 Feb 2024',
@@ -47,7 +47,7 @@ export default function PinnedWebsites() {
     },
     {
       id: 120,
-      user: '@ayeayecapt3n',
+      user: 'Nick Stark',
       content: 'Watched Comedy Shorts on Youtube, Seinfeld on Netflix',
       date: '11 Feb 2024',
       imageUrl:
@@ -71,7 +71,7 @@ export default function PinnedWebsites() {
     },
     {
       id: 40,
-      user: '@ayeayecapt3n',
+      user: 'Nick Stark',
       content: "Researched Books like 'Game Of Thrones' on Goodreads",
       contentImage: '',
       date: '11 Feb 2024',
@@ -101,7 +101,7 @@ export default function PinnedWebsites() {
     },
     {
       id: 10,
-      user: '@ayeayecapt3n',
+      user: 'Nick Stark',
       content:
         'Visits to huggingface.co increased by 18% as compared to last week!',
       date: '11 Feb 2024',
@@ -126,7 +126,7 @@ export default function PinnedWebsites() {
     },
     {
       id: 3,
-      user: '@ayeayecapt3n',
+      user: 'Nick Stark',
       content: 'Googled about cybercrime cases and IPC 420 of Penal Code',
       contentImage: '',
       date: '11 Feb 2024',
@@ -223,26 +223,29 @@ export default function PinnedWebsites() {
       <header className="flex flex-row gap-2 justify-between items-center px-6 py-5 font-medium border-b border-gray-200">
         <div className="flex w-full justify-between items-center gap-2">
           <div>
-            <h3 className="text-lg text-gray-900 flex-grow-0">Profile Cards</h3>
+            <h3 className="text-xl text-gray-900 flex-grow-0">
+              Publish Activity for 19th December
+            </h3>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm px-2 py-2 text-blue-700 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-200">
-              Pending Cards
+              19th December
             </span>
 
-            {/* Published Cards Pill */}
-            <span className="text-xs text-green-700 bg-green-100 py-[2px] px-2 rounded-sm cursor-pointer hover:bg-green-200 ml-2">
-              Published Cards
+            {/* Date Pill */}
+            <span className="text-sm p-2 text-gray-700 bg-gray-100 rounded-sm cursor-pointer hover:bg-gray-200">
+              18th December
             </span>
-
-            {/* Discarded Cards Pill */}
-            <span className="text-xs text-red-700 bg-red-100 py-[2px] px-2 rounded-sm cursor-pointer hover:bg-red-200 ml-2">
-              Discarded Cards
+            <span className="text-sm p-2 text-gray-700 bg-gray-100 rounded-sm cursor-pointer hover:bg-gray-200 ml-2">
+              17th December
+            </span>
+            <span className="text-sm p-2 text-gray-700 bg-gray-100 rounded-sm cursor-pointer hover:bg-gray-200 ml-2">
+              16th December
             </span>
           </div>
         </div>
       </header>
-      <div className="flex flex-col md:flex-row justify-between items-center p-6">
+      <div className="flex flex-col md:flex-row justify-between items-center p-6 bg-gray-300">
         <div className="flex flex-col md:flex-row justify-center items-stretch p-6 gap-4 mx-auto">
           {cards.length > 0 ? (
             <>
@@ -318,7 +321,7 @@ export default function PinnedWebsites() {
                 </button>
                 <button
                   onClick={() => removeCard(activeCard.id, 'discard')}
-                  className="px-10 py-4 bg-red-500 text-white text-md font-medium rounded-2xl hover:bg-red-800 w-full h-1/2"
+                  className="flex justify-center items-center px-10 py-4 bg-red-500 text-white text-md font-medium rounded-2xl hover:bg-red-800 w-full h-1/2"
                 >
                   <Cross className="w-8 stroke-white fill-white" />
                 </button>
