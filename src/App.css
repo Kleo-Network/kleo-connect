@@ -44,3 +44,27 @@
   font-weight: 400;
   font-style: normal;
 }
+
+.color-empty {
+  fill: #ebedf0; /* Light gray, for empty tiles */
+}
+
+.color-scale-1 {
+  fill: #9be9a8; /* Light green */
+}
+
+.color-scale-2 {
+  fill: #40c463; /* Medium green */
+}
+
+.color-scale-3 {
+  fill: #30a14e; /* Dark green */
+}
+
+.color-scale-4 {
+  fill: #216e39; /* Darker green */
+}
+
+.color-scale-5 {
+  fill: #164e63; /* Darkest green */
+}
