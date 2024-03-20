@@ -1,14 +1,7 @@
 import React, { ReactNode } from 'react'
 import { ModalProvider } from '@particle-network/connectkit'
-import {
-  Ethereum,
-  EthereumGoerli,
-  EthereumSepolia,
-  Solana,
-  SolanaDevnet,
-  SolanaTestnet
-} from '@particle-network/chains'
-import { evmWallets, solanaWallets } from '@particle-network/connectors'
+import { Solana } from '@particle-network/chains'
+import { solanaWallets } from '@particle-network/connectors'
 import('buffer').then(({ Buffer }) => {
   window.Buffer = Buffer
 })
@@ -29,40 +22,23 @@ const ParticleNetworkProvider: React.FC<ParticleNetworkProviderProps> = ({
 
   return (
     <ModalProvider
+      walletSort={['Particle Auth', 'Wallet']}
       options={{
         projectId: projectId,
         clientKey: clientKey,
         appId: appId,
-        chains: [
-          Ethereum,
-          EthereumGoerli,
-          EthereumSepolia,
-          Solana,
-          SolanaDevnet,
-          SolanaTestnet
-        ],
-        connectors: [
-          ...evmWallets({
-            projectId: 'd81da1fa1b3a14753839777ad5ee086d',
-            showQrModal: true
-          }),
-          ...solanaWallets()
-        ],
+        chains: [Solana],
+        authTypes: ['email', 'google'],
+        connectors: [...solanaWallets()],
         erc4337: {
           name: 'SIMPLE',
           version: '1.0.0'
         },
+
         wallet: {
-          visible: false,
+          visible: true,
           customStyle: {
-            supportChains: [
-              Ethereum,
-              EthereumGoerli,
-              EthereumSepolia,
-              Solana,
-              SolanaDevnet,
-              SolanaTestnet
-            ]
+            supportChains: [Solana]
           }
         }
       }}

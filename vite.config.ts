@@ -4,7 +4,8 @@ import svgr from 'vite-plugin-svgr'
 
 export default defineConfig({
   base: '/',
-  plugins: [react(), svgr()]
+  plugins: [react(), svgr()],
+  envPrefix: 'VITE_'
   // build: {
   //   assetsInlineLimit: 1000000,
   //   assetsInclude: ['**/*.svg'],
