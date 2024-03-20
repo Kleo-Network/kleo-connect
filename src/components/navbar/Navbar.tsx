@@ -23,14 +23,13 @@ interface NavbarProps {
 }
 
 enum Tab {
-  HOME = 'Home',
-  PROFILE = 'Profile',
-  HISTORY = 'History',
-  PRIVACY = 'PRIVACY'
+  PUBLISH_CARDS = 'publish cards',
+  QUESTS = 'quests',
+  PRIVACY = 'privacy'
 }
 
 const Navbar = ({ avatar }: NavbarProps) => {
-  const [selectedTab, setSelectedTab] = React.useState(Tab.PROFILE)
+  const [selectedTab, setSelectedTab] = React.useState('null')
   const { pathname } = useLocation()
   const { updateEvent } = useContext(EventContext)
   const context = useAuthContext()
@@ -40,14 +39,14 @@ const Navbar = ({ avatar }: NavbarProps) => {
   }, [])
 
   useEffect(() => {
-    if (pathname === '/') {
-      setSelectedTab(Tab.HOME)
-    } else if (pathname === '/profile') {
-      setSelectedTab(Tab.PROFILE)
-    } else if (pathname === '/history') {
-      setSelectedTab(Tab.HISTORY)
+    if (pathname === '/cards') {
+      setSelectedTab(Tab.PUBLISH_CARDS)
+    } else if (pathname === '/quests') {
+      setSelectedTab(Tab.QUESTS)
     } else if (pathname === '/privacy') {
       setSelectedTab(Tab.PRIVACY)
+    } else if (pathname === '/profile') {
+      setSelectedTab('null')
     }
   }, [pathname])
 
@@ -61,7 +60,6 @@ const Navbar = ({ avatar }: NavbarProps) => {
       data-te-navbar-ref
     >
       <div className="flex w-full flex-wrap items-center justify-between px-12">
-        {/* <!-- Logo --> */}
         <a
           className="my-2 gap-2 flex items-center justify-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0"
           href="/"
@@ -94,65 +92,65 @@ const Navbar = ({ avatar }: NavbarProps) => {
             className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
             data-te-navbar-nav-ref
           >
-            {localStorage.getItem('userAddress') &&
-              KleoExtensionExists() &&
-              Object.values(Tab).map((tab, i) => {
-                return (
-                  tab !== Tab.HOME &&
-                  tab !== Tab.PRIVACY && (
-                    <li
-                      key={i}
-                      className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
-                      data-te-nav-item-ref
+            {Object.values(Tab).map((tab, i) => {
+              return (
+                tab !== Tab.PRIVACY && (
+                  <li
+                    key={i}
+                    className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+                    data-te-nav-item-ref
+                  >
+                    <a
+                      className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
+                        selectedTab === tab
+                          ? 'text-purple-700 bg-purple-100'
+                          : ''
+                      }`}
+                      href={`/${
+                        tab === Tab.PUBLISH_CARDS ? 'cards' : 'badges'
+                      }`}
+                      data-te-nav-link-ref
                     >
-                      <a
-                        className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
-                          selectedTab === tab
-                            ? 'text-purple-700 bg-purple-100'
-                            : ''
-                        }`}
-                        href={`/${
-                          tab === Tab.PROFILE
-                            ? `profile/${localStorage.getItem('userAddress')}`
-                            : tab.toLowerCase()
-                        }`}
-                        data-te-nav-link-ref
-                      >
-                        {tab}
-                      </a>
-                    </li>
-                  )
+                      {tab}
+                    </a>
+                  </li>
                 )
-              })}
+              )
+            })}
           </ul>
-          {/* <!-- Right elements --> */}
-          {localStorage.getItem('userAddress') && KleoExtensionExists() && (
-            <div className="flex items-center">
-              <button
-                data-te-ripple-init
-                onClick={handleSettingsClick}
-                className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
-              >
-                <Settings className="w-5 h-5 stroke-current" />
-              </button>
-              <a
-                href="/privacy"
-                data-te-ripple-init
-                className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
-              >
-                <Privacy className="w-5 h-5 stroke-current" />
-              </a>
-              <AccountButton />
-
-              {/* <button className="p-2 rounded-full">
+          <div className="flex items-center justify-center flex-grow">
+            <a href="/profile" className="flex items-center">
               <img
                 src={avatar.src}
                 alt={avatar.alt}
-                className="ml-4 w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full mr-2"
               />
-            </button> */}
-            </div>
-          )}
+              <span className="text-gray-700 font-medium">@kleo.network</span>
+            </a>
+          </div>
+
+          {/* <!-- Right elements --> */}
+
+          <div className="flex items-center">
+            <button className="p-2 mr-1 rounded-md bg-primary text-white">
+              mint
+            </button>
+            <button
+              data-te-ripple-init
+              onClick={handleSettingsClick}
+              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+            >
+              <Settings className="w-5 h-5 stroke-current" />
+            </button>
+            <a
+              href="/privacy"
+              data-te-ripple-init
+              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+            >
+              <Privacy className="w-5 h-5 stroke-current" />
+            </a>
+            <AccountButton />
+          </div>
         </div>
       </div>
     </nav>
