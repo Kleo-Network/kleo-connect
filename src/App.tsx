@@ -5,6 +5,7 @@ import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
 import { UserContext } from './components/common/contexts/UserContext'
 import ProfileV2 from './components/ProfileV2'
+import ProfileV3 from './components/ProfileV3'
 import BadgesList from './components/BadgesList'
 import ProfileCards from './components/profile/ProfileCards'
 function App(): ReactElement {
@@ -47,6 +48,9 @@ function App(): ReactElement {
             <Route path="/profilev2" element={<ProfileV2 />} />
             <Route path="/badges" element={<BadgesList />} />
             <Route path="/cards" element={<ProfileCards />} />
+            <Route path="/profilev3" element={<ProfileV3 />} />
+            <Route path="/Badges" element={<BadgesList />} />
+            <Route path="/Profilecard" element={<ProfileCards />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
