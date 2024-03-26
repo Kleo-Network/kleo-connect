@@ -7,7 +7,7 @@ const PrivacyPolicy: React.FC = () => {
         Privacy Policy for Kleo Network
       </h1>
       <p className="text-gray-500 my-3 text-sm self-start">
-        (Last updated: November 8, 2023)
+        (Last updated: March 26, 2024)
       </p>
       <p>
         At Kleo Network ("we," "us," "our"), your privacy is of the utmost
@@ -169,6 +169,72 @@ const PrivacyPolicy: React.FC = () => {
         </a>
       </p>
 
+      <h2 className="text-xl font-bold mt-4">
+        7. Information We Collect from Instagram and Why We Need It
+      </h2>
+      <p>
+        <ul className="list-disc ml-8">
+          <li>
+            We collect user images from Instagram to display within our
+            software. This is aimed at enhancing user experience and providing
+            personalized content.
+          </li>
+          <li>
+            We use the information collected from Instagram for the following
+            purposes:
+            <ul className="list-disc ml-6">
+              <li>
+                Enhancing user experience by displaying relevant and
+                personalized content.
+              </li>
+              <li>
+                Improving service functionality to better meet users' needs and
+                preferences.
+              </li>
+              <li>
+                Ensuring the delivery of relevant and useful information within
+                our software.
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </p>
+
+      <h2 className="text-xl font-bold mt-4">
+        8. Information We Collect from LinkedIn and Why We Need It
+      </h2>
+      <p>
+        <ul className="list-disc ml-8">
+          <li>
+            We collect data from LinkedIn profiles to showcase users'
+            experiences, education, and working profiles within our software.
+            This serves to enrich user profiles and provide comprehensive
+            information to other users.
+          </li>
+          <li>
+            We use the information collected from LinkedIn for the following
+            purposes:
+            <ul className="list-disc ml-6">
+              <li>
+                Enriching user profiles by showcasing professional experiences
+                and educational backgrounds.
+              </li>
+              <li>
+                Improving service functionality to better meet users' needs and
+                preferences.
+              </li>
+              <li>
+                Providing comprehensive information to other users within our
+                software.
+              </li>
+              <li>
+                Enhancing networking opportunities and professional connections
+                among users.
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </p>
       <p>
         Your use of Kleo Network signifies your consent to this Privacy Policy.
         If you do not agree to this policy, please do not use the Kleo Network
