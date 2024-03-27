@@ -48,25 +48,6 @@ export default function FeedCard({ card, user }: Card) {
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-500">Posted on {card.date}</span>
         </div>
-        <div className="flex justify-between items-center mt-4 pt-4 border-t">
-          <div className="flex space-x-3">
-            <button aria-label="Like" className="flex items-center space-x-1">
-              <Like className="w-6 h-6 text-gray-600" />
-              <span>{card.likeCount}</span>
-            </button>
-            <button
-              aria-label="Comment"
-              className="flex items-center space-x-1"
-            >
-              <Comment className="w-6 h-6 text-gray-600" />
-              <span>{card.commentCount}</span>
-            </button>
-            <button aria-label="Dig" className="flex items-center space-x-1">
-              <Digg className="w-6 h-6 text-gray-600" />
-              <span>{card.digCount}</span>
-            </button>
-          </div>
-        </div>
       </footer>
     </div>
   )

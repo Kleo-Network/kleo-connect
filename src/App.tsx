@@ -46,11 +46,11 @@ function App(): ReactElement {
 
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/profilev2" element={<ProfileV2 />} />
-            <Route path="/badges" element={<BadgesList />} />
-            <Route path="/cards" element={<ProfileCards />} />
             <Route path="/profilev3" element={<ProfileV3 />} />
             <Route path="/Badges" element={<BadgesList />} />
             <Route path="/Profilecard" element={<ProfileCards />} />
+            <Route path="/badges" element={<BadgesList />} />
+            <Route path="/cards" element={<ProfileCards />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

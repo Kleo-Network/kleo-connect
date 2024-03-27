@@ -23,7 +23,6 @@ const CalendlyLogin: React.FC = () => {
     const clientId = config.calendly.apiKey
     const redirectUri = 'http://localhost:5173/signup/4'
     const responseType = 'code'
-    const scope = 'user:read'
 
     const authUrl = `https://calendly.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}`
 

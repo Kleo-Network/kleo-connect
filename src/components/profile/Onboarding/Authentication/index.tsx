@@ -3,6 +3,7 @@ import { ReactComponent as Kleo } from '../../../../assets/images/kleoWithBg.svg
 import { ReactComponent as MetaMaskLogo } from '../../../../assets/images/solanaLogoMark.svg'
 import { ReactComponent as Arrow } from '../../../../assets/images/arrow.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
+import { ReactComponent as RightArrow } from '../../../../assets/images/arrow2.svg'
 import animationDataProcessing from '../../../../assets/images/welcome.json'
 import Accordion from '../../../common/Accordion'
 import useFetch, { FetchStatus } from '../../../common/hooks/useFetch'
@@ -83,11 +84,11 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const handleGoogleLogin = (credentialResponse: any) => {
     // Get the Google Access Token from the credential response
     const accessToken = credentialResponse.access_token
-    console.log(credentialResponse)
+    console.log(accessToken)
     // Send the Access Token to your server to authenticate and create an account
     // You can use an API call or any other method to communicate with your server
     // Example using fetch:
-    // fetch('/api/google-login', {
+    // fetch('/api/', {
     //   method: 'POST',
     //   headers: {
     //     'Content-Type': 'application/json'
@@ -248,7 +249,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
+                    <div className="flex flex-col items-center mt-2 text-sm font-medium">
                       {pluginState === PluginState.INSTALLED ? (
                         <GoogleLogin
                           onSuccess={handleGoogleLogin}
@@ -267,7 +268,8 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                                 border: 'none',
                                 borderRadius: '50%',
                                 padding: '10px',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                marginBottom: '10px'
                               }}
                             >
                               <img
@@ -279,8 +281,35 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                           )}
                         />
                       ) : (
-                        <p> Install Kleo Plugin to Create Account! </p>
+                        <p className="mb-4">
+                          Install Kleo Plugin to Create Account!
+                        </p>
                       )}
+
+                      <div className="relative w-full">
+                        <input
+                          type="search"
+                          id="location-search"
+                          className="block ps-2 p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-100 dark:border-s-gray-200  dark:border-gray-300 dark:placeholder-gray-200 dark:text-gray-900 dark:focus:border-blue-500"
+                          placeholder="Username"
+                          required
+                        />
+                        <button
+                          type="submit"
+                          className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-primary rounded-e-lg border border-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary-800"
+                        >
+                          <RightArrow />
+                          <span className="sr-only">Search</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <button
+                        disabled
+                        className="px-4 py-3 bg-gray-400 text-white rounded-lg shadow mx-auto block"
+                      >
+                        Next Step
+                      </button>
                     </div>
                   </div>
                 )}

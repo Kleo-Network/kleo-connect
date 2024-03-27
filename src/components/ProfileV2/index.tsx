@@ -10,7 +10,7 @@ import ProfileCards from '../profile/ProfileCards'
 import { ReactComponent as Cross } from '../../assets/images/cross.svg'
 import { ReactComponent as Arrow } from '../../assets/images/arrow.svg'
 import Feeds from '../profile/Feed/Feed'
-
+import ProfileStaticCards from '../ProfileV3/index'
 const user = {
   name: 'Nick Stark',
   avatar:
@@ -100,129 +100,19 @@ export default function ProfileV2() {
           </div>
         </div>
       </div>
-      <GridComponent />
-
-      <div className="mx-auto container p-5">
-        <section>
-          <div className="flex flex-col md:flex-row">
-            {/* User activity */}
-            <div className="flex basis-4/5 flex-col">
-              {/* Activity charts and badges */}
-
-              <div className="flex flex-col self-stretch items-start justify-between md:flex-row">
-                <div className="flex flex-row flex-1 border-gray-200 md:max-h-[250px]">
-                  <div className="w-full mb-4 flex flex-col items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(0,0,0,0.2)] ">
-                    <div className="h-full w-full px-5 flex items-center mt-2">
-                      <ResponsiveContainer
-                        className="w-8/10"
-                        width="100%"
-                        height="100%"
-                      >
-                        <BrowsingHistoryRadarChart
-                          browsingData={BrowsingHistoryForRadarChart}
-                          radarCharName="Visit count"
-                          dataKey="category"
-                          dataKeyForRadar="categoryVisits"
-                        />
-                      </ResponsiveContainer>
-                    </div>
-                    <p className="text-center mb-2 dark:text-violet-800">
-                      Browsing history
-                    </p>
-                  </div>
-                  <div className="w-full mb-4 mx-4 flex flex-col items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(0,0,0,0.2)] ">
-                    <div className="w-full h-full flex flex-row items-center justify-center self-stretch px-2 my-4">
-                      <div className="w-full h-full flex justify-center items-center w-1/3">
-                        <img
-                          src="https://bonkcoin.com/static/media/bonkog_200.e87b5d92088ca7a75178.png"
-                          alt="7 day strike"
-                          className="w-28 h-28 rounded-full"
-                        />
-                      </div>
-                      <div className="w-full h-full flex justify-center items-center w-1/3">
-                        <img
-                          src="\src\assets\images\superteam.png"
-                          alt="15 day strike"
-                          className="w-28 h-28 rounded-full"
-                        />
-                      </div>
-                    </div>
-                    <p className="text-center mb-2 dark:text-violet-800">
-                      Badges
-                    </p>
-                  </div>
-                  <div className="w-full mb-4 mx-4 flex flex-col items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(0,0,0,0.2)] ">
-                    <div className="w-full h-full flex flex-row items-center justify-center self-stretch px-2 my-4">
-                      <div className="w-full h-full flex justify-center items-center w-1/3">
-                        <img
-                          src="https://bonkcoin.com/static/media/bonkog_200.e87b5d92088ca7a75178.png"
-                          alt="7 day strike"
-                          className="w-28 h-28 rounded-full"
-                        />
-                      </div>
-                      <div className="w-full h-full flex justify-center items-center w-1/3">
-                        <img
-                          src="\src\assets\images\superteam.png"
-                          alt="15 day strike"
-                          className="w-28 h-28 rounded-full"
-                        />
-                      </div>
-                    </div>
-                    <p className="text-center mb-2 dark:text-violet-800">
-                      Badges
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col self-stretch items-start justify-between md:flex-row">
-                <div className="flex flex-row flex-1 border-gray-200 md:max-h-[250px]">
-                  <div className="w-full mb-4 flex flex-col items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(0,0,0,0.2)] ">
-                    <div className="h-full w-full px-5 flex items-center mt-2">
-                      <ResponsiveContainer
-                        className="w-8/10"
-                        width="100%"
-                        height="100%"
-                      >
-                        <BrowsingHistoryRadarChart
-                          browsingData={BrowsingHistoryForRadarChart}
-                          radarCharName="Visit count"
-                          dataKey="category"
-                          dataKeyForRadar="categoryVisits"
-                        />
-                      </ResponsiveContainer>
-                    </div>
-                    <p className="text-center mb-2 dark:text-violet-800">
-                      Browsing history
-                    </p>
-                  </div>
-                  <div className="w-full mb-4 mx-4 flex flex-col items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(0,0,0,0.2)] ">
-                    <div className="w-full h-full flex flex-row items-center justify-center self-stretch px-2 my-4">
-                      <div className="w-full h-full flex justify-center items-center w-1/3">
-                        <img
-                          src="https://bonkcoin.com/static/media/bonkog_200.e87b5d92088ca7a75178.png"
-                          alt="7 day strike"
-                          className="w-28 h-28 rounded-full"
-                        />
-                      </div>
-                      <div className="w-full h-full flex justify-center items-center w-1/3">
-                        <img
-                          src="\src\assets\images\superteam.png"
-                          alt="15 day strike"
-                          className="w-28 h-28 rounded-full"
-                        />
-                      </div>
-                    </div>
-                    <p className="text-center mb-2 dark:text-violet-800">
-                      Badges
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <Feeds data={FeedCardMock} user={user} />
-            </div>
-            {/* user profile */}
+      <div className="flex w-full items-center mx-auto justify-center">
+        <div className="flex w-full justify-center">
+          <div className="w-[75%] grid grid-cols-7 gap-1">
+            <ProfileStaticCards />
           </div>
-        </section>
+        </div>
+      </div>
+      <div className="flex w-full items-center mx-auto justify-center">
+        <div className="flex w-full justify-center">
+          <div className="w-[75%] grid">
+            <Feeds data={FeedCardMock} user={user} />
+          </div>
+        </div>
       </div>
     </div>
   )

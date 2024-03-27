@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import CalendarHeatmap from 'react-calendar-heatmap'
 import 'react-calendar-heatmap/dist/styles.css'
 import { ReactComponent as Github } from '../../../assets/images/githubFilled.svg'
-
+import './../../../assets/stylesheets/github.css'
 interface Contribution {
   date: string
   count: number
@@ -84,6 +84,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
       </div>
       <div className="mt-4">
         <CalendarHeatmap
+
           startDate={startDate}
           endDate={endDate}
           values={heatmapValues}

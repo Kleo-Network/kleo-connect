@@ -169,13 +169,42 @@ const experiences = [
   }
 ]
 
-const calendlyUrl = 'https://calendly.com/aish-96jain/'
+const calendlyUrl = 'https://calendly.com/vaibhav-dkm/'
 
 export default function ProfileV3() {
   const [isAccordianOpen, setIsAccordianOpen] = useState<boolean>(false)
 
   return (
-    <div className="flex flex-col self-stretch">
+    <>
+      <div className="col-span-4 row-span-1 rounded-[5px] p-2.5">
+        <ProfileBio user={user} />
+      </div>
+      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <GitHubCard
+          profileImage="https://avatars.githubusercontent.com/u/12345678?v=4"
+          username="johndoe"
+          bio="Software Developer"
+          contributions={contributions}
+        />
+      </div>
+      <div className="col-span-1 row-span-2 bg-gray-200 rounded-[5px]">
+        <img
+          src="placeholder.jpg"
+          alt="Placeholder"
+          className="w-full h-full object-cover rounded-[5px]"
+        />
+      </div>
+      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <MonthlyCalendarCard calendlyUrl={calendlyUrl} />
+      </div>
+      <div className="col-span-4 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <LinkedInCard
+          userImage="https://randomuser.me/api/portraits/women/44.jpg" // Random user image
+          bio="Passionate software engineer with over 10 years of experience specializing in web development and open source contributions."
+          experiences={experiences}
+        />
+      </div>
+
       {/* <div className="h-full w-full flex flex-row bg-violet-900 self-stretch items-center justify-between">
         <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
           <span className="text-white text-l font-semibold m-2">
@@ -194,7 +223,7 @@ export default function ProfileV3() {
         </div>
       </div> */}
       {/* divide into 3 columns */}
-      <section className="flex flex-row flex-wrap mx-auto gap-3 self-stretch p-5">
+      {/* <section className="flex flex-row flex-wrap mx-auto gap-3 self-stretch p-5">
         <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
           <ProfileBio user={user} />
         </div>
@@ -214,8 +243,8 @@ export default function ProfileV3() {
         </div>
         <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
           <MapCard
-            city="New York City"
-            country="USA"
+            city="New York"
+            country="India"
             lat={40.7128}
             lng={-74.006}
           />
@@ -245,7 +274,7 @@ export default function ProfileV3() {
             experiences={experiences}
           />
         </div>
-      </section>
-    </div>
+      </section> */}
+    </>
   )
 }

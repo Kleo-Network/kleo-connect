@@ -56,31 +56,6 @@ const Cards: React.FC = () => {
                 Posted on 11 Feb 2024
               </span>
             </div>
-            <div className="flex justify-between items-center mt-4 pt-4 border-t">
-              <div className="flex space-x-3">
-                <button
-                  aria-label="Like"
-                  className="flex items-center space-x-1"
-                >
-                  <Like className="w-6 h-6 text-gray-600" />
-                  <span>23</span>
-                </button>
-                <button
-                  aria-label="Comment"
-                  className="flex items-center space-x-1"
-                >
-                  <Comment className="w-6 h-6 text-gray-600" />
-                  <span>20</span>
-                </button>
-                <button
-                  aria-label="Dig"
-                  className="flex items-center space-x-1"
-                >
-                  <Digg className="w-6 h-6 text-gray-600" />
-                  <span>12</span>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -355,31 +330,6 @@ const Cards: React.FC = () => {
               <span className="text-sm text-gray-500">
                 Posted on 11 Feb 2024
               </span>
-            </div>
-            <div className="flex justify-between items-center mt-4 pt-4 border-t">
-              <div className="flex space-x-3">
-                <button
-                  aria-label="Like"
-                  className="flex items-center space-x-1"
-                >
-                  <Like className="w-6 h-6 text-gray-600" />
-                  <span>23</span>
-                </button>
-                <button
-                  aria-label="Comment"
-                  className="flex items-center space-x-1"
-                >
-                  <Comment className="w-6 h-6 text-gray-600" />
-                  <span>20</span>
-                </button>
-                <button
-                  aria-label="Dig"
-                  className="flex items-center space-x-1"
-                >
-                  <Digg className="w-6 h-6 text-gray-600" />
-                  <span>12</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
