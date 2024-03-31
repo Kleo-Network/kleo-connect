@@ -17,9 +17,16 @@ const config = {
     applicationSecret: import.meta.env.LINKEDIN_APPLICATION_SECRET
   },
   twitter: {
-    applicationId: import.meta.env.TWITTER_APPLICATION_ID,
-    key: import.meta.env.TWITTER_KEY,
-    secret: import.meta.env.TWITTER_SECRET
+    applicationId: import.meta.env.VITE_TWITTER_APPLICATION_ID,
+    key: import.meta.env.VITE_TWITTER_KEY,
+    secret: import.meta.env.VITE_TWITTER_SECRET,
+    clientId: import.meta.env.VITE_TWITTER_CLIENT_ID
+  },
+  github: {
+    clientId: import.meta.env.VITE_GITHUB_CLIENTID
+  },
+  googlemap: {
+    key: import.meta.env.VITE_GOOGLE_MAP_KEY
   }
 }
 
