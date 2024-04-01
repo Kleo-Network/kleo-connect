@@ -13,10 +13,10 @@ const MapCard: React.FC<MapCardProps> = ({ city, country, lat, lng }) => {
   return (
     <div className="flex-1 bg-gray-100 p-1 rounded-lg shadow-md relative">
       <MapContainer
+        className="h-60"
         center={[lat, lng]}
-        zoom={13}
+        zoom={9}
         scrollWheelZoom={false}
-        style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -133,7 +133,7 @@ const contributions = [
 ]
 
 const userSample = {
-  username: 'JaneDoe',
+  username: 'vaibhavgeek',
   avatar: 'https://via.placeholder.com/150',
   bio: 'Frontend Developer | React Enthusiast | Coffee Lover',
   followersCount: 500,
@@ -187,7 +187,7 @@ export default function ProfileV3() {
         />
       </div>
       <div className="col-span-2 row-span-2 bg-gray-200 rounded-[5px] p-2.5">
-        Hello World
+        <TwitterCard user={userSample} />
       </div>
 
       <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
@@ -198,6 +198,16 @@ export default function ProfileV3() {
           userImage="https://randomuser.me/api/portraits/women/44.jpg" // Random user image
           bio="Passionate software engineer with over 10 years of experience specializing in web development and open source contributions."
           experiences={experiences}
+        />
+      </div>
+      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <MapCard city={'Mumbaui'} country={'India'} lat={22.3} lng={73.07} />
+      </div>
+      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <TextCard
+          content={
+            'Hello World, right now I am just building kleo network, we are to create data owned identities, this will enable web3 applications like never before.'
+          }
         />
       </div>
     </>

@@ -26,22 +26,17 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
         <Twitter className="text-gray-800 w-8 h-8" />
       </div>
       <div className="flex items-center space-x-4">
-        <img
-          className="w-12 h-12 rounded-full"
-          src={user.avatar}
-          alt={user.username}
-        />
         <div>
-          <div className="font-bold text-xl mb-2">{user.username}</div>
+          <div className="font-bold text-md mb-2">/{user.username}</div>
           <p className="text-gray-700 text-sm">{user.bio}</p>
         </div>
       </div>
       <div className="py-3">
         <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          Followers: {user.followersCount}
+          {user.followersCount} <span className="text-xs">followers</span>
         </span>
         <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-          Following: {user.followingCount}
+          {user.followingCount} <span className="text-xs">following</span>
         </span>
       </div>
       {pinnedTweet && (
