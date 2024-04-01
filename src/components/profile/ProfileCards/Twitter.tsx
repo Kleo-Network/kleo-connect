@@ -21,7 +21,10 @@ interface TwitterCardProps {
 
 const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
   return (
-    <div className="flex-1 bg-gray-100 p-6 rounded-lg shadow-md relative">
+    <div className="flex-1 h-full bg-gray-100 p-6 rounded-lg shadow-md relative">
+      <div className="h-2/6 px-0">
+        <img src="https://pbs.twimg.com/profile_banners/86010277/1710089861/1500x500" />
+      </div>
       <div className="absolute top-0 right-0 p-4">
         <Twitter className="text-gray-800 w-8 h-8" />
       </div>
