@@ -1,53 +1,74 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 
 interface ImageButton {
   icon: string
   alt: string
+  name: string
 }
 
 const imageButtons: ImageButton[] = [
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/747/747310.png',
-    alt: 'Calendar'
+    alt: 'Calendar',
+    name: 'CalendarCard'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/2991/2991108.png',
-    alt: 'Text'
+    alt: 'Text',
+    name: 'TextCard'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/2838/2838912.png',
-    alt: 'Location'
+    alt: 'Location',
+    name: 'PlaceCard'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/174/174855.png',
-    alt: 'Instagram'
+    alt: 'Instagram',
+    name: 'InstaCard'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/733/733579.png',
-    alt: 'Twitter'
+    alt: 'Twitter',
+    name: 'XCard'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/25/25231.png',
-    alt: 'GitHub'
+    alt: 'GitHub',
+    name: 'GitCard'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/174/174857.png',
-    alt: 'LinkedIn'
+    alt: 'LinkedIn',
+    name: 'LinkedinCard'
   }
 ]
 
-const App: React.FC = () => {
-  const [selectedButtons, setSelectedButtons] = useState<number[]>([])
+const App: React.FC<{
+  onExternalToolChange: (externalTools: string[]) => void
+}> = ({ onExternalToolChange }) => {
+  const [selectedButtons, setSelectedButtons] = useState<string[]>([])
 
-  const handleButtonClick = (index: number) => {
-    const isSelected = selectedButtons.includes(index)
+  const handleButtonClick = (name: string) => {
+    const isSelected = selectedButtons.includes(name)
     if (isSelected) {
-      setSelectedButtons(selectedButtons.filter((i) => i !== index))
+      setSelectedButtons((prevSelectedButtons) =>
+        prevSelectedButtons.filter((nm) => nm !== name)
+      )
     } else if (selectedButtons.length < 5) {
-      setSelectedButtons([...selectedButtons, index])
+      setSelectedButtons((prevSelectedButtons) => [
+        ...prevSelectedButtons,
+        name
+      ])
     }
   }
+
+  useEffect(() => {
+    if (selectedButtons.length === 5) {
+      onExternalToolChange(selectedButtons)
+    }
+  }, [selectedButtons, onExternalToolChange])
 
   return (
     <div>
@@ -56,13 +77,15 @@ const App: React.FC = () => {
           <div key={index} className="relative m-2">
             <button
               className={`p-2 rounded-md ${
-                selectedButtons.includes(index) ? 'bg-blue-500' : 'bg-gray-200'
+                selectedButtons.includes(button.name)
+                  ? 'bg-blue-500'
+                  : 'bg-gray-200'
               }`}
-              onClick={() => handleButtonClick(index)}
+              onClick={() => handleButtonClick(button.name)}
             >
               <img src={button.icon} alt={button.alt} className="w-16 h-16" />
             </button>
-            {selectedButtons.includes(index) && (
+            {selectedButtons.includes(button.name) && (
               <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white">
                 <Tick className="w-3 h-3 fill-white" />
               </div>
@@ -70,7 +93,7 @@ const App: React.FC = () => {
           </div>
         ))}
       </div>
-      <p className="mt-4">{selectedButtons.length} / 7 selected</p>
+      <p className="mt-4">{selectedButtons.length} / 5 selected</p>
     </div>
   )
 }

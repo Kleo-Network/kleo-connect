@@ -3,11 +3,12 @@ import { useLinkedIn } from 'react-linkedin-login-oauth2'
 
 const LinkedInSignIn: React.FC = () => {
   const { linkedInLogin } = useLinkedIn({
-    clientId: 'YOUR_LINKEDIN_CLIENT_ID',
-    redirectUri: 'YOUR_REDIRECT_URI',
+    clientId: '865y5grz09krar',
+    redirectUri: 'http://localhost:5173/signup/4',
     onSuccess: (code) => {
       console.log('LinkedIn authentication successful')
       fetchUserProfile(code)
+      console.log('code', code)
     },
     onError: (error) => {
       console.error('LinkedIn authentication error:', error)

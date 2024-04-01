@@ -14,7 +14,7 @@ import { useAuthContext } from '../../../common/contexts/UserContext'
 import { UserResponse } from './interface'
 import Lottie from 'react-lottie'
 import { LoginButton } from '../Particle/LoginButton'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { isEVMProvider } from '@particle-network/connectors'
 import { useAccountInfo } from '@particle-network/connectkit'
 import { usePhantomWallet } from '../../../common/hooks/usePhantomWallet'
@@ -23,6 +23,13 @@ import SelectCards from './SelectCards'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import CalendlyLogin from '../Connections/Calendly'
 import GitHubSignIn from '../Connections/Github'
+import InstagramConnect from '../Connections/Instagram'
+import LinkedInSignIn from '../Connections/LinkedIn'
+import TwitterSignIn from '../Connections/Twitter'
+import CityAutocomplete from '../Connections/Place'
+import useDebounce from '../../../common/hooks/useDebounce'
+import { SlugData, userData } from '../../../constants/SignupData'
+import TextComponent from '../Connections/Text'
 const defaultOptions = {
   loop: true,
   autoplay: true,
@@ -48,9 +55,8 @@ const GET_USER_API = 'auth/get_user'
 export default function Onboarding({ handleLogin }: OnboardingProps) {
   const context = useAuthContext()
   const { step } = useParams()
-  const { account, particleProvider } = useAccountInfo()
   const [infoExpanded, setInfoExpanded] = useState(false)
-  const [pluginState, setPluginState] = useState(PluginState.CHECKING)
+  const [pluginState, setPluginState] = useState(PluginState.INSTALLED)
   const [currentStep, setCurrentStep] = useState(parseInt(step || '0'))
   const [code, setCode] = useState('')
 
@@ -69,6 +75,161 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
 
   const [login, setLogin] = useState(false)
 
+  //===================================================== Var and methods for login step 0  =======================================================
+  const USER_LOGIN_PATH = 'user/create-user'
+
+  const handleUserLogin = (credentialResponse: any) => {
+    const token = credentialResponse.credential
+    console.log(token)
+    fetchCreateAndFetchUserData(CREATE_USER_FOR_KLEO, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        signup: false,
+        stage: 0,
+        code: token
+      }),
+      onSuccessfulFetch: (data) => {
+        if (data?.slug) {
+          sessionStorage.setItem('slug', data.slug)
+        }
+        if (data?.token) {
+          setLogin(true)
+          sessionStorage.setItem('token', data.token)
+          window.alert('successful login')
+        } else {
+          window.alert('Error while creating user')
+        }
+      }
+    })
+  }
+
+  //===============================================================================================================================================
+
+  //===================================================== Var and methods for signup step 1 =======================================================
+
+  const CHECK_SLUG_FOR_USER = 'user/check_slug?slug={slug}'
+  const CREATE_USER_FOR_KLEO = 'user/create-user'
+  const navigate = useNavigate()
+  const [userSlug, setUserSlug] = useState('')
+  const [isSlugAvailable, setIsSlugAvailable] = useState(false)
+  const debouncedIsSlugAvailableTerm = useDebounce(userSlug, 500)
+  const { fetchData: fetchSlugAvaibility } = useFetch<SlugData>()
+  const { fetchData: fetchCreateAndFetchUserData } = useFetch<userData>()
+  const [userGoogleToken, setUserGoogleToken] = useState('')
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    setUserSlug(value)
+
+    // Check if the length of the input is greater than or equal to 4
+    if (value.length < 4) {
+      setIsSlugAvailable(false)
+    }
+  }
+
+  useEffect(() => {
+    const checkSlugAvaibility = async () => {
+      if (userSlug.length < 4) {
+        setIsSlugAvailable(false)
+      } else {
+        fetchSlugAvaibility(makeSlugApiUrl(), {
+          onSuccessfulFetch(data) {
+            if (data) {
+              console.log(data.result)
+              setIsSlugAvailable(data.result)
+            }
+          }
+        })
+      }
+    }
+
+    if (debouncedIsSlugAvailableTerm !== '') {
+      checkSlugAvaibility()
+    }
+  }, [debouncedIsSlugAvailableTerm])
+
+  function makeSlugApiUrl(): string {
+    return CHECK_SLUG_FOR_USER.replace('{slug}', userSlug)
+  }
+
+  const handleUserCreation = (slug: string, token: string) => {
+    fetchCreateAndFetchUserData(CREATE_USER_FOR_KLEO, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        signup: true,
+        stage: 1,
+        slug: slug,
+        code: token
+      }),
+      onSuccessfulFetch: (data) => {
+        if (data?.slug) {
+          sessionStorage.setItem('slug', data.slug)
+        }
+        if (data?.token) {
+          sessionStorage.setItem('token', data.token)
+          setCurrentStep(currentStep + 1)
+          navigate('/signup/' + (currentStep + 1))
+        } else {
+          window.alert('Error while creating user')
+        }
+      }
+    })
+  }
+
+  const handleGoogleSignUp = (credentialResponse: any) => {
+    // Get the Google Access Token from the credential response
+    const accessToken = credentialResponse.credential
+    setUserGoogleToken(accessToken)
+  }
+  //================================================================================================================================================
+
+  //===================================================== Var and methods for signup step 2 ========================================================
+  const UPDATE_USER_SETTING = 'user/update-settings/{slug}'
+  const [externalToolArray, setExternalToolArray] = useState<string[]>([])
+  const [userBio, setUserBio] = useState('')
+  const { fetchData: UpdateUserData } = useFetch<userData>()
+
+  const addExternalToolToUser = (externalTools: string[]) => {
+    setExternalToolArray(externalTools)
+    console.log(externalToolArray)
+  }
+  const onBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setUserBio(event.target.value)
+  }
+
+  const handleUserUpdation = (bio: string, cards: string[]) => {
+    UpdateUserData(makeUserUpdationUrl(), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        stage: 3,
+        about: bio,
+        settings: {
+          static_cards: cards
+        }
+      }),
+      onSuccessfulFetch: () => {
+        setCurrentStep(currentStep + 2)
+        navigate('/signup/' + (currentStep + 2))
+      }
+    })
+  }
+
+  function makeUserUpdationUrl(): string {
+    const slug = sessionStorage.getItem('slug') || ''
+    return UPDATE_USER_SETTING.replace('{slug}', slug)
+  }
+
+  //================================================================================================================================================
+
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
@@ -80,31 +241,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       }, 2000)
     }
   }, [])
-
-  const handleGoogleLogin = (credentialResponse: any) => {
-    // Get the Google Access Token from the credential response
-    const accessToken = credentialResponse.access_token
-    console.log(accessToken)
-    // Send the Access Token to your server to authenticate and create an account
-    // You can use an API call or any other method to communicate with your server
-    // Example using fetch:
-    // fetch('/api/', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ accessToken })
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     // Handle the server response
-    //     console.log(data)
-    //   })
-    //   .catch((error) => {
-    //     // Handle any errors
-    //     console.error(error)
-    //   })
-  }
 
   return (
     <GoogleOAuthProvider clientId="236440189889-c391vfab4cpsqnep0lo31ndg8g8qmq25.apps.googleusercontent.com">
@@ -152,12 +288,35 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
               <p className="text-sm font-regular text-gray-500">
                 Launch the app directly
               </p>
-              {account}
-              {!account ? (
-                <LoginButton txt={'Login'} />
-              ) : (
-                <>Add Login Method here with google!</>
-              )}
+              <GoogleLogin
+                onSuccess={handleUserLogin}
+                render={(renderProps: {
+                  onClick:
+                    | React.MouseEventHandler<HTMLButtonElement>
+                    | undefined
+                  disabled: boolean | undefined
+                }) => (
+                  <button
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    style={{
+                      backgroundColor: 'white',
+                      color: 'rgba(0, 0, 0, 0.54)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      padding: '10px',
+                      cursor: 'pointer',
+                      marginBottom: '10px'
+                    }}
+                  >
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
+                      alt="Google logo"
+                      style={{ width: '20px', height: '20px' }}
+                    />
+                  </button>
+                )}
+              />
             </div>
           </div>
         )}
@@ -234,7 +393,12 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                     </div>
                   )} */}
 
-                  <MetaMaskLogo className="w-12 h-12" />
+                  {/* <MetaMaskLogo className="w-12 h-12" /> */}
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
+                    alt="Google logo"
+                    style={{ width: '48px', height: '48px' }}
+                  />
                 </div>
                 {!login && (
                   <div className="w-9/12">
@@ -245,14 +409,15 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                         </span>
                         <span className="text-gray-400 text-sm font-regular">
                           To get started, we use Google Account or Email, this
-                          will be default authentication.
+                          will be default authentication. Only Post
+                          authentication with google you can select an username
                         </span>
                       </div>
                     </div>
                     <div className="flex flex-col items-center mt-2 text-sm font-medium">
                       {pluginState === PluginState.INSTALLED ? (
                         <GoogleLogin
-                          onSuccess={handleGoogleLogin}
+                          onSuccess={handleGoogleSignUp}
                           render={(renderProps: {
                             onClick:
                               | React.MouseEventHandler<HTMLButtonElement>
@@ -273,7 +438,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                               }}
                             >
                               <img
-                                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
                                 alt="Google logo"
                                 style={{ width: '20px', height: '20px' }}
                               />
@@ -286,27 +451,45 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                         </p>
                       )}
 
-                      <div className="relative w-full">
+                      <div className="relative w-full mt-2">
                         <input
                           type="search"
                           id="location-search"
-                          className="block ps-2 p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-100 dark:border-s-gray-200  dark:border-gray-300 dark:placeholder-gray-200 dark:text-gray-900 dark:focus:border-blue-500"
-                          placeholder="Username"
+                          className="block ps-2 p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg appearance-none"
+                          placeholder="Enter username"
+                          value={userSlug}
+                          onChange={handleInputChange}
+                          disabled={userGoogleToken.length <= 0}
                           required
                         />
-                        <button
-                          type="submit"
-                          className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-primary rounded-e-lg border border-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary-800"
+                        <div
+                          className={`absolute bottom-2 left-auto right-3 top-auto z-10 rounded-full ${
+                            isSlugAvailable
+                              ? 'bg-green-600 border-white'
+                              : 'bg-gray-50 border-gray-50'
+                          } p-1 border-4 border-white `}
                         >
-                          <RightArrow />
-                          <span className="sr-only">Search</span>
-                        </button>
+                          <Tick
+                            className={`w-3 h-3 ${
+                              isSlugAvailable ? 'fill-white' : 'fill-gray-50'
+                            }`}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="p-6">
                       <button
-                        disabled
-                        className="px-4 py-3 bg-gray-400 text-white rounded-lg shadow mx-auto block"
+                        disabled={
+                          !isSlugAvailable || userGoogleToken.length <= 0
+                        }
+                        className={`px-4 py-3 ${
+                          isSlugAvailable && userGoogleToken.length > 0
+                            ? 'bg-violet-800 text-white'
+                            : 'bg-violet-400 text-white'
+                        } rounded-lg shadow mx-auto block`}
+                        onClick={() =>
+                          handleUserCreation(userSlug, userGoogleToken)
+                        }
                       >
                         Next Step
                       </button>
@@ -353,7 +536,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                 </span>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-6 w-full">
-                <SelectCards />
+                <SelectCards onExternalToolChange={addExternalToolToUser} />
                 {/* <div className="flex flex-col items-center md:w-1/3">
                   <label htmlFor="profile-upload" className="cursor-pointer">
                     <div className="flex flex-col items-center justify-center">
@@ -369,7 +552,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                     </div>
                   </label>
                   <input type="file" id="profile-upload" className="hidden" />
-                </div>
+                </div> */}
                 <div className="md:w-1/3">
                   <label
                     htmlFor="bio"
@@ -378,15 +561,20 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                     Bio:
                   </label>
                   <textarea
+                    value={userBio}
+                    onChange={onBioChange}
                     id="bio"
                     rows={4}
                     className="shadow-sm focus:ring-primary focus:border-primary mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                     placeholder="Tell us a bit about yourself..."
                   ></textarea>
-                </div> */}
+                </div>
               </div>
               <div className="p-6">
-                <button className="px-4 py-3 bg-primary text-white rounded-lg shadow mx-auto block">
+                <button
+                  className="px-4 py-3 bg-primary text-white rounded-lg shadow mx-auto block"
+                  onClick={() => handleUserUpdation(userBio, externalToolArray)}
+                >
                   Proceed to Step 3
                 </button>
               </div>
@@ -414,8 +602,13 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
         )}
         {currentStep == 4 && (
           <div>
+            <TextComponent />
             <CalendlyLogin />
             <GitHubSignIn />
+            <InstagramConnect />
+            <LinkedInSignIn />
+            <TwitterSignIn />
+            <CityAutocomplete />
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import config from '../../../common/config'
+import useFetch from '../../../common/hooks/useFetch'
 interface CalendlyUserResponse {
   resource: {
     slug: string
@@ -15,10 +16,12 @@ interface CalendlyTokenResponse {
 
 const CalendlyLogin: React.FC = () => {
   const [username, setUsername] = useState<string>('')
+  const { fetchData: UpdateUserData } = useFetch<any>()
+  const CREATE_CALENDLY_CARD = 'static-card/calendly/{slug}'
+  const [isCardCreated, setIsCardCreated] = useState(false)
+  const slug = sessionStorage.getItem('slug') || ''
 
   const handleLogin = () => {
-    alert(config.calendly.apiKey)
-    alert(config.calendly.clientSecret)
     // Step 1: Get the authorization code
     const clientId = config.calendly.apiKey
     const redirectUri = 'http://localhost:5173/signup/4'
@@ -30,9 +33,12 @@ const CalendlyLogin: React.FC = () => {
     window.location.href = authUrl
   }
 
+  function makeCalendyCardUrl(): string {
+    return CREATE_CALENDLY_CARD.replace('{slug}', slug)
+  }
+
   const handleCallback = async (code: string) => {
     try {
-      // Step 2: Exchange the authorization code for an access token
       const response: AxiosResponse<CalendlyTokenResponse> = await axios.post(
         'https://calendly.com/oauth/token',
         {
@@ -46,18 +52,20 @@ const CalendlyLogin: React.FC = () => {
 
       const accessToken = response.data.access_token
       console.log('accessToken', accessToken)
-      // Step 3: Get the user details using the access token
-      const userResponse: AxiosResponse<CalendlyUserResponse> = await axios.get(
-        'https://api.calendly.com/users/me',
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+
+      UpdateUserData(makeCalendyCardUrl(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: accessToken
+        }),
+        onSuccessfulFetch: () => {
+          setIsCardCreated(true)
+          setUsername(slug)
         }
-      )
-      console.log(userResponse.data)
-      const username = userResponse.data.resource.slug
-      setUsername(username)
+      })
     } catch (error) {
       console.error('Error:', error)
     }
@@ -74,7 +82,7 @@ const CalendlyLogin: React.FC = () => {
 
   return (
     <div>
-      {username ? (
+      {isCardCreated ? (
         <div>
           <h2>Welcome, {username}!</h2>
         </div>

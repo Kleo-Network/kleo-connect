@@ -1,22 +1,64 @@
 import React, { useState } from 'react'
 import { Autocomplete, useLoadScript } from '@react-google-maps/api'
+import config from '../../../common/config'
+
+const libraries = ['places']
 
 const CityAutocomplete: React.FC = () => {
-  const [city, setCity] = useState<string | null>(null)
+  const [city, setCity] = useState('')
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null)
+  const [coordinates, setCoordinates] = useState({})
+  const apiKey = config.googlemap.key
+
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          city
+        )}&key=YOUR_API_KEY&libraries=${libraries.join(',')}`
+      )
+      const data = await response.json()
+      console.log(data)
+      if (data.results.length > 0) {
+        const { lat, lng } = data.results[0].geometry.location
+        setCoordinates({ lat, lng })
+      } else {
+        console.error('No results found for the given city')
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+    googleMapsApiKey: config.googlemap.key,
     libraries: ['places']
   })
 
-  const handleCitySelect = () => {
+  const handleCitySelect = async () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace()
       if (place && place.formatted_address) {
         console.log('Selected city:', place.formatted_address)
         setCity(place.formatted_address)
+      }
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            city
+          )}&key=${apiKey}&libraries=${libraries.join(',')}`
+        )
+        const data = await response.json()
+        console.log(data)
+        if (data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location
+          setCoordinates({ lat, lng })
+        } else {
+          console.error('No results found for the given city')
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
       }
     }
   }

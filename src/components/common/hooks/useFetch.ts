@@ -46,7 +46,7 @@ function useFetch<T>(url?: string, options?: Options<T>): FetchResponse<T> {
     'https://api.kleo.network/api/v1/core'
 
   function getToken(): string | undefined {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     if (token) {
       return token
     } else {
