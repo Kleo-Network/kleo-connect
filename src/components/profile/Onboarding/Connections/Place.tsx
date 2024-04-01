@@ -42,23 +42,27 @@ const CityAutocomplete: React.FC = () => {
       if (place && place.formatted_address) {
         console.log('Selected city:', place.formatted_address)
         setCity(place.formatted_address)
-      }
-      try {
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            city
-          )}&key=${apiKey}&libraries=${libraries.join(',')}`
-        )
-        const data = await response.json()
-        console.log(data)
-        if (data.results.length > 0) {
-          const { lat, lng } = data.results[0].geometry.location
-          setCoordinates({ lat, lng })
-        } else {
-          console.error('No results found for the given city')
+
+        try {
+          console.log('city', city)
+          console.log(apiKey)
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+              place.formatted_address
+            )}&key=${apiKey}&libraries=${libraries.join(',')}`
+          )
+          const data = await response.json()
+          console.log(data)
+          if (data.results.length > 0) {
+            console.log('data results', data.results)
+            const { lat, lng } = data.results[0].geometry.location
+            setCoordinates({ lat, lng })
+          } else {
+            console.error('No results found for the given city')
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error)
         }
-      } catch (error) {
-        console.error('Error fetching data:', error)
       }
     }
   }
