@@ -148,7 +148,7 @@ const pinnedTweetSample = {
 
 const experiences = [
   {
-    icon: 'https://cdn-icons-png.flaticon.com/512/174/174857.png', // LinkedIn icon
+    icon: 'https://theme.zdassets.com/theme_assets/1024340/78b0cd1ea78d2763fb98cb466ef065903b5efc0b.png', // LinkedIn icon
     designation: 'Software Engineer',
     placeOfWork: 'Google'
   },
@@ -186,20 +186,10 @@ export default function ProfileV3() {
           contributions={contributions}
         />
       </div>
-      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
-        <GitHubCard
-          username="johndoe"
-          bio="Software Developer"
-          contributions={contributions}
-        />
+      <div className="col-span-2 row-span-2 bg-gray-200 rounded-[5px] p-2.5">
+        Hello World
       </div>
-      <div className="col-span-1 row-span-2 bg-gray-200 rounded-[5px]">
-        <img
-          src="placeholder.jpg"
-          alt="Placeholder"
-          className="w-full h-full object-cover rounded-[5px]"
-        />
-      </div>
+
       <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
         <MonthlyCalendarCard calendlyUrl={calendlyUrl} />
       </div>
@@ -210,77 +200,6 @@ export default function ProfileV3() {
           experiences={experiences}
         />
       </div>
-
-      {/* <div className="h-full w-full flex flex-row bg-violet-900 self-stretch items-center justify-between">
-        <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
-          <span className="text-white text-l font-semibold m-2">
-            New cards arriving in
-          </span>
-          <span className="text-white text-2xl font-semibold my-2">
-            09:12:33
-          </span>
-        </div>
-        <div>
-          <div className="h-6 w-24 m-2 flex flex-col bg-white items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(255,255,255,0.2)] ">
-            <p className="text-center font-medium text-sm dark:text-violet-800">
-              Notify
-            </p>
-          </div>
-        </div>
-      </div> */}
-      {/* divide into 3 columns */}
-      {/* <section className="flex flex-row flex-wrap mx-auto gap-3 self-stretch p-5">
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
-          <ProfileBio user={user} />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
-          <TwitterCard user={userSample} pinnedTweet={pinnedTweetSample} />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
-          <GitHubCard
-            profileImage="https://avatars.githubusercontent.com/u/12345678?v=4"
-            username="johndoe"
-            bio="Software Developer"
-            contributions={contributions}
-          />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
-          <MonthlyCalendarCard calendlyUrl={calendlyUrl} />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
-          <MapCard
-            city="New York"
-            country="India"
-            lat={40.7128}
-            lng={-74.006}
-          />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/4">
-          <TextCard
-            title="Simple Text Card"
-            subtitle="Subtitle Here"
-            content="This is a simple text card component in React. It displays a title, a subtitle, and some content text."
-          />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/3">
-          <InstagramPostCard
-            username="nature_lover"
-            userImage="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMD-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-            postImage="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-            caption="Exploring the beautiful landscapes 🏞️ #travel #adventure"
-            likes={256}
-            comments={12}
-            postDate="2023-04-15T14:00:00Z"
-          />
-        </div>
-        <div className="flex flex-col flex-1 basis-1 md:basis-1/3">
-          <LinkedInCard
-            userImage="https://randomuser.me/api/portraits/women/44.jpg" // Random user image
-            bio="Passionate software engineer with over 10 years of experience specializing in web development and open source contributions."
-            experiences={experiences}
-          />
-        </div>
-      </section> */}
     </>
   )
 }

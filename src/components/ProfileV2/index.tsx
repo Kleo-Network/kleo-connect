@@ -102,7 +102,7 @@ export default function ProfileV2() {
       </div>
       <div className="flex w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
-          <div className="w-[75%] grid grid-cols-9 gap-1">
+          <div className="w-[75%] grid grid-cols-8 gap-1">
             <ProfileStaticCards />
           </div>
         </div>
