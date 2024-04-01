@@ -17,9 +17,7 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
       {/* <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{`${currentMonth.toUpperCase()} ${currentYear}`}</h2>
       </div> */}
-      <div className="mt-4" style={{ height: '100%' }}>
-        <InlineWidget url={calendlyUrl} styles={{ height: '100%' }} />
-      </div>
+      <div className="mt-4" style={{ height: '100%' }}></div>
     </div>
   )
 }

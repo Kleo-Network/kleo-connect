@@ -65,10 +65,8 @@ const Feeds: React.FC<Feed> = ({ data, user }) => {
             <h3 className="text-sm font-medium">{category}</h3>
           </button>
         ))}
-        {/* </div> */}
       </div>
 
-      {/* Filtered data cards */}
       <div className="grid grid-cols-3 gap-4">
         {selectedCategory
           ? data

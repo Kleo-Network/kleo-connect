@@ -72,19 +72,12 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
         <Github className="text-gray-800 w-8 h-8" />
       </div>
       <div className="flex items-center mb-4">
-        <img
-          src={profileImage}
-          alt={`Profile of ${username}`}
-          className="w-12 h-12 rounded-full mr-4"
-        />
         <div>
-          <h2 className="text-lg font-bold">{username}</h2>
-          <p className="text-gray-600 text-sm">{bio}</p>
+          <h2 className="text-lg font-bold">/{username}</h2>
         </div>
       </div>
       <div className="mt-4">
         <CalendarHeatmap
-
           startDate={startDate}
           endDate={endDate}
           values={heatmapValues}

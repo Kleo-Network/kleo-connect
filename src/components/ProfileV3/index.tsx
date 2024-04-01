@@ -18,7 +18,7 @@ import MapCard from '../profile/ProfileCards/MapCard'
 import TextCard from '../profile/ProfileCards/TextCard'
 import InstagramPostCard from '../profile/ProfileCards/Instagram'
 import LinkedInCard from '../profile/ProfileCards/LinkedIn'
-
+import MintProfile from './connect'
 const user = {
   name: 'Nick Stark',
   avatar:
@@ -181,7 +181,13 @@ export default function ProfileV3() {
       </div>
       <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
         <GitHubCard
-          profileImage="https://avatars.githubusercontent.com/u/12345678?v=4"
+          username="johndoe"
+          bio="Software Developer"
+          contributions={contributions}
+        />
+      </div>
+      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <GitHubCard
           username="johndoe"
           bio="Software Developer"
           contributions={contributions}
