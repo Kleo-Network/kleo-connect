@@ -1,17 +1,9 @@
 import React, { createContext, useContext } from 'react'
+import { UserData } from '../../constants/SignupData'
 
-interface UserContextProps {
-  user: UserProps
-}
-
-interface UserProps {
-  name: string
-  avatar: string
-  address: string
-  kleo: number
-  userId: string
-  loggedIn: boolean
-  jwtToken: string
+export interface UserContextProps {
+  user: UserData
+  setUser: (user: UserData) => void
 }
 
 export const UserContext = createContext<UserContextProps | null>(null)

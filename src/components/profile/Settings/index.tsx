@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
 import Privacy from './Privacy'
+import { UserData } from '../../constants/SignupData'
 
 interface User {
-  user: UserProps
-}
-
-interface UserProps {
-  name: string
-  avatar: string
-  userId: string
-  kleo: number
+  user: UserData
 }
 
 enum TABS {

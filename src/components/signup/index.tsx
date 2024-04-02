@@ -1,12 +1,14 @@
 import Onboarding from '../profile/Onboarding/Authentication'
 import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../common/contexts/UserContext'
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const context = useAuthContext()
 
-  const handleLogin = (userAddress: string) => {
+  const handleLogin = (slug: string) => {
     console.log('logged in successfully')
-    navigate('/profile/' + userAddress)
+    navigate('/profilev3/' + slug)
   }
 
   return (

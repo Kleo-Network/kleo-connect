@@ -28,7 +28,7 @@ import LinkedInSignIn from '../Connections/LinkedIn'
 import TwitterSignIn from '../Connections/Twitter'
 import CityAutocomplete from '../Connections/Place'
 import useDebounce from '../../../common/hooks/useDebounce'
-import { SlugData, userData } from '../../../constants/SignupData'
+import { SlugData, UserData } from '../../../constants/SignupData'
 import TextComponent from '../Connections/Text'
 const defaultOptions = {
   loop: true,
@@ -67,21 +67,15 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
 
   const { fetchData, error: loginError, data: loginData } = useFetch<any>()
   const { fetchData: fetchInviteCheck } = useFetch<any>()
-  const {
-    fetchData: fetchUser,
-    status: fetchUserStatus,
-    data: user
-  } = useFetch<any>()
 
   const [login, setLogin] = useState(false)
 
   //===================================================== Var and methods for login step 0  =======================================================
   const USER_LOGIN_PATH = 'user/create-user'
-
   const handleUserLogin = (credentialResponse: any) => {
     const token = credentialResponse.credential
     console.log(token)
-    fetchCreateAndFetchUserData(CREATE_USER_FOR_KLEO, {
+    fetchCreateAndFetchUserData(USER_LOGIN_PATH, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -117,8 +111,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [isSlugAvailable, setIsSlugAvailable] = useState(false)
   const debouncedIsSlugAvailableTerm = useDebounce(userSlug, 500)
   const { fetchData: fetchSlugAvaibility } = useFetch<SlugData>()
-  const { fetchData: fetchCreateAndFetchUserData } = useFetch<userData>()
+  const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
+    useFetch<UserData>()
   const [userGoogleToken, setUserGoogleToken] = useState('')
+  const [isSignUp, setIsSignUp] = useState(false)
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -172,6 +168,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           sessionStorage.setItem('slug', data.slug)
         }
         if (data?.token) {
+          setIsSignUp(true)
           sessionStorage.setItem('token', data.token)
           setCurrentStep(currentStep + 1)
           navigate('/signup/' + (currentStep + 1))
@@ -193,7 +190,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const UPDATE_USER_SETTING = 'user/update-settings/{slug}'
   const [externalToolArray, setExternalToolArray] = useState<string[]>([])
   const [userBio, setUserBio] = useState('')
-  const { fetchData: UpdateUserData } = useFetch<userData>()
+  const { fetchData: UpdateUserData } = useFetch<UserData>()
 
   const addExternalToolToUser = (externalTools: string[]) => {
     setExternalToolArray(externalTools)
@@ -241,6 +238,33 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       }, 2000)
     }
   }, [])
+
+  useEffect(() => {
+    if (login) {
+      const user = context?.user
+      context?.setUser({
+        ...user,
+        about: userFromDB?.about || '',
+        badges: userFromDB?.badges || [],
+        content_tags: userFromDB?.content_tags || [],
+        identity_tags: userFromDB?.identity_tags || [],
+        last_attested:
+          userFromDB?.last_attested || Math.floor(Date.now() / 1000),
+        last_cards_marked:
+          userFromDB?.last_cards_marked || Math.floor(Date.now() / 1000),
+        name: userFromDB?.name || '',
+        pfp: userFromDB?.pfp || '',
+        profile_metadata: userFromDB?.profile_metadata || {},
+        settings: userFromDB?.settings || {},
+        slug: userFromDB?.slug || '',
+        stage: userFromDB?.stage || 1,
+        verified: userFromDB?.verified || false,
+        email: userFromDB?.email || '',
+        token: userFromDB?.token || ''
+      })
+      handleLogin(user?.slug || '')
+    }
+  }, [isSignUp, login])
 
   return (
     <GoogleOAuthProvider clientId="236440189889-c391vfab4cpsqnep0lo31ndg8g8qmq25.apps.googleusercontent.com">
