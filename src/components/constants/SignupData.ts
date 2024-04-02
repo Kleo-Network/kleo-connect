@@ -2,7 +2,7 @@ export interface SlugData {
   result: boolean
 }
 
-export interface userData {
+export interface UserData {
   about: string
   badges: string[]
   content_tags: string[]
@@ -16,6 +16,6 @@ export interface userData {
   slug: string
   stage: number
   verified: boolean
-  emain: string
+  email: string
   token: any
 }

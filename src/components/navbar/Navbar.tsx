@@ -7,13 +7,6 @@ import { useLocation } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
 import { EventContext } from '../common/contexts/EventContext'
 import { NavbarEvents } from '../constants/Events'
-import {
-  AccountButton,
-  KleoExtensionExists,
-  LoginButton
-} from '../profile/Onboarding/Particle/LoginButton'
-import { useAuthContext } from '../common/contexts/UserContext'
-import '@particle-network/connectkit/dist/index.css'
 
 interface NavbarProps {
   avatar: {
@@ -32,7 +25,6 @@ const Navbar = ({ avatar }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState('null')
   const { pathname } = useLocation()
   const { updateEvent } = useContext(EventContext)
-  const context = useAuthContext()
 
   useEffect(() => {
     initTE({ Collapse, Dropdown })
@@ -149,7 +141,6 @@ const Navbar = ({ avatar }: NavbarProps) => {
             >
               <Privacy className="w-5 h-5 stroke-current" />
             </a>
-            <AccountButton />
           </div>
         </div>
       </div>
