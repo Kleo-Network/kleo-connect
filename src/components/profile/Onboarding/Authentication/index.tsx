@@ -70,7 +70,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
 
   const [login, setLogin] = useState(false)
 
-  //===================================================== Var and methods for login step 0  =======================================================
+  // Var and methods for login step 0
   const USER_LOGIN_PATH = 'user/create-user'
   const handleUserLogin = (credentialResponse: any) => {
     const token = credentialResponse.credential
@@ -92,7 +92,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
         if (data?.token) {
           setLogin(true)
           sessionStorage.setItem('token', data.token)
-          window.alert('successful login')
         } else {
           window.alert('Error while creating user')
         }
@@ -100,9 +99,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     })
   }
 
-  //===============================================================================================================================================
-
-  //===================================================== Var and methods for signup step 1 =======================================================
+  // Var and methods for signup step 1
 
   const CHECK_SLUG_FOR_USER = 'user/check_slug?slug={slug}'
   const CREATE_USER_FOR_KLEO = 'user/create-user'
@@ -184,16 +181,18 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     const accessToken = credentialResponse.credential
     setUserGoogleToken(accessToken)
   }
-  //================================================================================================================================================
 
-  //===================================================== Var and methods for signup step 2 ========================================================
+  // Var and methods for signup step 2
   const UPDATE_USER_SETTING = 'user/update-settings/{slug}'
   const [externalToolArray, setExternalToolArray] = useState<string[]>([])
   const [userBio, setUserBio] = useState('')
   const { fetchData: UpdateUserData } = useFetch<UserData>()
 
   const addExternalToolToUser = (externalTools: string[]) => {
-    setExternalToolArray(externalTools)
+    setExternalToolArray((prevExternalToolArray) => [
+      ...prevExternalToolArray,
+      ...externalTools
+    ])
     console.log(externalToolArray)
   }
   const onBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -224,8 +223,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     const slug = sessionStorage.getItem('slug') || ''
     return UPDATE_USER_SETTING.replace('{slug}', slug)
   }
-
-  //================================================================================================================================================
 
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
@@ -560,7 +557,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                 </span>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-6 w-full">
-                <SelectCards onExternalToolChange={addExternalToolToUser} />
+                <SelectCards
+                  externalToolArray={externalToolArray}
+                  setExternalToolArray={setExternalToolArray}
+                />
                 {/* <div className="flex flex-col items-center md:w-1/3">
                   <label htmlFor="profile-upload" className="cursor-pointer">
                     <div className="flex flex-col items-center justify-center">
@@ -591,6 +591,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
                     rows={4}
                     className="shadow-sm focus:ring-primary focus:border-primary mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                     placeholder="Tell us a bit about yourself..."
+                    maxLength={180}
                   ></textarea>
                 </div>
               </div>

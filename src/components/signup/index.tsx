@@ -7,8 +7,7 @@ const SignUp = () => {
   const context = useAuthContext()
 
   const handleLogin = (slug: string) => {
-    console.log('logged in successfully')
-    navigate('/profilev3/' + slug)
+    navigate('/profileV2/' + slug)
   }
 
   return (

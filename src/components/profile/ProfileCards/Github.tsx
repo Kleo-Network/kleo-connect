@@ -9,9 +9,10 @@ interface Contribution {
 }
 
 interface GitHubCardProps {
-  profileImage: string
   username: string
-  bio: string
+  followers: number
+  following: number
+  url: string
   contributions: Contribution[]
 }
 
@@ -21,9 +22,10 @@ interface TooltipData {
 }
 
 const GitHubCard: React.FC<GitHubCardProps> = ({
-  profileImage,
   username,
-  bio,
+  followers,
+  following,
+  url,
   contributions
 }) => {
   const { startDate, endDate, heatmapValues, maxCount } = useMemo(() => {
@@ -62,18 +64,25 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
     else return 'color-scale-5'
   }
 
+  const handleOnClick = () => {
+    window.open(url, '_blank')
+  }
+
   if (contributions.length === 0) {
     return <div>No contribution data available.</div>
   }
 
   return (
-    <div className="flex-1 bg-gray-100 p-6 rounded-lg shadow-md relative">
+    <div
+      className="flex-1 bg-gray-100 p-6 rounded-lg shadow-md relative hover:cursor-pointer"
+      onClick={handleOnClick}
+    >
       <div className="absolute top-0 right-0 p-4">
         <Github className="text-gray-800 w-8 h-8" />
       </div>
       <div className="flex items-center mb-4">
         <div>
-          <h2 className="text-lg font-bold">/{username}</h2>
+          <h2 className="text-lg font-bold">{username}</h2>
         </div>
       </div>
       <div className="mt-4">
@@ -87,6 +96,14 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
             'data-tip': `${value.date} has count: ${value.count}`
           })}
         />
+      </div>
+      <div className="flex flex-row py-3">
+        <span className="inline-block bg-gray-200 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 mr-2">
+          <span className="text-xs"> {followers} followers</span>
+        </span>
+        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+          <span className="text-xs"> {following} following</span>
+        </span>
       </div>
     </div>
   )

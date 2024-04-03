@@ -45,30 +45,28 @@ const imageButtons: ImageButton[] = [
   }
 ]
 
-const App: React.FC<{
-  onExternalToolChange: (externalTools: string[]) => void
-}> = ({ onExternalToolChange }) => {
-  const [selectedButtons, setSelectedButtons] = useState<string[]>([])
+interface externalToolArrayProp {
+  externalToolArray: string[]
+  setExternalToolArray: React.Dispatch<React.SetStateAction<string[]>>
+}
 
+const App: React.FC<externalToolArrayProp> = ({
+  externalToolArray,
+  setExternalToolArray
+}) => {
   const handleButtonClick = (name: string) => {
-    const isSelected = selectedButtons.includes(name)
+    const isSelected = externalToolArray.includes(name)
     if (isSelected) {
-      setSelectedButtons((prevSelectedButtons) =>
-        prevSelectedButtons.filter((nm) => nm !== name)
+      setExternalToolArray((prevExternalToolArray) =>
+        prevExternalToolArray.filter((nm) => nm !== name)
       )
-    } else if (selectedButtons.length < 5) {
-      setSelectedButtons((prevSelectedButtons) => [
-        ...prevSelectedButtons,
+    } else if (externalToolArray.length < 2) {
+      setExternalToolArray((prevExternalToolArray) => [
+        ...prevExternalToolArray,
         name
       ])
     }
   }
-
-  useEffect(() => {
-    if (selectedButtons.length === 5) {
-      onExternalToolChange(selectedButtons)
-    }
-  }, [selectedButtons, onExternalToolChange])
 
   return (
     <div>
@@ -77,7 +75,7 @@ const App: React.FC<{
           <div key={index} className="relative m-2">
             <button
               className={`p-2 rounded-md ${
-                selectedButtons.includes(button.name)
+                externalToolArray.includes(button.name)
                   ? 'bg-blue-500'
                   : 'bg-gray-200'
               }`}
@@ -85,7 +83,7 @@ const App: React.FC<{
             >
               <img src={button.icon} alt={button.alt} className="w-16 h-16" />
             </button>
-            {selectedButtons.includes(button.name) && (
+            {externalToolArray.includes(button.name) && (
               <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white">
                 <Tick className="w-3 h-3 fill-white" />
               </div>
@@ -93,7 +91,7 @@ const App: React.FC<{
           </div>
         ))}
       </div>
-      <p className="mt-4">{selectedButtons.length} / 5 selected</p>
+      <p className="mt-4">{externalToolArray.length} / 2 selected</p>
     </div>
   )
 }

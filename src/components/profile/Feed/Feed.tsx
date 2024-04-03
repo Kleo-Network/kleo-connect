@@ -1,29 +1,11 @@
 import { useState } from 'react'
 import FeedCard from './FeedCard'
+import { UserData } from '../../constants/SignupData'
+import { PublishedCard } from '../../common/interface'
 
 interface Feed {
-  data: CardProps[]
-  user: UserProps
-}
-
-export interface CardProps {
-  id: number
-  category: string
-  content: string
-  contentImageUrl?: string
-  contentData?: string
-  date: string
-  likeCount: number
-  commentCount: number
-  digCount: number
-  userImageUrl: string
-}
-
-export interface UserProps {
-  name: string
-  avatar: string
-  kleo: number
-  userId: string
+  data: PublishedCard[]
+  user: UserData
 }
 
 const Feeds: React.FC<Feed> = ({ data, user }) => {

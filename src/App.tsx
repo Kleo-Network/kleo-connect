@@ -9,6 +9,7 @@ import ProfileV3 from './components/ProfileV3'
 import BadgesList from './components/BadgesList'
 import ProfileCards from './components/profile/ProfileCards'
 import { UserData } from './components/constants/SignupData'
+import { EventProvider } from './components/common/contexts/EventContext'
 function App(): ReactElement {
   const emptyStringArray: string[] = []
   const [account, setAccount] = useState(null)
@@ -31,39 +32,44 @@ function App(): ReactElement {
   })
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <div className="h-full w-full">
-        <div className="flex flex-col font-inter self-stretch h-full">
-          {user.token && (
-            <header className="flex flex-row self-stretch items-center">
-              <Navbar avatar={{ src: user.pfp, alt: 'Profile' }} />
-            </header>
-          )}
+    <EventProvider>
+      <UserContext.Provider value={{ user, setUser }}>
+        <div className="h-full w-full">
+          <div className="flex flex-col font-inter self-stretch h-full">
+            {user.token && (
+              <header className="flex flex-row self-stretch items-center">
+                <Navbar
+                  avatar={{ src: user.pfp, alt: 'Profile' }}
+                  slug={user.slug}
+                />
+              </header>
+            )}
 
-          <Routes>
-            <Route
-              path="/"
-              element={
-                user.token ? (
-                  <Navigate to={`/profilev3/${user.slug}`} />
-                ) : (
-                  <Navigate to={`/signup/0`} />
-                )
-              }
-            />
-            <Route path="/signup/:step" element={<SignUp />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/profilev2" element={<ProfileV2 />} />
-            <Route path="/profilev3/:slug" element={<ProfileV3 />} />
-            <Route path="/Badges" element={<BadgesList />} />
-            <Route path="/Profilecard" element={<ProfileCards />} />
-            <Route path="/badges" element={<BadgesList />} />
-            <Route path="/cards" element={<ProfileCards />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  user.token ? (
+                    <Navigate to={`/profileV2/${user.slug}`} />
+                  ) : (
+                    <Navigate to={`/signup/0`} />
+                  )
+                }
+              />
+              <Route path="/signup/:step" element={<SignUp />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/profilev2/:slug" element={<ProfileV2 />} />
+              <Route path="/profilev3/:slug" element={<ProfileV3 />} />
+              <Route path="/Badges" element={<BadgesList />} />
+              <Route path="/Profilecard" element={<ProfileCards />} />
+              <Route path="/badges" element={<BadgesList />} />
+              <Route path="/cards" element={<ProfileCards />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </UserContext.Provider>
+      </UserContext.Provider>
+    </EventProvider>
   )
 }
 
