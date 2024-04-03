@@ -13,7 +13,7 @@ import Feeds from '../profile/Feed/Feed'
 import ProfileV3 from '../ProfileV3/index'
 import { useAuthContext } from '../common/contexts/UserContext'
 import useFetch from '../common/hooks/useFetch'
-import { fullUserData } from '../common/interface'
+import { UserDataProps, fullUserData } from '../common/interface'
 
 const ProfileCard = () => {
   return (
@@ -63,9 +63,8 @@ const GridComponent = () => {
   return <div></div>
 }
 
-export default function ProfileV2() {
+export default function ProfileV2({ user, setUser }: UserDataProps) {
   const [isAccordianOpen, setIsAccordianOpen] = useState<boolean>(false)
-  let user = useAuthContext()!.user
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
   const {
     status,
@@ -95,6 +94,7 @@ export default function ProfileV2() {
         onSuccessfulFetch(data) {
           if (data) {
             setUserFullData(data)
+            setUser(data.user)
           }
         }
       })

@@ -9,16 +9,8 @@ import Accordion from '../../../common/Accordion'
 import useFetch, { FetchStatus } from '../../../common/hooks/useFetch'
 import Alert from '../../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
-import { ethers, BrowserProvider } from 'ethers'
-import { useAuthContext } from '../../../common/contexts/UserContext'
-import { UserResponse } from './interface'
 import Lottie from 'react-lottie'
-import { LoginButton } from '../Particle/LoginButton'
 import { useParams, useNavigate } from 'react-router-dom'
-import { isEVMProvider } from '@particle-network/connectors'
-import { useAccountInfo } from '@particle-network/connectkit'
-import { usePhantomWallet } from '../../../common/hooks/usePhantomWallet'
-import { baseUrl } from '../../../common/hooks/useFetch'
 import SelectCards from './SelectCards'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import CalendlyLogin from '../Connections/Calendly'
@@ -40,6 +32,8 @@ const defaultOptions = {
 }
 interface OnboardingProps {
   handleLogin: (userAddress: string) => void
+  user: UserData
+  setUser: React.Dispatch<React.SetStateAction<UserData>>
 }
 
 enum PluginState {
@@ -48,12 +42,11 @@ enum PluginState {
   INSTALLED
 }
 
-const AUTH_API = 'auth/create_jwt_authentication'
-const INVITE_CODE_API = 'auth/check_invite_code'
-const GET_USER_API = 'auth/get_user'
-
-export default function Onboarding({ handleLogin }: OnboardingProps) {
-  const context = useAuthContext()
+export default function Onboarding({
+  handleLogin,
+  user,
+  setUser
+}: OnboardingProps) {
   const { step } = useParams()
   const [infoExpanded, setInfoExpanded] = useState(false)
   const [pluginState, setPluginState] = useState(PluginState.INSTALLED)
@@ -188,13 +181,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [userBio, setUserBio] = useState('')
   const { fetchData: UpdateUserData } = useFetch<UserData>()
 
-  const addExternalToolToUser = (externalTools: string[]) => {
-    setExternalToolArray((prevExternalToolArray) => [
-      ...prevExternalToolArray,
-      ...externalTools
-    ])
-    console.log(externalToolArray)
-  }
   const onBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserBio(event.target.value)
   }
@@ -238,9 +224,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
 
   useEffect(() => {
     if (login) {
-      const user = context?.user
-      context?.setUser({
-        ...user,
+      setUser({
         about: userFromDB?.about || '',
         badges: userFromDB?.badges || [],
         content_tags: userFromDB?.content_tags || [],

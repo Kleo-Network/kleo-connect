@@ -51,3 +51,8 @@ export interface fullUserData {
   published_cards: PublishedCard[]
   static_cards: StaticCard[]
 }
+
+export interface UserDataProps {
+  user: UserData
+  setUser: React.Dispatch<React.SetStateAction<UserData>>
+}

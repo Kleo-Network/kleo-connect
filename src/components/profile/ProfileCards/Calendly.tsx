@@ -15,7 +15,7 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
   const currentDay = currentDate.getDate()
 
   const openPopUp = () => {
-    window.open(calendlyUrl, 'Calendly', 'width=600,height=400')
+    window.open(calendlyUrl, '_blank')
   }
 
   return (

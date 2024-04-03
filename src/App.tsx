@@ -31,45 +31,55 @@ function App(): ReactElement {
     token: ''
   })
 
-  return (
-    <EventProvider>
-      <UserContext.Provider value={{ user, setUser }}>
-        <div className="h-full w-full">
-          <div className="flex flex-col font-inter self-stretch h-full">
-            {user.token && (
-              <header className="flex flex-row self-stretch items-center">
-                <Navbar
-                  avatar={{ src: user.pfp, alt: 'Profile' }}
-                  slug={user.slug}
-                />
-              </header>
-            )}
+  function getToken(): string {
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      return token
+    } else {
+      return ''
+    }
+  }
 
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  user.token ? (
-                    <Navigate to={`/profileV2/${user.slug}`} />
-                  ) : (
-                    <Navigate to={`/signup/0`} />
-                  )
-                }
-              />
-              <Route path="/signup/:step" element={<SignUp />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/profilev2/:slug" element={<ProfileV2 />} />
-              <Route path="/profilev3/:slug" element={<ProfileV3 />} />
-              <Route path="/Badges" element={<BadgesList />} />
-              <Route path="/Profilecard" element={<ProfileCards />} />
-              <Route path="/badges" element={<BadgesList />} />
-              <Route path="/cards" element={<ProfileCards />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </div>
-        </div>
-      </UserContext.Provider>
-    </EventProvider>
+  return (
+    <div className="h-full w-full">
+      <div className="flex flex-col font-inter self-stretch h-full">
+        {getToken().length && (
+          <header className="flex flex-row self-stretch items-center">
+            <Navbar
+              avatar={{ src: user.pfp, alt: 'Profile' }}
+              slug={user.slug}
+            />
+          </header>
+        )}
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              user.token ? (
+                <Navigate to={`/profileV2/${user.slug}`} />
+              ) : (
+                <Navigate to={`/signup/0`} />
+              )
+            }
+          />
+          <Route
+            path="/signup/:step"
+            element={<SignUp user={user} setUser={setUser} />}
+          />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route
+            path="/profilev2/:slug"
+            element={<ProfileV2 user={user} setUser={setUser} />}
+          />
+          <Route path="/Badges" element={<BadgesList />} />
+          <Route path="/Profilecard" element={<ProfileCards />} />
+          <Route path="/badges" element={<BadgesList />} />
+          <Route path="/cards" element={<ProfileCards />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </div>
   )
 }
 

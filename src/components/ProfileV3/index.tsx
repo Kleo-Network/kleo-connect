@@ -48,16 +48,11 @@ export default function ProfileV3({ data }: fullUserDataProp) {
       <div className="col-span-2 row-span-1 rounded-[5px] p-2.5">
         <ProfileBio user={data.user} />
       </div>
-      <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+      <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
         <TextCard content={data.user.about} />
       </div>
-      {userExternalTool.includes('XCard') && (
-        <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
-          <TwitterCard user={getCardByType(staticCards, 'XCard').metadata} />
-        </div>
-      )}
       {userExternalTool.includes('CalendarCard') && (
-        <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
           <MonthlyCalendarCard
             calendlyUrl={makeCalendyCardUrl(
               getCardByType(staticCards, 'CalendarCard').metadata.slug
@@ -65,8 +60,13 @@ export default function ProfileV3({ data }: fullUserDataProp) {
           />
         </div>
       )}
+      {userExternalTool.includes('XCard') && (
+        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+          <TwitterCard user={getCardByType(staticCards, 'XCard').metadata} />
+        </div>
+      )}
       {userExternalTool.includes('PlaceCard') && (
-        <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
           <MapCard
             location={mapCardMetadata.location}
             lat={mapCardMetadata?.cordinates?.lat}
@@ -75,7 +75,7 @@ export default function ProfileV3({ data }: fullUserDataProp) {
         </div>
       )}
       {userExternalTool.includes('GitCard') && (
-        <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
           <GitHubCard
             username={gitCardMetadata?.userName}
             followers={gitCardMetadata?.followers}
