@@ -73,9 +73,11 @@ function App(): ReactElement {
             element={<ProfileV2 user={user} setUser={setUser} />}
           />
           <Route path="/Badges" element={<BadgesList />} />
-          <Route path="/Profilecard" element={<ProfileCards />} />
           <Route path="/badges" element={<BadgesList />} />
-          <Route path="/cards" element={<ProfileCards />} />
+          <Route
+            path="/cards"
+            element={<ProfileCards user={user} setUser={setUser} />}
+          />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

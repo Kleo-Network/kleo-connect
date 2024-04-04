@@ -124,7 +124,6 @@ export default function Onboarding({
         fetchSlugAvaibility(makeSlugApiUrl(), {
           onSuccessfulFetch(data) {
             if (data) {
-              console.log(data.result)
               setIsSlugAvailable(data.result)
             }
           }

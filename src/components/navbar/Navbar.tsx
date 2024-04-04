@@ -47,6 +47,19 @@ const Navbar = ({ avatar, slug }: NavbarProps) => {
     updateEvent(NavbarEvents.SETTINGS)
   }
 
+  function getSlug(): string {
+    const slug = sessionStorage.getItem('slug')
+    if (slug) {
+      return slug
+    } else {
+      return ''
+    }
+  }
+
+  function getHomeLink() {
+    return `/profileV2/${getSlug()}`
+  }
+
   return (
     <nav
       className="relative flex w-full flex-wrap items-center justify-between py-2  border-b border-gray-200 bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 lg:py-3"
@@ -55,7 +68,7 @@ const Navbar = ({ avatar, slug }: NavbarProps) => {
       <div className="flex w-full flex-wrap items-center justify-between px-12">
         <a
           className="my-2 gap-2 flex items-center justify-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0"
-          href="/"
+          href={getHomeLink()}
         >
           <Logo className="w-8 h-8" />
           <h3 className="font-bold text-xl">KLEO</h3>

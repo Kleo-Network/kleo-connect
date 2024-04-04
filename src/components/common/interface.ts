@@ -56,3 +56,15 @@ export interface UserDataProps {
   user: UserData
   setUser: React.Dispatch<React.SetStateAction<UserData>>
 }
+
+export interface PendingCard {
+  cardType: string
+  category: string
+  content: string
+  date: number
+  id: string
+  metadata: PublishedCardMetadata
+  minted: boolean
+  tags: string[]
+  urls: PublishedCardUrls
+}

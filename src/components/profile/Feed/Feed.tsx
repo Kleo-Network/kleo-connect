@@ -9,14 +9,19 @@ interface Feed {
 }
 
 const Feeds: React.FC<Feed> = ({ data, user }) => {
+  const [cards, setCards] = useState<PublishedCard[]>(data)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const uniqueCategories = Array.from(
-    new Set(data.map((card) => card.category))
+    new Set(cards.map((card) => card.tags[0]))
   )
 
   const handleCategoryChange = (category: string | null) => {
     setSelectedCategory(category)
+  }
+
+  const handleCardDelete = (id: string) => {
+    setCards((cards) => cards.filter((card) => card.id !== id))
   }
 
   return (
@@ -51,10 +56,22 @@ const Feeds: React.FC<Feed> = ({ data, user }) => {
 
       <div className="grid grid-cols-3 gap-4">
         {selectedCategory
-          ? data
-              .filter((card) => card.category === selectedCategory)
-              .map((cardData) => <FeedCard card={cardData} user={user} />)
-          : data.map((card) => <FeedCard card={card} user={user} />)}
+          ? cards
+              .filter((card) => card.tags[0] === selectedCategory)
+              .map((cardData) => (
+                <FeedCard
+                  handleCardDelete={handleCardDelete}
+                  card={cardData}
+                  user={user}
+                />
+              ))
+          : cards.map((card) => (
+              <FeedCard
+                handleCardDelete={handleCardDelete}
+                card={card}
+                user={user}
+              />
+            ))}
       </div>
     </div>
   )

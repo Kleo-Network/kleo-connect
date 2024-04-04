@@ -43,7 +43,7 @@ export default function Profile() {
           </div>
         </header>
         <div className="flex flex-col w-full items-start justify-between py-8 gap-6 md:flex-row">
-          <ProfileCards />
+          {/* <ProfileCards /> */}
           <ProfileCard user={context!.user} />
         </div>
         <BrowsingHistory />
