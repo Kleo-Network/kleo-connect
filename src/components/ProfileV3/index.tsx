@@ -193,18 +193,18 @@ export default function ProfileV3() {
       <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
         <MonthlyCalendarCard calendlyUrl={calendlyUrl} />
       </div>
-      {/*
 
       <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
         <MapCard city={'Mumbai'} country={'India'} lat={22.3} lng={73.07} />
       </div>
       <div className="col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
-        <TextCard
-          content={
-            'Hello World, right now I am just building kleo network, we are to create data owned identities, this will enable web3 applications like never before.'
-          }
+        <GitHubCard
+          profileImage={user.avatar}
+          contributions={contributions}
+          bio={user.bio}
+          username="vaibhavgeek"
         />
-      </div> */}
+      </div>
     </>
   )
 }

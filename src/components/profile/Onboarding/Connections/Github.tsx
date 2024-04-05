@@ -58,31 +58,47 @@ const GitHubSignIn: React.FC = () => {
   }, [])
 
   return (
-    <div>
-      {isGitHubConnected ? (
-        <div>
-          <h2>Welcome, {slug} for Github!</h2>
+    <div className="flex">
+      <div className="w-1/2 pt-2 pl-1 pr-3">
+        <div className="flex flex-col items-start justify-center">
+          <div className="flex mb-20 flex-col items-start justify-center">
+            <span className="text-gray-900 text-base font-sm">Github Card</span>
+            <span className="text-gray-400 text-sm font-regular">
+              We use your{' '}
+              <u className="text-gray-800 bold">
+                contributions graph in last 3 months
+              </u>{' '}
+              and showcase it on your profile!
+            </span>
+          </div>
         </div>
-      ) : (
-        <button
-          onClick={handleSignIn}
-          className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded"
-        >
-          Sign in with GitHub
-        </button>
-      )}
-      {commitData.length > 0 && (
-        <div className="mt-4">
-          <h2 className="text-xl font-bold">Commit Graph (Last Month)</h2>
-          <ul>
-            {commitData.map((data, index) => (
-              <li key={index} className="py-1">
-                {data.date}: {data.count} commits
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </div>
+      <div className="w-1/2 mt-7">
+        {isGitHubConnected ? (
+          <div>
+            <h2>Welcome, {slug} for Github!</h2>
+          </div>
+        ) : (
+          <button
+            onClick={handleSignIn}
+            className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded"
+          >
+            Sign in with GitHub
+          </button>
+        )}
+        {commitData.length > 0 && (
+          <div className="mt-4">
+            <h2 className="text-xl font-bold">Commit Graph (Last Month)</h2>
+            <ul>
+              {commitData.map((data, index) => (
+                <li key={index} className="py-1">
+                  {data.date}: {data.count} commits
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

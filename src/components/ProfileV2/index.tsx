@@ -82,24 +82,6 @@ export default function ProfileV2() {
 
   return (
     <div className="flex flex-col">
-      <div className="h-full w-full flex flex-row bg-violet-900 self-stretch items-center justify-between">
-        <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
-          <span className="text-white text-l font-semibold m-2">
-            {' '}
-            New cards arriving in{' '}
-          </span>
-          <span className="text-white text-2xl font-semibold my-2">
-            09:12:33
-          </span>
-        </div>
-        <div>
-          <div className="h-6 w-24 m-2 flex flex-col bg-white items-center self-stretch rounded-lg border border-gray-200 shadow-[0_5px_5px_4px_rgba(255,255,255,0.2)] ">
-            <p className="text-center font-medium text-sm dark:text-violet-800">
-              Notify
-            </p>
-          </div>
-        </div>
-      </div>
       <div className="flex w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid grid-cols-8 gap-1">

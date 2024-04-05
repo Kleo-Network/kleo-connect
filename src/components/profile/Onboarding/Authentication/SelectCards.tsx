@@ -10,38 +10,23 @@ interface ImageButton {
 const imageButtons: ImageButton[] = [
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/747/747310.png',
-    alt: 'Calendar',
-    name: 'CalendarCard'
-  },
-  {
-    icon: 'https://cdn-icons-png.flaticon.com/512/2991/2991108.png',
-    alt: 'Text',
-    name: 'TextCard'
+    alt: 'Allow people to book an appointment',
+    name: 'Calendly'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/2838/2838912.png',
-    alt: 'Location',
-    name: 'PlaceCard'
-  },
-  {
-    icon: 'https://cdn-icons-png.flaticon.com/512/174/174855.png',
-    alt: 'Instagram',
-    name: 'InstaCard'
+    alt: 'Showcase a specific location on map',
+    name: 'Pin Location'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/733/733579.png',
-    alt: 'Twitter',
-    name: 'XCard'
+    alt: 'Pinned tweet, bio, following and followers',
+    name: 'Twitter Profile'
   },
   {
     icon: 'https://cdn-icons-png.flaticon.com/512/25/25231.png',
-    alt: 'GitHub',
-    name: 'GitCard'
-  },
-  {
-    icon: 'https://cdn-icons-png.flaticon.com/512/174/174857.png',
-    alt: 'LinkedIn',
-    name: 'LinkedinCard'
+    alt: 'Your github contributions graph for last 3 months',
+    name: 'Github Graph'
   }
 ]
 
@@ -56,7 +41,7 @@ const App: React.FC<{
       setSelectedButtons((prevSelectedButtons) =>
         prevSelectedButtons.filter((nm) => nm !== name)
       )
-    } else if (selectedButtons.length < 5) {
+    } else if (selectedButtons.length < 2) {
       setSelectedButtons((prevSelectedButtons) => [
         ...prevSelectedButtons,
         name
@@ -65,26 +50,41 @@ const App: React.FC<{
   }
 
   useEffect(() => {
-    if (selectedButtons.length === 5) {
+    if (selectedButtons.length === 2) {
       onExternalToolChange(selectedButtons)
     }
   }, [selectedButtons, onExternalToolChange])
 
   return (
     <div>
-      <div className="flex flex-wrap">
+      <div className="grid grid-cols-2 gap-4">
         {imageButtons.map((button, index) => (
-          <div key={index} className="relative m-2">
-            <button
-              className={`p-2 rounded-md ${
-                selectedButtons.includes(button.name)
-                  ? 'bg-blue-500'
-                  : 'bg-gray-200'
-              }`}
-              onClick={() => handleButtonClick(button.name)}
-            >
-              <img src={button.icon} alt={button.alt} className="w-16 h-16" />
-            </button>
+          <div
+            key={index}
+            className={`relative p-6 rounded-lg shadow-md cursor-pointer ${
+              selectedButtons.includes(button.name)
+                ? 'bg-violet-100'
+                : 'bg-white'
+            }`}
+            onClick={() => handleButtonClick(button.name)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <img
+                  src={button.icon}
+                  alt={button.alt}
+                  className="w-8 h-8 mr-4"
+                />
+                <div className="flex flex-col">
+                  <span className="text-gray-900 text-base font-sm">
+                    {button.name}
+                  </span>
+                  <span className="text-gray-400 text-sm font-regular">
+                    {button.alt}
+                  </span>
+                </div>
+              </div>
+            </div>
             {selectedButtons.includes(button.name) && (
               <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white">
                 <Tick className="w-3 h-3 fill-white" />
@@ -93,7 +93,6 @@ const App: React.FC<{
           </div>
         ))}
       </div>
-      <p className="mt-4">{selectedButtons.length} / 5 selected</p>
     </div>
   )
 }

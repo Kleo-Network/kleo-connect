@@ -76,30 +76,40 @@ const CityAutocomplete: React.FC = () => {
   }
 
   return (
-    <div className="relative">
-      <label
-        htmlFor="city-input"
-        className="block text-sm font-medium text-gray-700"
-      >
-        Enter city:
-      </label>
-      <div className="mt-1">
-        <Autocomplete
-          onLoad={(instance) => setAutocomplete(instance)}
-          onPlaceChanged={handleCitySelect}
-          options={{
-            types: ['(cities)']
-          }}
-        >
-          <input
-            type="text"
-            id="city-input"
-            className="block w-full px-4 py-2 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter a city"
-            value={city || ''}
-            onChange={handleInputChange}
-          />
-        </Autocomplete>
+    <div className="flex">
+      <div className="w-1/2 pt-2 pl-1 pr-3">
+        <div className="flex flex-col items-start justify-center">
+          <div className="flex mb-20 flex-col items-start justify-center">
+            <span className="text-gray-900 text-base font-sm">
+              Location Card
+            </span>
+            <span className="text-gray-400 text-sm font-regular">
+              Love a city, want to share where you are from, or{' '}
+              <u className="text-gray-800 bold">a location you call home </u>
+              this is your place to flaunt! just talk to us!
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="w-1/2 pt-2 pl-1 pr-3">
+        <div className="mt-1">
+          <Autocomplete
+            onLoad={(instance) => setAutocomplete(instance)}
+            onPlaceChanged={handleCitySelect}
+            options={{
+              types: ['(cities)']
+            }}
+          >
+            <input
+              type="text"
+              id="city-input"
+              className="block w-full px-4 py-2 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Enter a city"
+              value={city || ''}
+              onChange={handleInputChange}
+            />
+          </Autocomplete>
+        </div>
       </div>
     </div>
   )

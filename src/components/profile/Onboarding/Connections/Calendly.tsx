@@ -81,14 +81,35 @@ const CalendlyLogin: React.FC = () => {
   }
 
   return (
-    <div>
-      {isCardCreated ? (
-        <div>
-          <h2>Welcome, {username}!</h2>
+    <div className="flex">
+      <div className="w-1/2 pt-2 pl-1 pr-3">
+        <div className="flex flex-col items-start justify-center">
+          <div className="flex mb-20 flex-col items-start justify-center">
+            <span className="text-gray-900 text-base font-sm">
+              Calendly Card
+            </span>
+            <span className="text-gray-400 text-sm font-regular">
+              We will put your{' '}
+              <u className="text-gray-800 bold">calendly link</u> in a beautiful
+              card!
+            </span>
+          </div>
         </div>
-      ) : (
-        <button onClick={handleLogin}>Login with Calendly</button>
-      )}
+      </div>
+      <div className="w-1/2 mt-7">
+        {isCardCreated ? (
+          <div>
+            <h2>Welcome, {username}!</h2>
+          </div>
+        ) : (
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            onClick={handleLogin}
+          >
+            Login with Calendly
+          </button>
+        )}
+      </div>
     </div>
   )
 }

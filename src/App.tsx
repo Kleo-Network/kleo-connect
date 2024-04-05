@@ -25,11 +25,9 @@ function App(): ReactElement {
     <UserContext.Provider value={{ user }}>
       <div className="h-full w-full">
         <div className="flex flex-col font-inter self-stretch h-full">
-          {account && (
-            <header className="flex flex-row self-stretch items-center">
-              <Navbar avatar={{ src: user.avatar, alt: 'Profile' }} />
-            </header>
-          )}
+          <header className="flex flex-row self-stretch items-center">
+            {/* <Navbar avatar={{ src: user.avatar, alt: 'Profile' }} /> */}
+          </header>
 
           <Routes>
             <Route
