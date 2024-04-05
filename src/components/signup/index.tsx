@@ -1,11 +1,18 @@
-import { UserDataProps } from '../common/interface'
+import { UserData } from '../common/interface'
 import Onboarding from '../profile/Onboarding/Authentication'
 import { useNavigate } from 'react-router-dom'
 
-const SignUp: React.FC<UserDataProps> = ({ user, setUser }) => {
+interface SignupProps {
+  user: UserData
+  setUser: React.Dispatch<React.SetStateAction<UserData>>
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const SignUp: React.FC<SignupProps> = ({ user, setUser, setIsLoggedIn }) => {
   const navigate = useNavigate()
 
   const handleLogin = (slug: string) => {
+    setIsLoggedIn(true)
     navigate('/profileV2/' + slug)
   }
 

@@ -3,7 +3,8 @@ import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
 import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
 import { ReactComponent as Settings } from '../../assets/images/settings.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
-import { useLocation } from 'react-router-dom'
+import { ReactComponent as Logout } from '../../assets/images/logout.svg'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
 import { EventContext } from '../common/contexts/EventContext'
 import { NavbarEvents } from '../constants/Events'
@@ -14,6 +15,7 @@ interface NavbarProps {
     alt: string
   }
   slug: string
+  handleLogout: () => void
 }
 
 enum Tab {
@@ -22,9 +24,10 @@ enum Tab {
   PRIVACY = 'privacy'
 }
 
-const Navbar = ({ avatar, slug }: NavbarProps) => {
+const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState('null')
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { updateEvent } = useContext(EventContext)
 
   useEffect(() => {
@@ -42,6 +45,12 @@ const Navbar = ({ avatar, slug }: NavbarProps) => {
       setSelectedTab('null')
     }
   }, [pathname])
+
+  const handleLogoutClick = () => {
+    sessionStorage.clear()
+    handleLogout()
+    navigate('/')
+  }
 
   const handleSettingsClick = () => {
     updateEvent(NavbarEvents.SETTINGS)
@@ -98,31 +107,32 @@ const Navbar = ({ avatar, slug }: NavbarProps) => {
             className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
             data-te-navbar-nav-ref
           >
-            {Object.values(Tab).map((tab, i) => {
-              return (
-                tab !== Tab.PRIVACY && (
-                  <li
-                    key={i}
-                    className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
-                    data-te-nav-item-ref
-                  >
-                    <a
-                      className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
-                        selectedTab === tab
-                          ? 'text-purple-700 bg-purple-100'
-                          : ''
-                      }`}
-                      href={`/${
-                        tab === Tab.PUBLISH_CARDS ? 'cards' : 'badges'
-                      }`}
-                      data-te-nav-link-ref
+            {sessionStorage.getItem('token') &&
+              Object.values(Tab).map((tab, i) => {
+                return (
+                  tab !== Tab.PRIVACY && (
+                    <li
+                      key={i}
+                      className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+                      data-te-nav-item-ref
                     >
-                      {tab}
-                    </a>
-                  </li>
+                      <a
+                        className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
+                          selectedTab === tab
+                            ? 'text-purple-700 bg-purple-100'
+                            : ''
+                        }`}
+                        href={`/${
+                          tab === Tab.PUBLISH_CARDS ? 'cards' : 'badges'
+                        }`}
+                        data-te-nav-link-ref
+                      >
+                        {tab}
+                      </a>
+                    </li>
+                  )
                 )
-              )
-            })}
+              })}
           </ul>
           <div className="flex items-center justify-center flex-grow">
             <a href="/profile" className="flex items-center">
@@ -155,6 +165,13 @@ const Navbar = ({ avatar, slug }: NavbarProps) => {
             >
               <Privacy className="w-5 h-5 stroke-current" />
             </a>
+            <button
+              data-te-ripple-init
+              className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
+              onClick={handleLogoutClick}
+            >
+              <Logout className="w-5 h-5 stroke-current" />
+            </button>
           </div>
         </div>
       </div>
