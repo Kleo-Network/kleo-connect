@@ -41,7 +41,7 @@ const ProfileSideDrawer = React.memo(
     const [userId, setUserId] = useState<string>()
 
     useEffect(() => {
-      const user = sessionStorage.getItem('userAddress') || ''
+      const user = localStorage.getItem('userAddress') || ''
       setUserId(user)
     }, [userId])
 

@@ -2,20 +2,33 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import config from '../../../common/config'
 import useFetch from '../../../common/hooks/useFetch'
+import {
+  TwitterCard,
+  StaticCard as StaticCardType
+} from '../../../common/interface'
 
-interface TwitterUserData {
-  bio: string
-  pinnedTweet: string
-  isVerified: boolean
-  followersCount: number
+interface TwitterProps {
+  cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
 }
 
-const TwitterSignIn: React.FC = () => {
-  const [userData, setUserData] = useState<TwitterUserData | null>(null)
+const TwitterSignIn: React.FC<TwitterProps> = ({ cards }) => {
   const [isTwitterConnected, setIsTwitterConnected] = useState(false)
   const { fetchData: createTwitterCard } = useFetch<any>()
   const CREATE_TWITTER_CARD = 'static-card/x/{slug}'
-  const slug = sessionStorage.getItem('slug') || ''
+  const slug = localStorage.getItem('slug') || ''
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    const getCardinCards = (cardType: string) => {
+      if (cards?.find((card) => card.cardType == cardType)) {
+        const card = cards?.find((card) => card.cardType == cardType)
+        if (card) setUsername((card.metadata as TwitterCard).username)
+        return true
+      }
+      return false
+    }
+    getCardinCards('XCard')
+  }, [])
 
   const handleSignIn = () => {
     const clientId = config.twitter.clientId
@@ -28,22 +41,21 @@ const TwitterSignIn: React.FC = () => {
     window.location.href = authUrl
   }
 
-  function makeGitHubCardUrl(): string {
+  function makeTwitterCardUrl(): string {
     return CREATE_TWITTER_CARD.replace('{slug}', slug)
   }
 
   useEffect(() => {
     const handleTwitterCardCreation = async (code: string) => {
-      createTwitterCard(makeGitHubCardUrl(), {
+      createTwitterCard(makeTwitterCardUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          code: code
-        }),
+        body: JSON.stringify({ code: code }),
         onSuccessfulFetch: () => {
           setIsTwitterConnected(true)
+          setUsername(slug)
         }
       })
     }
@@ -52,8 +64,8 @@ const TwitterSignIn: React.FC = () => {
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get('code')
 
-    // Execute handleGitHubCardCreation only if code exists and it's not already handled
-    if (code && !isTwitterConnected) {
+    // Execute handleTwitterCardCreation only if code exists and it's not already handled
+    if (code && username === '') {
       handleTwitterCardCreation(code)
     }
   }, [])
@@ -69,7 +81,8 @@ const TwitterSignIn: React.FC = () => {
             <span className="text-gray-400 text-sm font-regular">
               We use your{' '}
               <u className="text-gray-800 bold">
-                bio, pinned tweet, follower count, following count
+                {' '}
+                bio, pinned tweet, follower count, following count{' '}
               </u>{' '}
               to make an awesome twitter profile for you!
             </span>
@@ -77,9 +90,9 @@ const TwitterSignIn: React.FC = () => {
         </div>
       </div>
       <div className="w-1/2 mt-7">
-        {isTwitterConnected ? (
+        {isTwitterConnected || username ? (
           <div>
-            <h2>Welcome, {slug} for Github!</h2>
+            <h2 className="text-green-800">Connected @{username} Twitter.</h2>
           </div>
         ) : (
           <button
@@ -88,26 +101,6 @@ const TwitterSignIn: React.FC = () => {
           >
             Sign in with Twitter
           </button>
-        )}
-        {userData && (
-          <div className="mt-4">
-            <p className="text-lg font-bold">Bio:</p>
-            <p>{userData.bio}</p>
-            {userData.pinnedTweet && (
-              <>
-                <p className="text-lg font-bold mt-2">Pinned Tweet:</p>
-                <p>{userData.pinnedTweet}</p>
-              </>
-            )}
-            <p className="mt-2">
-              <span className="font-bold">Verified:</span>{' '}
-              {userData.isVerified ? 'Yes' : 'No'}
-            </p>
-            <p>
-              <span className="font-bold">Followers:</span>{' '}
-              {userData.followersCount}
-            </p>
-          </div>
         )}
       </div>
     </div>

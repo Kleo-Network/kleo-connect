@@ -1,25 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import config from '../../../common/config'
 import useFetch from '../../../common/hooks/useFetch'
-interface CalendlyUserResponse {
-  resource: {
-    slug: string
-    // Add other user properties if needed
-  }
-}
-
+import {
+  CalendlyCard,
+  StaticCard as StaticCardType
+} from '../../../common/interface'
 interface CalendlyTokenResponse {
   access_token: string
   // Add other token properties if needed
 }
+interface CalendlyLoginProps {
+  cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
+}
 
-const CalendlyLogin: React.FC = () => {
+const CalendlyLogin: React.FC<CalendlyLoginProps> = ({ cards }) => {
   const [username, setUsername] = useState<string>('')
   const { fetchData: UpdateUserData } = useFetch<any>()
   const CREATE_CALENDLY_CARD = 'static-card/calendly/{slug}'
   const [isCardCreated, setIsCardCreated] = useState(false)
-  const slug = sessionStorage.getItem('slug') || ''
+  const slug = localStorage.getItem('slug') || ''
+
+  useEffect(() => {
+    const getCardinCards = (cardType: string) => {
+      if (cards?.find((card) => card.cardType == cardType)) {
+        const card = cards?.find((card) => card.cardType == cardType)
+        if (card) setUsername((card.metadata as CalendlyCard).slug)
+        return true
+      }
+      return false
+    }
+    getCardinCards('CalendarCard')
+  }, [])
 
   const handleLogin = () => {
     // Step 1: Get the authorization code
@@ -97,9 +109,9 @@ const CalendlyLogin: React.FC = () => {
         </div>
       </div>
       <div className="w-1/2 mt-7">
-        {isCardCreated ? (
+        {isCardCreated || username ? (
           <div>
-            <h2>Welcome, {username}!</h2>
+            <h2 className="text-green-800">Connected @{username} calendly.</h2>
           </div>
         ) : (
           <button

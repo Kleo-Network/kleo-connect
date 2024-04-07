@@ -66,8 +66,11 @@ export interface MapCard {
   }
 }
 //  Type 'GitCard' is missing the following properties from type 'User': pinned_tweet, bio, followers_count, is_verifiedts(2322)
-
+export interface TextCard {
+  text: string
+}
 export interface TwitterCard {
+  username: string
   pinned_tweet: string
   followers_count: number
   following: number
@@ -78,7 +81,7 @@ export interface StaticCard {
   cardType: string
   id: string
   last_connected: string
-  metadata: GitCard | CalendlyCard | MapCard | TwitterCard
+  metadata: GitCard | CalendlyCard | MapCard | TwitterCard | TextCard
 }
 
 export interface fullUserData {

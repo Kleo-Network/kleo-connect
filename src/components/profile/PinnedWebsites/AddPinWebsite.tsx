@@ -40,7 +40,7 @@ export function AddPinWebsite({ onPinHandler }: AddPinWebsiteProps) {
     }
   }, [debouncedSearchTerm])
   useEffect(() => {
-    const user = sessionStorage.getItem('userAddress') || ''
+    const user = localStorage.getItem('userAddress') || ''
     setUserId(user)
   }, [userId])
   const handlePin = (website: SearchResult) => {

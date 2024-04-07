@@ -32,12 +32,12 @@ function App(): ReactElement {
   })
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     setIsLoggedIn(!!token) // Convert token to boolean (truthy/falsy)
   }, []) // Empty dependency array: run only on initial render
 
   const handleLogout = () => {
-    sessionStorage.removeItem('token')
+    localStorage.removeItem('token')
     setIsLoggedIn(false) // Update state immediately
   }
 

@@ -11,7 +11,7 @@ export default function Privacy() {
   const PRIVACY_ENDPOINT = `user/set_privacy`
   const GET_USER_API = 'auth/get_user_privacy'
   const { fetchData } = useFetch()
-  const userAddress = sessionStorage.getItem('userAddress')
+  const userAddress = localStorage.getItem('userAddress')
   const { fetchData: fetchUserPrivacy } = useFetch<any>()
 
   const fetchUserFromDB = async (address: string): Promise<UserResponse> => {

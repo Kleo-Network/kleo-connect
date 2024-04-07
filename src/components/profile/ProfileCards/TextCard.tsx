@@ -1,21 +1,13 @@
 import React from 'react'
-
+import { TextCard as TextCardT } from '../../common/interface'
 interface TextCardProps {
-  title?: string
-  subtitle?: string
-  content: string
+  metadata: TextCardT
 }
 
-const TextCard: React.FC<TextCardProps> = ({ title, subtitle, content }) => {
+const TextCard: React.FC<TextCardProps> = ({ metadata }) => {
   return (
     <div className="flex-1 h-full bg-gray-100 p-6 rounded-lg shadow-md flex items-center justify-between">
-      {title && (
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-center">{title}</h2>
-        </div>
-      )}
-      {subtitle && <h3 className="text-md text-gray-500">{subtitle}</h3>}
-      <p className="text-gray-700 mt-2">{content}</p>
+      <p className="text-gray-700 mt-2">{metadata.text}</p>
     </div>
   )
 }

@@ -55,7 +55,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           chain: 'solana'
         }),
         onSuccessfulFetch(data) {
-          sessionStorage.setItem('token', data.accessToken)
+          localStorage.setItem('token', data.accessToken)
           setLogin(true)
         }
       })

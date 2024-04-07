@@ -7,16 +7,18 @@ import TextCard from '../profile/ProfileCards/TextCard'
 import {
   StaticCard,
   TwitterCard as TwitterCardType,
-  fullUserData,
   CalendlyCard as CalendlyCardType,
   MapCard as MapCardType,
-  GitCard as GitCardType
+  GitCard as GitCardType,
+  UserData,
+  TextCard as TextCardType
 } from '../common/interface'
 
 const calendlyUrl = 'https://calendly.com/{slug}/'
 
 interface fullUserDataProp {
-  data: fullUserData
+  data: StaticCard[]
+  user: UserData
 }
 
 function makeCalendyCardUrl(cal: CalendlyCardType): string {
@@ -31,20 +33,26 @@ const getCardByType = (cards: StaticCard[], cardType: string) => {
   return undefined
 }
 
-export default function ProfileV3({ data }: fullUserDataProp) {
-  const staticCards = data?.static_cards || []
-  const mapCard = getCardByType(staticCards, 'PlaceCard')
-  const gitCard = getCardByType(staticCards, 'GitCard')
-  const calendlyCard = getCardByType(staticCards, 'CalendarCard')
-  const twitterCard = getCardByType(staticCards, 'XCard')
+export default function ProfileV3({ data, user }: fullUserDataProp) {
+  console.log('staticCards', data)
+  const showCardList = user.settings.static_cards
+  const mapCard =
+    showCardList.includes('Pin Location') && getCardByType(data, 'PlaceCard')
+  const gitCard =
+    showCardList.includes('Github Graph') && getCardByType(data, 'GitCard')
+  const calendlyCard =
+    showCardList.includes('Calendly') && getCardByType(data, 'CalendarCard')
+  const twitterCard =
+    showCardList.includes('Twitter Profile') && getCardByType(data, 'XCard')
+  const textCard = getCardByType(data, 'TextCard')
 
   return (
     <>
       <div className="col-span-2 row-span-1 rounded-[5px] p-2.5">
-        <ProfileBio user={data.user} />
+        <ProfileBio user={user} />
       </div>
       <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
-        <TextCard content={data.user.about} />
+        <TextCard metadata={textCard?.metadata as TextCardType} />
       </div>
       {calendlyCard && (
         <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
@@ -62,7 +70,7 @@ export default function ProfileV3({ data }: fullUserDataProp) {
       )}
       {mapCard && (
         <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
-          {mapCard.cardType === 'MapCard' && (
+          {mapCard.cardType === 'PlaceCard' && (
             <MapCard map={mapCard.metadata as MapCardType} />
           )}
         </div>

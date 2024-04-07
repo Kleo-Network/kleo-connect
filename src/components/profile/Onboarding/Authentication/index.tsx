@@ -22,6 +22,7 @@ import CityAutocomplete from '../Connections/Place'
 import useDebounce from '../../../common/hooks/useDebounce'
 import { SlugData, UserData } from '../../../constants/SignupData'
 import TextComponent from '../Connections/Text'
+import { StaticCard as StaticCardType } from '../../../common/interface'
 const defaultOptions = {
   loop: true,
   autoplay: true,
@@ -72,11 +73,11 @@ export default function Onboarding({
       }),
       onSuccessfulFetch: (data) => {
         if (data?.slug) {
-          sessionStorage.setItem('slug', data.slug)
+          localStorage.setItem('slug', data.slug)
         }
         if (data?.token) {
           setLogin(true)
-          sessionStorage.setItem('token', data.token)
+          localStorage.setItem('token', data.token)
         } else {
           window.alert('Error while creating user')
         }
@@ -101,6 +102,8 @@ export default function Onboarding({
   const [userGoogleToken, setUserGoogleToken] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [loginError, setLoginError] = useState(false)
+  const [createdStaticCards, setCreatedStaticCards] =
+    useState<StaticCardType[]>()
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
     setUserSlug(value)
@@ -149,11 +152,11 @@ export default function Onboarding({
       }),
       onSuccessfulFetch: (data) => {
         if (data?.slug) {
-          sessionStorage.setItem('slug', data.slug)
+          localStorage.setItem('slug', data.slug)
         }
         if (data?.token) {
           setIsSignUp(true)
-          sessionStorage.setItem('token', data.token)
+          localStorage.setItem('token', data.token)
           setCurrentStep(currentStep + 1)
           navigate('/signup/' + (currentStep + 1))
         } else {
@@ -175,12 +178,8 @@ export default function Onboarding({
   const [userBio, setUserBio] = useState('')
   const { fetchData: UpdateUserData } = useFetch<UserData>()
 
-  const onBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUserBio(event.target.value)
-  }
-
   const handleUserUpdation = (cards: string[]) => {
-    UpdateUserData(makeUserUpdationUrl(), {
+    UpdateUserData(makeUserUpdationUrl(UPDATE_USER_SETTING), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -199,12 +198,90 @@ export default function Onboarding({
     })
   }
 
-  function makeUserUpdationUrl(): string {
-    const slug = sessionStorage.getItem('slug') || ''
-    return UPDATE_USER_SETTING.replace('{slug}', slug)
+  function makeUserUpdationUrl(slug_string: string): string {
+    const slug = localStorage.getItem('slug') || ''
+    return slug_string.replace('{slug}', slug)
   }
+
+  //const [isTextCardCreated, setIsTextCardCreated] = useState(false)
+  const CREATE_TEXT_CARD = 'cards/static/{slug}'
+  const { error, fetchData: createTextCard } = useFetch()
+  const { fetchData: CreatePlaceCard } = useFetch<any>()
+  const [city, setCity] = useState('')
+  const [cordinates, setCordinates] = useState()
+  const [step4button, setStep4Button] = useState(false)
+  const handleButtonClickStep4 = () => {
+    if (userBio.trim() !== '') {
+      createTextCard(makeUserUpdationUrl(CREATE_TEXT_CARD), {
+        method: 'POST',
+        body: JSON.stringify({
+          card: {
+            type: 'TextCard',
+            metadata: {
+              text: userBio
+            }
+          }
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        onSuccessfulFetch: () => {
+          console.log('text card created success!')
+        }
+      })
+      if (externalToolArray.includes('Pin Location')) {
+        CreatePlaceCard(makeUserUpdationUrl(CREATE_TEXT_CARD), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            card: {
+              type: 'PlaceCard',
+              metadata: {
+                cordinates: cordinates,
+                location: city
+              }
+            }
+          }),
+          onSuccessfulFetch: () => {
+            console.log('successfull place card created')
+          }
+        })
+      }
+      setStep4Button(true)
+      navigate(`/profilev2/${localStorage.getItem('slug')}`)
+    } else {
+      alert('Please enter some text')
+    }
+  }
+
+  const GET_STATIC_CARDS = 'cards/static/{slug}'
+  const { error: _errorstatic, fetchData: fetchStaticCards } = useFetch()
+  const GET_USER_API = 'user/get-user/{slug}'
   useEffect(() => {
-    if (step == 4) {
+    if (step == '4') {
+      fetchUser(makeUserUpdationUrl(GET_USER_API), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        onSuccessfulFetch: (data) => {
+          console.log('user data', data?.settings?.static_cards)
+          setExternalToolArray(data?.settings?.static_cards)
+        }
+      })
+
+      fetchStaticCards(makeUserUpdationUrl(GET_STATIC_CARDS), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        onSuccessfulFetch: (data) => {
+          console.log('static cards', data)
+          setCreatedStaticCards(data as StaticCardType[])
+        }
+      })
     }
   }, [])
   useEffect(() => {
@@ -656,25 +733,35 @@ export default function Onboarding({
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
                 <div className="w-full pl-10 pr-10">
-                  <TextComponent />
-                  {externalToolArray.includes('Calendly') && <CalendlyLogin />}
+                  {externalToolArray.includes('Calendly') && (
+                    <CalendlyLogin cards={createdStaticCards} />
+                  )}
                   {externalToolArray.includes('Github Graph') && (
-                    <GitHubSignIn />
+                    <GitHubSignIn cards={createdStaticCards} />
                   )}
                   {externalToolArray.includes('Pin Location') && (
-                    <CityAutocomplete />
+                    <CityAutocomplete
+                      city={city}
+                      setCity={setCity}
+                      cordinates={cordinates}
+                      setCordinates={setCordinates}
+                      cards={createdStaticCards}
+                    />
                   )}
                   {externalToolArray.includes('Twitter Profile') && (
-                    <TwitterSignIn />
+                    <TwitterSignIn cards={createdStaticCards} />
                   )}
+                  <TextComponent about={userBio} setAbout={setUserBio} />
                 </div>
               </div>
               <div className="p-2 pb-5">
                 <button
-                  className="px-4 py-3 bg-primary text-white rounded-lg shadow mx-auto block"
-                  onClick={() => handleUserUpdation(externalToolArray)}
+                  className={`px-4 py-3 ${
+                    step4button ? 'bg-primary' : 'bg-gray-400'
+                  } text-white rounded-lg shadow mx-auto block`}
+                  onClick={() => handleButtonClickStep4()}
                 >
-                  Proceed to Step 3
+                  Create Profile & Take Me to it!
                 </button>
               </div>
               {loginError && (

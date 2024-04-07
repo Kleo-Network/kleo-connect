@@ -20,7 +20,7 @@ function formatDate(epochTimestamp: number) {
   const ampm = date.getHours() >= 12 ? 'PM' : 'AM'
 
   // Construct the formatted string
-  const formattedDate = `${hours}:${minutes}:${seconds} ${ampm} ${month} ${day}, ${year}`
+  const formattedDate = `${month} ${day}, ${year}`
 
   return formattedDate
 }
@@ -33,7 +33,7 @@ export default function ProfileBio({ user }: User) {
           src={user.pfp}
           className="w-24 h-24 rounded-full border-4 border-white"
         />
-        <h3 className="text-2xl font-medium text-gray-900">{user.name}</h3>
+        <h3 className="text-2xl font-medium text-gray-900">{user.slug}</h3>
       </div>
       <div className="max-w-sm text-center text-gray-400">
         last minted on {formatDate(user.last_attested)}

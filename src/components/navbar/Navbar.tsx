@@ -47,7 +47,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   }, [pathname])
 
   const handleLogoutClick = () => {
-    sessionStorage.clear()
+    localStorage.clear()
     handleLogout()
     navigate('/')
   }
@@ -57,7 +57,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   }
 
   function getSlug(): string {
-    const slug = sessionStorage.getItem('slug')
+    const slug = localStorage.getItem('slug')
     if (slug) {
       return slug
     } else {
@@ -107,7 +107,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
             className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
             data-te-navbar-nav-ref
           >
-            {sessionStorage.getItem('token') &&
+            {localStorage.getItem('token') &&
               Object.values(Tab).map((tab, i) => {
                 return (
                   tab !== Tab.PRIVACY && (

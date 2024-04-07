@@ -1,45 +1,10 @@
 import React, { useState } from 'react'
 import useFetch from '../../../common/hooks/useFetch'
-
-const TextComponent = () => {
-  const [textData, setTextData] = useState('')
-  const [isTextCardCreated, setIsTextCardCreated] = useState(false)
-  const { error, fetchData: createTextCard } = useFetch() // Assuming you have a custom hook for fetching data
-
-  const CREATE_TEXT_CARD = 'cards/static/{slug}'
-  const slug = sessionStorage.getItem('slug') || ''
-
-  function makeTextCardUrl(): string {
-    return CREATE_TEXT_CARD.replace('{slug}', slug)
-  }
-
-  const handleButtonClick = () => {
-    // Assuming you have an API endpoint for adding data
-    // Make sure textData is not empty before making the API call
-    if (textData.trim() !== '') {
-      createTextCard(makeTextCardUrl(), {
-        method: 'POST',
-        body: JSON.stringify({
-          card: {
-            type: 'TextCard',
-            metadata: {
-              text: textData
-            }
-          }
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        onSuccessfulFetch: () => {
-          setIsTextCardCreated(true)
-        }
-      })
-    } else {
-      // Handle case where textarea is empty
-      alert('Please enter some text')
-    }
-  }
-
+interface TextComponentProps {
+  about: string
+  setAbout: (value: string) => void
+}
+const TextComponent: React.FC<TextComponentProps> = ({ about, setAbout }) => {
   return (
     <div className="flex">
       <div className="w-1/2 pt-2 pl-1 pr-3">
@@ -59,8 +24,8 @@ const TextComponent = () => {
           id="textArea"
           className="w-full border border-gray-300 p-2"
           rows={4}
-          value={textData}
-          onChange={(e) => setTextData(e.target.value)}
+          value={about}
+          onChange={(e) => setAbout(e.target.value)}
         ></textarea>
         {/* <button
             className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

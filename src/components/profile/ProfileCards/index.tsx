@@ -11,7 +11,7 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
   const context = useAuthContext()
 
   function getSlug(): string {
-    const slug = sessionStorage.getItem('slug')
+    const slug = localStorage.getItem('slug')
     if (slug) {
       return slug
     } else {

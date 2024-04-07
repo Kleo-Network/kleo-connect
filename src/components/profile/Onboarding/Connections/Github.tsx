@@ -2,22 +2,36 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import config from '../../../common/config'
 import useFetch from '../../../common/hooks/useFetch'
+import {
+  GitCard,
+  StaticCard as StaticCardType
+} from '../../../common/interface'
 
-interface CommitData {
-  date: string
-  count: number
+interface GithubProps {
+  cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
 }
 
-const GitHubSignIn: React.FC = () => {
-  const [commitData, setCommitData] = useState<CommitData[]>([])
+const GitHubSignIn: React.FC<GithubProps> = ({ cards }) => {
   const [isGitHubConnected, setIsGitHubConnected] = useState(false)
   const { fetchData: createGitHubCard } = useFetch<any>()
   const CREATE_GITHUB_CARD = 'static-card/github/{slug}'
-  const slug = sessionStorage.getItem('slug') || ''
+  const slug = localStorage.getItem('slug') || ''
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    const getCardinCards = (cardType: string) => {
+      if (cards?.find((card) => card.cardType == cardType)) {
+        const card = cards?.find((card) => card.cardType == cardType)
+        if (card) setUsername((card.metadata as GitCard).username)
+        return true
+      }
+      return false
+    }
+    getCardinCards('GitCard')
+  }, [])
 
   const handleSignIn = () => {
     console.log(config.github.clientId)
-
     const clientId = config.github.clientId
     const redirectUri = 'http://localhost:5173/signup/4'
     const scope = 'repo'
@@ -38,11 +52,10 @@ const GitHubSignIn: React.FC = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          code: code
-        }),
+        body: JSON.stringify({ code: code }),
         onSuccessfulFetch: () => {
           setIsGitHubConnected(true)
+          setUsername(slug)
         }
       })
     }
@@ -52,7 +65,7 @@ const GitHubSignIn: React.FC = () => {
     const code = urlParams.get('code')
 
     // Execute handleGitHubCardCreation only if code exists and it's not already handled
-    if (code && !isGitHubConnected) {
+    if (code && username === '') {
       handleGitHubCardCreation(code)
     }
   }, [])
@@ -66,7 +79,8 @@ const GitHubSignIn: React.FC = () => {
             <span className="text-gray-400 text-sm font-regular">
               We use your{' '}
               <u className="text-gray-800 bold">
-                contributions graph in last 3 months
+                {' '}
+                contributions graph in last 3 months{' '}
               </u>{' '}
               and showcase it on your profile!
             </span>
@@ -74,9 +88,9 @@ const GitHubSignIn: React.FC = () => {
         </div>
       </div>
       <div className="w-1/2 mt-7">
-        {isGitHubConnected ? (
+        {isGitHubConnected || username ? (
           <div>
-            <h2>Welcome, {slug} for Github!</h2>
+            <h2 className="text-green-800">Connected @{username} GitHub.</h2>
           </div>
         ) : (
           <button
@@ -85,18 +99,6 @@ const GitHubSignIn: React.FC = () => {
           >
             Sign in with GitHub
           </button>
-        )}
-        {commitData.length > 0 && (
-          <div className="mt-4">
-            <h2 className="text-xl font-bold">Commit Graph (Last Month)</h2>
-            <ul>
-              {commitData.map((data, index) => (
-                <li key={index} className="py-1">
-                  {data.date}: {data.count} commits
-                </li>
-              ))}
-            </ul>
-          </div>
         )}
       </div>
     </div>

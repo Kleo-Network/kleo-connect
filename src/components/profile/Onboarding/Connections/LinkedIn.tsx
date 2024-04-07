@@ -13,7 +13,7 @@ const LinkedInSignIn: React.FC = () => {
   const CREATE_LINKEDIN_CARD = 'static-card/linkedIn/{slug}'
   const { fetchData: CreateLinkedInCard } = useFetch<any>()
   const [isCardCreated, setIsCardCreated] = useState(false)
-  const slug = sessionStorage.getItem('slug') || ''
+  const slug = localStorage.getItem('slug') || ''
 
   const handleLogin = () => {
     // Step 1: Get the authorization code
