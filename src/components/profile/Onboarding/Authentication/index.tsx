@@ -6,23 +6,22 @@ import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 import { ReactComponent as RightArrow } from '../../../../assets/images/arrow2.svg'
 import animationDataProcessing from '../../../../assets/images/welcome.json'
 import Accordion from '../../../common/Accordion'
-import useFetch from '../../../common/hooks/useFetch'
+import useFetch, { FetchStatus } from '../../../common/hooks/useFetch'
 import Alert from '../../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
-import { useAuthContext } from '../../../common/contexts/UserContext'
 import Lottie from 'react-lottie'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { baseUrl } from '../../../common/hooks/useFetch'
+import { useParams, useNavigate } from 'react-router-dom'
 import SelectCards from './SelectCards'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import CalendlyLogin from '../Connections/Calendly'
 import GitHubSignIn from '../Connections/Github'
+//import InstagramConnect from '../Connections/Instagram'
+//import LinkedInSignIn from '../Connections/LinkedIn'
 import TwitterSignIn from '../Connections/Twitter'
 import CityAutocomplete from '../Connections/Place'
 import useDebounce from '../../../common/hooks/useDebounce'
-import { SlugData, userData } from '../../../constants/SignupData'
+import { SlugData, UserData } from '../../../constants/SignupData'
 import TextComponent from '../Connections/Text'
-
 const defaultOptions = {
   loop: true,
   autoplay: true,
@@ -33,6 +32,8 @@ const defaultOptions = {
 }
 interface OnboardingProps {
   handleLogin: (userAddress: string) => void
+  user: UserData
+  setUser: React.Dispatch<React.SetStateAction<UserData>>
 }
 
 enum PluginState {
@@ -41,39 +42,25 @@ enum PluginState {
   INSTALLED
 }
 
-const AUTH_API = 'auth/create_jwt_authentication'
-const INVITE_CODE_API = 'auth/check_invite_code'
-const GET_USER_API = 'auth/get_user'
-
-export default function Onboarding({ handleLogin }: OnboardingProps) {
-  const context = useAuthContext()
+export default function Onboarding({
+  handleLogin,
+  user,
+  setUser
+}: OnboardingProps) {
   const { step } = useParams()
   const [infoExpanded, setInfoExpanded] = useState(false)
-  const [pluginState, setPluginState] = useState(PluginState.CHECKING)
+  const [pluginState, setPluginState] = useState(PluginState.INSTALLED)
   const [currentStep, setCurrentStep] = useState(parseInt(step || '0'))
   const [code, setCode] = useState('')
 
-  const [signedData, setSignedData] = useState<{
-    signature: any
-    publicKey: any
-  } | null>(null)
-
-  const { fetchData, error: loginError, data: loginData } = useFetch<any>()
-  const { fetchData: fetchInviteCheck } = useFetch<any>()
-  const {
-    fetchData: fetchUser,
-    status: fetchUserStatus,
-    data: user
-  } = useFetch<any>()
-
   const [login, setLogin] = useState(false)
 
+  // Var and methods for login step 0
   const USER_LOGIN_PATH = 'user/create-user'
-
   const handleUserLogin = (credentialResponse: any) => {
     const token = credentialResponse.credential
     console.log(token)
-    fetchCreateAndFetchUserData(CREATE_USER_FOR_KLEO, {
+    fetchCreateAndFetchUserData(USER_LOGIN_PATH, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -90,13 +77,14 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
         if (data?.token) {
           setLogin(true)
           sessionStorage.setItem('token', data.token)
-          window.alert('successful login')
         } else {
           window.alert('Error while creating user')
         }
       }
     })
   }
+
+  // Var and methods for signup step 1
 
   const CHECK_SLUG_FOR_USER = 'user/check_slug?slug={slug}'
   const CREATE_USER_FOR_KLEO = 'user/create-user'
@@ -105,9 +93,14 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [isSlugAvailable, setIsSlugAvailable] = useState(false)
   const debouncedIsSlugAvailableTerm = useDebounce(userSlug, 500)
   const { fetchData: fetchSlugAvaibility } = useFetch<SlugData>()
-  const { fetchData: fetchCreateAndFetchUserData } = useFetch<userData>()
+  const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
+    useFetch<UserData>()
+
+  const { fetchData: fetchUser, data: userDataFromDB } = useFetch<UserData>()
+
   const [userGoogleToken, setUserGoogleToken] = useState('')
-  const [selectedCards, setSelectedItems] = useState([''])
+  const [isSignUp, setIsSignUp] = useState(false)
+  const [loginError, setLoginError] = useState(false)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
     setUserSlug(value)
@@ -126,7 +119,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
         fetchSlugAvaibility(makeSlugApiUrl(), {
           onSuccessfulFetch(data) {
             if (data) {
-              console.log(data.result)
               setIsSlugAvailable(data.result)
             }
           }
@@ -156,12 +148,13 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
         code: token
       }),
       onSuccessfulFetch: (data) => {
-        console.log('response from api', data)
-        if (data?.slug && data?.token) {
+        if (data?.slug) {
           sessionStorage.setItem('slug', data.slug)
+        }
+        if (data?.token) {
+          setIsSignUp(true)
           sessionStorage.setItem('token', data.token)
           setCurrentStep(currentStep + 1)
-          ;(window as any).kleoUploadHistory(data.slug, data.token)
           navigate('/signup/' + (currentStep + 1))
         } else {
           window.alert('Error while creating user')
@@ -171,16 +164,19 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   }
 
   const handleGoogleSignUp = (credentialResponse: any) => {
+    // Get the Google Access Token from the credential response
     const accessToken = credentialResponse.credential
     setUserGoogleToken(accessToken)
   }
 
+  // Var and methods for signup step 2
   const UPDATE_USER_SETTING = 'user/update-settings/{slug}'
   const [externalToolArray, setExternalToolArray] = useState<string[]>([])
-  const { fetchData: UpdateUserData } = useFetch<userData>()
+  const [userBio, setUserBio] = useState('')
+  const { fetchData: UpdateUserData } = useFetch<UserData>()
 
-  const addExternalToolToUser = (externalTools: string[]) => {
-    setExternalToolArray(externalTools)
+  const onBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setUserBio(event.target.value)
   }
 
   const handleUserUpdation = (cards: string[]) => {
@@ -191,14 +187,14 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       },
       body: JSON.stringify({
         stage: 3,
+        about: '',
         settings: {
           static_cards: cards
         }
       }),
-      onSuccessfulFetch: (data) => {
-        console.log('response from API', data)
+      onSuccessfulFetch: () => {
         setCurrentStep(currentStep + 2)
-        navigate('/signup/4')
+        navigate('/signup/' + (currentStep + 2))
       }
     })
   }
@@ -207,21 +203,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     const slug = sessionStorage.getItem('slug') || ''
     return UPDATE_USER_SETTING.replace('{slug}', slug)
   }
-
   useEffect(() => {
-    setTimeout(() => {
-      console.log((window as any).kleoConnect)
-      if (!(window as any).kleoConnect && step == '0') {
-        navigate('/signup/1')
-        window.location.reload()
-      }
-    }, 1000)
-  }, [])
-  const [searchParams] = useSearchParams()
-  useEffect(() => {
-    if (step == '4') {
+    if (step == 4) {
     }
-  }, [step])
+  }, [])
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
@@ -233,6 +218,31 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
       }, 2000)
     }
   }, [])
+
+  useEffect(() => {
+    if (login) {
+      setUser({
+        about: userFromDB?.about || '',
+        badges: userFromDB?.badges || [],
+        content_tags: userFromDB?.content_tags || [],
+        identity_tags: userFromDB?.identity_tags || [],
+        last_attested:
+          userFromDB?.last_attested || Math.floor(Date.now() / 1000),
+        last_cards_marked:
+          userFromDB?.last_cards_marked || Math.floor(Date.now() / 1000),
+        name: userFromDB?.name || '',
+        pfp: userFromDB?.pfp || '',
+        profile_metadata: userFromDB?.profile_metadata || {},
+        settings: userFromDB?.settings || {},
+        slug: userFromDB?.slug || '',
+        stage: userFromDB?.stage || 1,
+        verified: userFromDB?.verified || false,
+        email: userFromDB?.email || '',
+        token: userFromDB?.token || ''
+      })
+      handleLogin(user?.slug || '')
+    }
+  }, [isSignUp, login])
 
   return (
     <GoogleOAuthProvider clientId="236440189889-c391vfab4cpsqnep0lo31ndg8g8qmq25.apps.googleusercontent.com">
@@ -567,7 +577,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-6 w-full">
                 <div className="w-2/3">
-                  <SelectCards onExternalToolChange={addExternalToolToUser} />
+                  <SelectCards
+                    selectedButtons={externalToolArray}
+                    setSelectedButtons={setExternalToolArray}
+                  />
                 </div>
                 <div className="w-1/3 mt-5 pt-2 pl-5 pr-5 mb-5 border-l border-gray-300">
                   <div className="flex flex-col items-start justify-center">
@@ -644,12 +657,14 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
                 <div className="w-full pl-10 pr-10">
                   <TextComponent />
-                  {selectedCards.includes('Calendly') && <CalendlyLogin />}
-                  {selectedCards.includes('Github Graph') && <GitHubSignIn />}
-                  {selectedCards.includes('Pin Location') && (
+                  {externalToolArray.includes('Calendly') && <CalendlyLogin />}
+                  {externalToolArray.includes('Github Graph') && (
+                    <GitHubSignIn />
+                  )}
+                  {externalToolArray.includes('Pin Location') && (
                     <CityAutocomplete />
                   )}
-                  {selectedCards.includes('Twitter Profile') && (
+                  {externalToolArray.includes('Twitter Profile') && (
                     <TwitterSignIn />
                   )}
                 </div>

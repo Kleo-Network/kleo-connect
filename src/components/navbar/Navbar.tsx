@@ -3,7 +3,8 @@ import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
 import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
 import { ReactComponent as Settings } from '../../assets/images/settings.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
-import { useLocation } from 'react-router-dom'
+import { ReactComponent as Logout } from '../../assets/images/logout.svg'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
 import { EventContext } from '../common/contexts/EventContext'
 import { NavbarEvents } from '../constants/Events'
@@ -13,6 +14,8 @@ interface NavbarProps {
     src: string
     alt: string
   }
+  slug: string
+  handleLogout: () => void
 }
 
 enum Tab {
@@ -21,9 +24,10 @@ enum Tab {
   PRIVACY = 'privacy'
 }
 
-const Navbar = ({ avatar }: NavbarProps) => {
+const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState('null')
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { updateEvent } = useContext(EventContext)
 
   useEffect(() => {
@@ -42,8 +46,27 @@ const Navbar = ({ avatar }: NavbarProps) => {
     }
   }, [pathname])
 
+  const handleLogoutClick = () => {
+    sessionStorage.clear()
+    handleLogout()
+    navigate('/')
+  }
+
   const handleSettingsClick = () => {
     updateEvent(NavbarEvents.SETTINGS)
+  }
+
+  function getSlug(): string {
+    const slug = sessionStorage.getItem('slug')
+    if (slug) {
+      return slug
+    } else {
+      return ''
+    }
+  }
+
+  function getHomeLink() {
+    return `/profileV2/${getSlug()}`
   }
 
   return (
@@ -54,7 +77,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
       <div className="flex w-full flex-wrap items-center justify-between px-12">
         <a
           className="my-2 gap-2 flex items-center justify-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0"
-          href="/"
+          href={getHomeLink()}
         >
           <Logo className="w-8 h-8" />
           <h3 className="font-bold text-xl">KLEO</h3>
@@ -84,31 +107,32 @@ const Navbar = ({ avatar }: NavbarProps) => {
             className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
             data-te-navbar-nav-ref
           >
-            {Object.values(Tab).map((tab, i) => {
-              return (
-                tab !== Tab.PRIVACY && (
-                  <li
-                    key={i}
-                    className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
-                    data-te-nav-item-ref
-                  >
-                    <a
-                      className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
-                        selectedTab === tab
-                          ? 'text-purple-700 bg-purple-100'
-                          : ''
-                      }`}
-                      href={`/${
-                        tab === Tab.PUBLISH_CARDS ? 'cards' : 'badges'
-                      }`}
-                      data-te-nav-link-ref
+            {sessionStorage.getItem('token') &&
+              Object.values(Tab).map((tab, i) => {
+                return (
+                  tab !== Tab.PRIVACY && (
+                    <li
+                      key={i}
+                      className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+                      data-te-nav-item-ref
                     >
-                      {tab}
-                    </a>
-                  </li>
+                      <a
+                        className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
+                          selectedTab === tab
+                            ? 'text-purple-700 bg-purple-100'
+                            : ''
+                        }`}
+                        href={`/${
+                          tab === Tab.PUBLISH_CARDS ? 'cards' : 'badges'
+                        }`}
+                        data-te-nav-link-ref
+                      >
+                        {tab}
+                      </a>
+                    </li>
+                  )
                 )
-              )
-            })}
+              })}
           </ul>
           <div className="flex items-center justify-center flex-grow">
             <a href="/profilev2" className="flex items-center">
@@ -117,7 +141,7 @@ const Navbar = ({ avatar }: NavbarProps) => {
                 alt={avatar.alt}
                 className="w-10 h-10 rounded-full mr-2"
               />
-              <span className="text-gray-700 font-medium">@kleo.network</span>
+              <span className="text-gray-700 font-medium">@{slug}</span>
             </a>
           </div>
 
@@ -141,6 +165,13 @@ const Navbar = ({ avatar }: NavbarProps) => {
             >
               <Privacy className="w-5 h-5 stroke-current" />
             </a>
+            <button
+              data-te-ripple-init
+              className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
+              onClick={handleLogoutClick}
+            >
+              <Logout className="w-5 h-5 stroke-current" />
+            </button>
           </div>
         </div>
       </div>

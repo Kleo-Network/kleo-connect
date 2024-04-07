@@ -2,16 +2,10 @@ import React from 'react'
 import { ReactComponent as CopyIcon } from '../../assets/images/copy.svg'
 import { ReactComponent as TickIcon } from '../../assets/images/check.svg'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import { UserData } from '../constants/SignupData'
 
 interface User {
-  user: UserProps
-}
-
-interface UserProps {
-  name: string
-  avatar: string
-  userId: string
-  kleo: number
+  user: UserData
 }
 
 export default function ProfileCard({ user }: User) {
@@ -22,7 +16,7 @@ export default function ProfileCard({ user }: User) {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(user.userId)
+    navigator.clipboard.writeText(user.slug)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -33,13 +27,13 @@ export default function ProfileCard({ user }: User) {
         {/* <Jazzicon diameter={80} seed={jsNumberForAddress(user.userId)} /> */}
 
         <img
-          src={user.avatar}
+          src={user.pfp}
           className="w-24 h-24 rounded-full border-4 border-white"
         />
         <div className="text-center">
           <h3 className="text-2xl font-medium text-gray-900">{user.name}</h3>
           <span className="flex flex-row items-center mt-4 text-base font-regular text-gray-500">
-            {shortenAddress(user.userId)}
+            {shortenAddress(user.slug)}
             <button
               className="ml-2 text-gray-400 w-4 h-4"
               onClick={copyToClipboard}

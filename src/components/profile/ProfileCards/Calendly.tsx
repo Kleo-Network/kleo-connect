@@ -14,6 +14,10 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
   const currentYear = currentDate.getFullYear()
   const currentDay = currentDate.getDate()
 
+  const openPopUp = () => {
+    window.open(calendlyUrl, '_blank')
+  }
+
   return (
     <div className="flex-1 bg-gray-100 rounded-lg shadow-md relative">
       <div className="bg-white shadow-xl overflow-hidden rounded-lg mx-auto mt-2 text-gray-900 font-semibold text-center opacity-60 pointer-events-none">
@@ -44,7 +48,10 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4 z-10">
-        <button className="flex items-center bg-violet-500 text-white px-4 py-2 rounded-md hover:bg-violet-600">
+        <button
+          className="flex items-center bg-violet-500 text-white px-4 py-2 rounded-md hover:bg-violet-600"
+          onClick={openPopUp}
+        >
           <Calendly className="text-gray-100 w-5 h-5 mr-2" />
           <div className="border-l border-gray-300 mx-2 h-4"></div>
           <span className="text-sm">Book a meeting</span>

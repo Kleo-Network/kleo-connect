@@ -1,20 +1,16 @@
 import React from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-
+import { MapCard as MapCardType } from '../../common/interface'
 interface MapCardProps {
-  city: string
-  country: string
-  lat: number
-  lng: number
+  map: MapCardType
 }
-
-const MapCard: React.FC<MapCardProps> = ({ city, country, lat, lng }) => {
+const MapCard: React.FC<MapCardProps> = ({ map }) => {
   return (
     <div className="flex-1 bg-gray-100 p-1 rounded-lg shadow-md relative">
       <MapContainer
         className="h-60"
-        center={[lat, lng]}
+        center={[map.cordinates.lat, map.cordinates.lng]}
         zoom={9}
         scrollWheelZoom={false}
       >
@@ -22,10 +18,8 @@ const MapCard: React.FC<MapCardProps> = ({ city, country, lat, lng }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={[lat, lng]}>
-          <Popup>
-            {city}, {country}
-          </Popup>
+        <Marker position={[map.cordinates.lat, map.cordinates.lng]}>
+          <Popup>{map.location}</Popup>
         </Marker>
       </MapContainer>
     </div>

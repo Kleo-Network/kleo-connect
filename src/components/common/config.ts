@@ -13,8 +13,8 @@ const config = {
     appSecret: import.meta.env.INSTAGRAM_APP_SECRET
   },
   linkedin: {
-    applicationId: import.meta.env.LINKEDIN_APPLICATION_ID,
-    applicationSecret: import.meta.env.LINKEDIN_APPLICATION_SECRET
+    applicationId: import.meta.env.VITE_LINKEDIN_APPLICATION_ID,
+    applicationSecret: import.meta.env.VITE_LINKEDIN_APPLICATION_SECRET
   },
   twitter: {
     applicationId: import.meta.env.VITE_TWITTER_APPLICATION_ID,

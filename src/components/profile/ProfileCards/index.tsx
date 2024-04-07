@@ -4,216 +4,136 @@ import { useTransition, animated } from 'react-spring'
 import { ReactComponent as Tick } from '../../../assets/images/check.svg'
 import { ReactComponent as Cross } from '../../../assets/images/cross.svg'
 import CountdownTimer from './countdown'
+import { PendingCard, UserData, UserDataProps } from '../../common/interface'
+import useFetch from '../../common/hooks/useFetch'
 
-export interface Card {
-  id: number
-  user: string
-  content: string
-  contentImage: string
-  date: string
-  imageUrl: string
-  direction: string
-  links: Link[]
-}
-
-export interface Link {
-  domain: string
-  icon: string
-  link: string
-  title: string
-}
-
-export default function PinnedWebsites() {
+export default function PinnedWebsites({ user, setUser }: UserDataProps) {
   const context = useAuthContext()
 
-  const initialCards: Card[] = [
-    {
-      id: 740,
-      user: 'Nick Stark',
-      content: "Delved into blockchain information on BRINC's website.",
-      contentImage: '',
-      date: '11 Feb 2024',
-      imageUrl:
-        'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp',
-      direction: '',
-      links: [
-        {
-          domain: 'www.brinc.io',
-          icon: '',
-          link: '',
-          title: 'Brinc Accelerator - Accelerating Future'
-        }
-      ]
-    },
-    {
-      id: 120,
-      user: 'Nick Stark',
-      content: 'Watched Comedy Shorts on Youtube, Seinfeld on Netflix',
-      date: '11 Feb 2024',
-      imageUrl:
-        'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp',
-      contentImage: '',
-      direction: '',
-      links: [
-        {
-          domain: 'www.youtube.com',
-          icon: '',
-          link: '',
-          title: 'Kenny Sebastian Crowd Work Part -1'
-        },
-        {
-          domain: 'www.netflix.com',
-          icon: '',
-          link: '',
-          title: 'Watch Seinfeld'
-        }
-      ]
-    },
-    {
-      id: 40,
-      user: 'Nick Stark',
-      content: "Researched Books like 'Game Of Thrones' on Goodreads",
-      contentImage: '',
-      date: '11 Feb 2024',
-      imageUrl:
-        'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp',
-      direction: '',
-      links: [
-        {
-          domain: 'www.goodreads.com',
-          icon: '',
-          link: '',
-          title: 'Game of Thrones Series'
-        },
-        {
-          domain: 'www.amazon.com',
-          icon: '',
-          link: '',
-          title: 'Buy Game of Thrones Books'
-        },
-        {
-          domain: 'www.barnesandnoble.com',
-          icon: '',
-          link: '',
-          title: 'Game of Thrones Collection'
-        }
-      ]
-    },
-    {
-      id: 10,
-      user: 'Nick Stark',
-      content:
-        'Visits to huggingface.co increased by 18% as compared to last week!',
-      date: '11 Feb 2024',
-      imageUrl:
-        'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp',
-      contentImage: '',
-      direction: '',
-      links: [
-        {
-          domain: 'www.huggingface.co',
-          icon: '',
-          link: '',
-          title: 'Hugging Face – The AI community building the future.'
-        },
-        {
-          domain: 'github.com',
-          icon: '',
-          link: '',
-          title: 'Hugging Face on GitHub'
-        }
-      ]
-    },
-    {
-      id: 3,
-      user: 'Nick Stark',
-      content: 'Googled about cybercrime cases and IPC 420 of Penal Code',
-      contentImage: '',
-      date: '11 Feb 2024',
-      imageUrl:
-        'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp',
-      direction: '',
-      links: [
-        {
-          domain: 'www.cybercrime.gov',
-          icon: '',
-          link: '',
-          title: 'Cybercrime Cases and Legal Advice'
-        },
-        {
-          domain: 'indiankanoon.org',
-          icon: '',
-          link: '',
-          title: 'IPC Section 420 - Cheating and Dishonestly'
-        },
-        {
-          domain: 'www.legalserviceindia.com',
-          icon: '',
-          link: '',
-          title: 'Understanding IPC 420 with Cases'
-        }
-      ]
-    },
-    {
-      id: 4,
-      user: '@ayeayecapt3n',
-      content:
-        'Managed VISA Application on VFS Global Website, for United States of America',
-      date: '11 Feb 2024',
-      imageUrl:
-        'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp',
-      contentImage: '',
-      direction: '',
-      links: [
-        {
-          domain: 'www.vfsglobal.com',
-          icon: '',
-          link: '',
-          title: 'VFS Global - USA Visa Application'
-        },
-        {
-          domain: 'travel.state.gov',
-          icon: '',
-          link: '',
-          title: 'U.S. Visas - State Department'
-        },
-        {
-          domain: 'www.uscis.gov',
-          icon: '',
-          link: '',
-          title: 'United States Citizenship and Immigration Services'
-        }
-      ]
+  function getSlug(): string {
+    const slug = sessionStorage.getItem('slug')
+    if (slug) {
+      return slug
+    } else {
+      return ''
     }
-  ]
+  }
 
-  const [cards, setCards] = useState<Card[]>(initialCards)
-  const [activeCard, setActiveCard] = useState<Card>(initialCards[0])
-  const [userId, setUserId] = useState<any>()
+  // to fetch user data
+  const GET_USER_DETAIL = 'user/get-user/{slug}'
+  const { fetchData: fetchUserData } = useFetch<UserData>()
 
-  const transitions = useTransition(activeCard, {
-    keys: (card) => card.id,
-    from: {
-      opacity: 0,
-      transform:
-        activeCard.direction == 'publish'
-          ? ' translateX(800px)'
-          : ' translateX(-800px)'
-    },
-    enter: { opacity: 1, transform: 'scale(1) translateX(0)' },
-    config: { tension: 250, friction: 20 }
-  })
+  function getUserDetails() {
+    const slug = getSlug()
+    return GET_USER_DETAIL.replace('{slug}', slug)
+  }
 
-  const removeCard = (id: number, direction: string) => {
+  useEffect(() => {
+    try {
+      fetchUserData(getUserDetails(), {
+        onSuccessfulFetch(data) {
+          if (data) {
+            setUser(data)
+          }
+        }
+      })
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }, [])
+
+  const formatDate = (epoch: number): string => {
+    const date = new Date(epoch * 1000) // Convert epoch to milliseconds
+
+    const day = String(date.getDate()).padStart(2, '0') // Ensure two digits for day
+    const year = date.getFullYear()
+
+    return `${day} ${new Date(epoch * 1000).toLocaleDateString('en-US', {
+      month: 'long'
+    })} ${year}`
+  }
+
+  // to fetch pending cards
+  const [cards, setCards] = useState<PendingCard[]>([])
+  const [activeCardList, setActiveCardList] = useState<PendingCard[]>([])
+  const [activeCard, setActiveCard] = useState<PendingCard>(activeCardList[0])
+  const [selectedDate, setSelectedDate] = useState<string>(
+    null as unknown as string
+  )
+  const GET_CARD_DETAIL = 'cards/pending/{slug}'
+  const { fetchData: fetchPendingCardData } = useFetch<PendingCard[]>()
+  const { fetchData: managePendingCardCreation } = useFetch<any>()
+  const CREATE_PUBLISHED_CARDS = 'cards/published/{slug}'
+
+  function createPendingCard() {
+    const slug = getSlug()
+    return CREATE_PUBLISHED_CARDS.replace('{slug}', slug)
+  }
+
+  function getPendingCardDetails() {
+    const slug = getSlug()
+    return GET_CARD_DETAIL.replace('{slug}', slug)
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchPendingCardData(getPendingCardDetails(), {
+          onSuccessfulFetch(data) {
+            if (data) {
+              setCards(data)
+              setActiveCardList(data)
+              setActiveCard(data[0])
+            }
+          }
+        })
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    fetchData()
+  }, [])
+
+  const filterCards = (selectedDate: string) => {
+    const filteredCards = cards.filter((card) => {
+      if (!selectedDate) {
+        return true // Show all cards if no date is selected
+      }
+      return formatDate(card.date) == selectedDate
+    })
+    setActiveCardList(filteredCards)
+    setActiveCard(filteredCards[0])
+  }
+
+  const getLastFourDates = (cards: PendingCard[]) => {
+    const uniqueDates = new Set(cards.map((card) => formatDate(card.date)))
+    const datesArray = Array.from(uniqueDates)
+    return datesArray.slice(0, 4) // Get the first 4 elements
+  }
+
+  const availableDates = getLastFourDates(cards)
+
+  const removeCard = (id: string, hasToPublished: boolean) => {
+    console.log(id)
+
+    managePendingCardCreation(createPendingCard(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        isPublishCard: hasToPublished
+      })
+    })
+
     setCards((cards) => cards.filter((card) => card.id !== id))
-    const active = cards.filter((card) => card.id !== id)[0]
-    active.direction = direction
+    setActiveCardList((activeCardList) =>
+      activeCardList.filter((card) => card.id !== id)
+    )
+    const active = activeCardList.filter((card) => card.id !== id)[0]
     setActiveCard(active)
   }
-  useEffect(() => {
-    const user = context!.user.userId
-    setUserId(user)
-  }, [userId])
 
   const user1 =
     'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp'
@@ -225,103 +145,92 @@ export default function PinnedWebsites() {
           <div className="flex w-full justify-between items-center gap-2">
             <div>
               <h3 className="text-xl text-gray-900 flex-grow-0">
-                Publish Activity for 19th December
+                Publish Activity for{' '}
+                {activeCardList.length > 0 && formatDate(activeCard.date)}
+                {activeCardList.length <= 0 && cards.length > 0 && 'Other days'}
               </h3>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm px-2 py-2 text-blue-700 bg-blue-100 rounded-sm cursor-pointer hover:bg-blue-200">
-                19th December
-              </span>
-
-              {/* Date Pill */}
-              <span className="text-sm p-2 text-gray-700 bg-gray-100 rounded-sm cursor-pointer hover:bg-gray-200">
-                18th December
-              </span>
-              <span className="text-sm p-2 text-gray-700 bg-gray-100 rounded-sm cursor-pointer hover:bg-gray-200 ml-2">
-                17th December
-              </span>
-              <span className="text-sm p-2 text-gray-700 bg-gray-100 rounded-sm cursor-pointer hover:bg-gray-200 ml-2">
-                16th December
-              </span>
+            <div className="flex items-center h-300 gap-2">
+              <select
+                className="text-sm w-44 px-2 py-2 text-violet-700 bg-violet-100 rounded-lg cursor-pointer"
+                value={selectedDate}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value)
+                  filterCards(e.target.value)
+                }}
+              >
+                <option value="">All Dates</option>
+                {availableDates.map((date) => (
+                  <option key={date} value={date}>
+                    {date}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </header>
         <div className="flex flex-col md:flex-row justify-between items-center p-6 bg-gray-300">
           <div className="flex flex-col md:flex-row justify-center items-stretch p-6 gap-4 mx-auto">
-            {cards.length > 0 ? (
+            {activeCardList.length > 0 ? (
               <>
                 <div className="flex-grow">
-                  {transitions((styles, item) => (
-                    <animated.div
-                      key={item.id}
-                      style={{
-                        ...styles,
-                        willChange: 'transform, opacity'
-                      }}
-                    >
-                      <div className="bg-white rounded-lg shadow-lg p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight]">
-                        <div className="flex items-center mt-3">
-                          <img
-                            src={item.imageUrl}
-                            alt="Sarah Murray"
-                            className="w-10 h-10 rounded-full mr-3"
-                          />
-                          <div>
-                            <h2 className="text-lg font-semibold text-violet-800">
-                              {item.user}
-                            </h2>
-                            <p className="text-sm text-gray-500">
-                              {item.id} KLEO
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex-1 flex flex-col justify-center flex-1">
-                          <blockquote className="text-gray-600 text-lg mt-4 pb-3">
-                            {item.content}
-                          </blockquote>
-
-                          <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40">
-                            {item.links.map((link) => (
-                              <>
-                                <button
-                                  className="flex items-center  gap-2 rounded-lg border border-gray-200 px-2 py-1"
-                                  style={{
-                                    backgroundColor: '#fff'
-                                  }}
-                                >
-                                  <img
-                                    className="w-4 h-4 flex-none"
-                                    src={`https://www.google.com/s2/favicons?domain=${link.domain}`}
-                                  />
-
-                                  <h3 className="text-sm font-medium text-gray-700">
-                                    {link.title}
-                                  </h3>
-                                </button>
-                              </>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="flex justify-between border-t py-2 items-center mt-4">
-                            <span className="text-sm text-gray-500">
-                              {item.date}
-                            </span>
-                          </div>
-                        </div>
+                  <div className="bg-white rounded-lg shadow-lg p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight]">
+                    <div className="flex items-center mt-3">
+                      <img
+                        src={user?.pfp}
+                        alt={user?.name}
+                        className="w-10 h-10 rounded-full mr-3"
+                      />
+                      <div>
+                        <h2 className="text-lg font-semibold text-violet-800">
+                          {user?.name}
+                        </h2>
+                        <p className="text-sm text-gray-500">@{user?.slug}</p>
                       </div>
-                    </animated.div>
-                  ))}
+                    </div>
+                    <div className="flex-1 flex flex-col justify-center flex-1">
+                      <blockquote className="text-gray-600 text-lg mt-4 pb-3">
+                        {activeCard.content}
+                      </blockquote>
+
+                      <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40">
+                        <>
+                          <button
+                            className="flex items-center  gap-2 rounded-lg border border-gray-200 px-2 py-1"
+                            style={{
+                              backgroundColor: '#fff'
+                            }}
+                          >
+                            <img
+                              className="w-4 h-4 flex-none"
+                              src={`https://www.google.com/s2/favicons?domain=${activeCard.urls.url}`}
+                            />
+
+                            <h3 className="text-sm font-medium text-gray-700">
+                              {activeCard.urls.title}
+                            </h3>
+                          </button>
+                        </>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between border-t py-2 items-center mt-4">
+                        <span className="text-sm text-gray-500">
+                          {formatDate(activeCard.date)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex-grow">
                   <button
-                    onClick={() => removeCard(activeCard.id, 'publish')}
+                    onClick={() => removeCard(activeCard.id, true)}
                     className="flex justify-center items-center mb-2 px-3 py-2 rounded-2xl bg-green-700 text-green-800 font-medium rounded hover:bg-green-800 w-full h-1/2"
                   >
                     <Tick className="w-8 stroke-white fill-white" />
                   </button>
                   <button
-                    onClick={() => removeCard(activeCard.id, 'discard')}
+                    onClick={() => removeCard(activeCard.id, false)}
                     className="flex justify-center items-center px-10 py-4 bg-red-500 text-white text-md font-medium rounded-2xl hover:bg-red-800 w-full h-1/2"
                   >
                     <Cross className="w-8 stroke-white fill-white" />
@@ -329,11 +238,13 @@ export default function PinnedWebsites() {
                 </div>
               </>
             ) : (
-              <div className="flex-grow">
-                <div className="bg-white rounded-lg shadow-lg p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight]">
-                  <CountdownTimer endDate="2024-02-16T00:00:00Z" />
+              cards.length <= 0 && (
+                <div className="flex-grow">
+                  <div className="bg-white rounded-lg shadow-lg p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight]">
+                    <CountdownTimer endDate="2024-02-16T00:00:00Z" />
+                  </div>
                 </div>
-              </div>
+              )
             )}
           </div>
         </div>

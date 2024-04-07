@@ -3,16 +3,9 @@ import CalendarHeatmap from 'react-calendar-heatmap'
 import 'react-calendar-heatmap/dist/styles.css'
 import { ReactComponent as Github } from '../../../assets/images/githubFilled.svg'
 import './../../../assets/stylesheets/github.css'
-interface Contribution {
-  date: string
-  count: number
-}
-
+import { GitCard as GitCardType } from '../../common/interface'
 interface GitHubCardProps {
-  profileImage: string
-  username: string
-  bio: string
-  contributions: Contribution[]
+  gitData: GitCardType
 }
 
 interface TooltipData {
@@ -20,14 +13,9 @@ interface TooltipData {
   count: number
 }
 
-const GitHubCard: React.FC<GitHubCardProps> = ({
-  profileImage,
-  username,
-  bio,
-  contributions
-}) => {
+const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
   const { startDate, endDate, heatmapValues, maxCount } = useMemo(() => {
-    const sortedContributions = contributions.sort(
+    const sortedContributions = gitData.contributions.sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     )
     const startDate =
@@ -47,7 +35,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
       0
     )
     return { startDate, endDate, heatmapValues, maxCount }
-  }, [contributions])
+  }, [gitData.contributions])
 
   const getClassForValue = (value: TooltipData | null) => {
     if (!value || maxCount === 0) {
@@ -62,18 +50,25 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
     else return 'color-scale-5'
   }
 
-  if (contributions.length === 0) {
+  const handleOnClick = () => {
+    window.open(gitData.url, '_blank')
+  }
+
+  if (gitData.contributions.length === 0) {
     return <div>No contribution data available.</div>
   }
 
   return (
-    <div className="flex-1 bg-gray-100 p-6 rounded-lg shadow-md relative">
+    <div
+      className="flex-1 bg-gray-100 p-6 rounded-lg shadow-md relative hover:cursor-pointer"
+      onClick={handleOnClick}
+    >
       <div className="absolute top-0 right-0 p-4">
         <Github className="text-gray-800 w-8 h-8" />
       </div>
       <div className="flex items-center mb-4">
         <div>
-          <h2 className="text-lg font-bold">/{username}</h2>
+          <h2 className="text-lg font-bold">{gitData.username}</h2>
         </div>
       </div>
       <div className="mt-4">
@@ -87,6 +82,14 @@ const GitHubCard: React.FC<GitHubCardProps> = ({
             'data-tip': `${value.date} has count: ${value.count}`
           })}
         />
+      </div>
+      <div className="flex flex-row py-3">
+        <span className="inline-block bg-gray-200 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 mr-2">
+          <span className="text-xs"> {gitData.followers} followers</span>
+        </span>
+        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+          <span className="text-xs"> {gitData.following} following</span>
+        </span>
       </div>
     </div>
   )

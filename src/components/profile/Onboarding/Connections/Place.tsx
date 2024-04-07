@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Autocomplete, useLoadScript } from '@react-google-maps/api'
 import config from '../../../common/config'
+import useFetch from '../../../common/hooks/useFetch'
 
 const libraries = ['places']
 
@@ -8,27 +9,14 @@ const CityAutocomplete: React.FC = () => {
   const [city, setCity] = useState('')
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null)
-  const [coordinates, setCoordinates] = useState({})
+  const [cordinates, setCordinates] = useState({})
   const apiKey = config.googlemap.key
+  const { fetchData: CreatePlaceCard } = useFetch<any>()
+  const CREATE_PLACE_CARD = 'cards/static/{slug}'
+  const slug = sessionStorage.getItem('slug') || ''
 
-  const handleSearch = async () => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          city
-        )}&key=YOUR_API_KEY&libraries=${libraries.join(',')}`
-      )
-      const data = await response.json()
-      console.log(data)
-      if (data.results.length > 0) {
-        const { lat, lng } = data.results[0].geometry.location
-        setCoordinates({ lat, lng })
-      } else {
-        console.error('No results found for the given city')
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
+  function makeUrl(): string {
+    return CREATE_PLACE_CARD.replace('{slug}', slug)
   }
 
   const { isLoaded } = useLoadScript({
@@ -39,13 +27,12 @@ const CityAutocomplete: React.FC = () => {
   const handleCitySelect = async () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace()
+      console.log('fa', place)
       if (place && place.formatted_address) {
         console.log('Selected city:', place.formatted_address)
         setCity(place.formatted_address)
 
         try {
-          console.log('city', city)
-          console.log(apiKey)
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
               place.formatted_address
@@ -54,9 +41,8 @@ const CityAutocomplete: React.FC = () => {
           const data = await response.json()
           console.log(data)
           if (data.results.length > 0) {
-            console.log('data results', data.results)
             const { lat, lng } = data.results[0].geometry.location
-            setCoordinates({ lat, lng })
+            setCordinates({ lat: lat, lng: lng })
           } else {
             console.error('No results found for the given city')
           }
@@ -65,6 +51,29 @@ const CityAutocomplete: React.FC = () => {
         }
       }
     }
+  }
+
+  const submitCityData = () => {
+    console.log(cordinates)
+
+    CreatePlaceCard(makeUrl(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        card: {
+          type: 'PlaceCard',
+          metadata: {
+            cordinates: cordinates,
+            location: city
+          }
+        }
+      }),
+      onSuccessfulFetch: () => {
+        window.alert('place card created successfully')
+      }
+    })
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,47 +1,80 @@
-import React from 'react'
-import { useLinkedIn } from 'react-linkedin-login-oauth2'
+import React, { useState } from 'react'
+import { useLinkedIn, LinkedIn } from 'react-linkedin-login-oauth2'
+import linkedin from 'react-linkedin-login-oauth2/assets/linkedin.png'
+import config from '../../../common/config'
+import useFetch from '../../../common/hooks/useFetch'
+
+interface LinkedInTokenResponse {
+  access_token: string
+  // Add other token properties if needed
+}
 
 const LinkedInSignIn: React.FC = () => {
-  const { linkedInLogin } = useLinkedIn({
-    clientId: '865y5grz09krar',
-    redirectUri: 'http://localhost:5173/signup/4',
-    onSuccess: (code) => {
-      console.log('LinkedIn authentication successful')
-      fetchUserProfile(code)
-      console.log('code', code)
-    },
-    onError: (error) => {
-      console.error('LinkedIn authentication error:', error)
-    }
-  })
+  const CREATE_LINKEDIN_CARD = 'static-card/linkedIn/{slug}'
+  const { fetchData: CreateLinkedInCard } = useFetch<any>()
+  const [isCardCreated, setIsCardCreated] = useState(false)
+  const slug = sessionStorage.getItem('slug') || ''
 
-  const fetchUserProfile = async (code: string) => {
+  const handleLogin = () => {
+    // Step 1: Get the authorization code
+    const clientId = config.linkedin.applicationId
+    const redirectUri = 'http://localhost:5173/signup/4'
+
+    const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=r_dma_portability_3rd_party`
+
+    // Redirect the user to the Calendly authorization page
+    window.location.href = authUrl
+  }
+
+  const handleCallback = async (code: string) => {
     try {
-      const response = await fetch('https://api.linkedin.com/v2/me', {
+      console.log('LinkedIn', code)
+      CreateLinkedInCard(makeLinkedInCardUrl(), {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${code}`
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          code: code
+        }),
+        onSuccessfulFetch: () => {
+          setIsCardCreated(true)
         }
       })
-
-      if (response.ok) {
-        const data = await response.json()
-        console.log('LinkedIn user profile:', data)
-        // Process the user profile data as needed
-      } else {
-        console.error('Error fetching LinkedIn user profile')
-      }
     } catch (error) {
-      console.error('Error fetching LinkedIn user profile:', error)
+      console.error('Error:', error)
     }
   }
 
+  function makeLinkedInCardUrl(): string {
+    return CREATE_LINKEDIN_CARD.replace('{slug}', slug)
+  }
+
+  // Check if there is a code parameter in the URL
+  const urlParams = new URLSearchParams(window.location.search)
+  const code = urlParams.get('code')
+
+  // If the code is present, handle the callback
+  // if (code && !isCardCreated) {
+  //   handleCallback(code)
+  // }
+
   return (
-    <button
-      onClick={linkedInLogin}
-      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Sign in with LinkedIn
-    </button>
+    // <button
+    //   onClick={linkedInLogin}
+    //   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    // >
+    //   Sign in with LinkedIn
+    // </button>
+    <div>
+      {isCardCreated ? (
+        <div>
+          <h2>Welcome, {slug}!</h2>
+        </div>
+      ) : (
+        <button onClick={handleLogin}>Login with LinkedIn</button>
+      )}
+    </div>
   )
 }
 

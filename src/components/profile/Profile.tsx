@@ -14,10 +14,10 @@ import Settings from './Settings'
 
 export default function Profile() {
   const context = useAuthContext()
-  const { id } = useParams()
+  const { slug } = useParams()
   const { event, updateEvent } = useContext(EventContext)
 
-  context!.user.userId = id || ''
+  context!.user.slug = slug || ''
 
   const kleoProfileUrl = 'https://app.kleo.network/profile/'
 
@@ -43,7 +43,7 @@ export default function Profile() {
           </div>
         </header>
         <div className="flex flex-col w-full items-start justify-between py-8 gap-6 md:flex-row">
-          <ProfileCards />
+          {/* <ProfileCards /> */}
           <ProfileCard user={context!.user} />
         </div>
         <BrowsingHistory />
@@ -53,7 +53,7 @@ export default function Profile() {
           onClose={() => setIsShareModalOpen(false)}
         >
           <div className="container mx-auto p-8">
-            <SocialShare profileUrl={kleoProfileUrl + id} />
+            <SocialShare profileUrl={kleoProfileUrl + slug} />
           </div>
         </Modal>
 

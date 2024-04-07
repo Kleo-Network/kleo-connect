@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 
+interface SelectCardsProps {
+  selectedButtons: string[]
+  setSelectedButtons: React.Dispatch<React.SetStateAction<string[]>>
+}
+
 interface ImageButton {
   icon: string
   alt: string
@@ -30,16 +35,15 @@ const imageButtons: ImageButton[] = [
   }
 ]
 
-const App: React.FC<{
-  onExternalToolChange: (externalTools: string[]) => void
-}> = ({ onExternalToolChange }) => {
-  const [selectedButtons, setSelectedButtons] = useState<string[]>([])
-
+const App: React.FC<SelectCardsProps> = ({
+  selectedButtons,
+  setSelectedButtons
+}) => {
   const handleButtonClick = (name: string) => {
     const isSelected = selectedButtons.includes(name)
     if (isSelected) {
-      setSelectedButtons((prevSelectedButtons) =>
-        prevSelectedButtons.filter((nm) => nm !== name)
+      setSelectedButtons((prevSelectedButtons: string[]) =>
+        prevSelectedButtons.filter((nm: string) => nm !== name)
       )
     } else if (selectedButtons.length < 2) {
       setSelectedButtons((prevSelectedButtons) => [
@@ -51,9 +55,9 @@ const App: React.FC<{
 
   useEffect(() => {
     if (selectedButtons.length === 2) {
-      onExternalToolChange(selectedButtons)
+      setSelectedButtons(selectedButtons)
     }
-  }, [selectedButtons, onExternalToolChange])
+  }, [selectedButtons])
 
   return (
     <div>
@@ -93,6 +97,7 @@ const App: React.FC<{
           </div>
         ))}
       </div>
+      <p className="mt-4">{selectedButtons.length} / 2 selected</p>
     </div>
   )
 }
