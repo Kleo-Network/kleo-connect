@@ -63,7 +63,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
           />
         </div>
       )}
-      {twitterCard && twitterCard.cardType === 'twitterCard' && (
+      {twitterCard && twitterCard.cardType === 'XCard' && (
         <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
           <TwitterCard user={twitterCard.metadata as TwitterCardType} />
         </div>

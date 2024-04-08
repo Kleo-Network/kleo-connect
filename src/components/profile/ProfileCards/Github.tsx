@@ -15,7 +15,7 @@ interface TooltipData {
 
 const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
   const { startDate, endDate, heatmapValues, maxCount } = useMemo(() => {
-    const sortedContributions = gitData.contributions.sort(
+    const sortedContributions = gitData.contribution.sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     )
     const startDate =
@@ -35,7 +35,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
       0
     )
     return { startDate, endDate, heatmapValues, maxCount }
-  }, [gitData.contributions])
+  }, [gitData.contribution])
 
   const getClassForValue = (value: TooltipData | null) => {
     if (!value || maxCount === 0) {
@@ -54,7 +54,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
     window.open(gitData.url, '_blank')
   }
 
-  if (gitData.contributions.length === 0) {
+  if (gitData.contribution.length === 0) {
     return <div>No contribution data available.</div>
   }
 
@@ -68,7 +68,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
       </div>
       <div className="flex items-center mb-4">
         <div>
-          <h2 className="text-lg font-bold">{gitData.username}</h2>
+          <h2 className="text-lg font-bold">{gitData.userName}</h2>
         </div>
       </div>
       <div className="mt-4">

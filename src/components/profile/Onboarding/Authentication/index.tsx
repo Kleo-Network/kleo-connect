@@ -179,6 +179,7 @@ export default function Onboarding({
   const { fetchData: UpdateUserData } = useFetch<UserData>()
 
   const handleUserUpdation = (cards: string[]) => {
+    sessionStorage.setItem('externalTools', JSON.stringify(cards))
     UpdateUserData(makeUserUpdationUrl(UPDATE_USER_SETTING), {
       method: 'PUT',
       headers: {

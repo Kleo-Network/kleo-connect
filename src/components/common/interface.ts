@@ -49,10 +49,10 @@ interface Contribution {
   count: number
 }
 export interface GitCard {
-  username: string
+  userName: string
   followers: number
   following: number
-  contributions: Contribution[]
+  contribution: Contribution[]
   url: string
 }
 export interface CalendlyCard {

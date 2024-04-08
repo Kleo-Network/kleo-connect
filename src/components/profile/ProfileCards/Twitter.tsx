@@ -31,7 +31,6 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
         <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
           <span className="text-xs"> {user.followers_count} followers</span>
         </span>
-        hi
         {/* <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
           {user.followingCount} <span className="text-xs">following</span>
         </span> */}
