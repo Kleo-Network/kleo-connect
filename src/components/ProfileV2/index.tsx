@@ -7,6 +7,8 @@ import {
   StaticCard as StaticCardType
 } from '../common/interface'
 import { useState, useEffect } from 'react'
+import CountdownTimer from '../profile/ProfileCards/countdown'
+import { convertEpochToISO } from '../profile/ProfileCards'
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const [isAccordianOpen, setIsAccordianOpen] = useState<boolean>(false)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
@@ -63,6 +65,20 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   return (
     <div className="flex flex-col">
+      <div className="h-full w-full flex flex-row bg-violet-900 self-stretch items-center justify-between">
+        <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
+          <span className="text-white text-l font-semibold">
+            {' '}
+            New cards arriving in{' '}
+          </span>
+          <span className="text-white font-semibold ">
+            <CountdownTimer
+              endDate={convertEpochToISO(user.last_cards_marked + 86400)}
+              isProfilePage={true}
+            />
+          </span>
+        </div>
+      </div>
       <div className="flex w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid grid-cols-8 gap-1">

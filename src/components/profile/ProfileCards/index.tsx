@@ -241,7 +241,12 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
               cards.length <= 0 && (
                 <div className="flex-grow">
                   <div className="bg-white rounded-lg shadow-lg p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight]">
-                    <CountdownTimer endDate="2024-02-16T00:00:00Z" />
+                    <CountdownTimer
+                      endDate={convertEpochToISO(
+                        user.last_cards_marked + 86400
+                      )}
+                      isProfilePage={false}
+                    />
                   </div>
                 </div>
               )
@@ -251,4 +256,10 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
       </div>
     </div>
   )
+}
+
+export function convertEpochToISO(epoch: number): string {
+  const date = new Date(epoch * 1000) // Convert seconds to milliseconds
+  const isoString = date.toISOString() // Get ISO 8601 string in UTC timezone
+  return isoString
 }
