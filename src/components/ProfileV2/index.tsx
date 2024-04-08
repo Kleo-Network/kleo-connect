@@ -7,11 +7,16 @@ import {
   StaticCard as StaticCardType,
   PendingCard
 } from '../common/interface'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import CountdownTimer from '../profile/ProfileCards/countdown'
 import { convertEpochToISO } from '../profile/ProfileCards'
+import Modal from '../common/Modal'
+import { NavbarEvents } from '../constants/Events'
+import { EventContext } from '../common/contexts/EventContext'
+import Settings from '../profile/Settings'
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const [isAccordianOpen, setIsAccordianOpen] = useState<boolean>(false)
+  const { event, updateEvent } = useContext(EventContext)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
   const {
     status,
@@ -94,8 +99,8 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   return (
     <div className="flex flex-col">
-      {pendignCards?.length <= 0 && (
-        <div className="h-full w-full flex flex-row bg-violet-700 self-stretch items-center justify-between">
+      {!pendignCards?.length && (
+        <div className="h-full w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
           <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
             <span className="text-white text-l font-semibold">
               {' '}
@@ -139,6 +144,14 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={event === NavbarEvents.SETTINGS}
+        onClose={() => updateEvent(null)}
+      >
+        <div className="container">
+          <Settings user={user} />
+        </div>
+      </Modal>
     </div>
   )
 }

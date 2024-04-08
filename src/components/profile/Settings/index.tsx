@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Privacy from './Privacy'
 import { UserData } from '../../constants/SignupData'
+import Mint from './mint'
 
 interface User {
   user: UserData
@@ -10,27 +11,18 @@ enum TABS {
   //   PROFILE = 'Pofile',
   //   WALLET = 'Wallet Connects',
   //   GITCOIN = 'Gitcoin Passports',
-  PRIVACY = 'Privacy'
+  // PRIVACY = 'Privacy'
+  MINT = 'Mint your cards'
   //   TERMS = 'Terms & Conditions'
 }
 
 const Settings = ({ user }: User) => {
-  const [selectedTab, setSelectedTab] = useState<TABS>(TABS.PRIVACY)
+  const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
 
   const renderTabContent = () => {
     switch (selectedTab) {
-      //   case TABS.PROFILE:
-      //     return (
-      //       <div>
-      //         PROFILE
-      //       </div>
-      //     )
-      //   case TABS.WALLET:
-      //     return <div>Wallet Connects</div>
-      //   case TABS.GITCOIN:
-      //     return <div>Gitcoin</div>
-      case TABS.PRIVACY:
-        return <Privacy />
+      case TABS.MINT:
+        return <Mint />
       //   case TABS.TERMS:
       //     return <div>TERMS</div>
       default:

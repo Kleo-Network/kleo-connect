@@ -148,15 +148,12 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
           {/* <!-- Right elements --> */}
 
           <div className="flex items-center">
-            <button className="p-2 mr-1 rounded-md bg-primary text-white">
-              mint
-            </button>
             <button
               data-te-ripple-init
               onClick={handleSettingsClick}
-              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+              className="p-2 mr-1 stroke-black hover:bg-purple-700 hover:text-white hover:font-bold rounded-md"
             >
-              <Settings className="w-5 h-5 stroke-current" />
+              mint
             </button>
             <a
               href="/privacy"
