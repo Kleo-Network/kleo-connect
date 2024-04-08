@@ -145,7 +145,7 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
           <div className="flex w-full justify-between items-center gap-2">
             <div>
               <h3 className="text-xl text-gray-900 flex-grow-0">
-                Publish Activity for{' '}
+                Publish Activity -{' '}
                 {activeCardList.length > 0 && formatDate(activeCard.date)}
                 {activeCardList.length <= 0 && cards.length > 0 && 'Other days'}
               </h3>

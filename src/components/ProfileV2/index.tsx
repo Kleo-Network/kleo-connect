@@ -4,7 +4,8 @@ import useFetch from '../common/hooks/useFetch'
 import {
   UserDataProps,
   fullUserData,
-  StaticCard as StaticCardType
+  StaticCard as StaticCardType,
+  PendingCard
 } from '../common/interface'
 import { useState, useEffect } from 'react'
 import CountdownTimer from '../profile/ProfileCards/countdown'
@@ -22,9 +23,10 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const [createdStaticCards, setCreatedStaticCards] =
     useState<StaticCardType[]>()
 
+  const [pendignCards, setPendingCards] = useState<PendingCard[]>()
+
   const GET_STATIC_CARDS = 'cards/static/{slug}'
   const { error: _errorstatic, fetchData: fetchStaticCards } = useFetch()
-  const GET_USER_API = 'user/get-user/{slug}'
   function makeUserUpdationUrl(slug_string: string): string {
     const slug = localStorage.getItem('slug') || ''
     return slug_string.replace('{slug}', slug)
@@ -47,6 +49,33 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
     return GET_USER_DATA.replace('{slug}', localStorage.getItem('slug') || '')
   }
 
+  const GET_CARD_DETAIL = 'cards/pending/{slug}'
+  const { fetchData: fetchPendingCardData } = useFetch<PendingCard[]>()
+
+  function getPendingCardDetails() {
+    const slug = localStorage.getItem('slug') || ''
+    return GET_CARD_DETAIL.replace('{slug}', slug)
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchPendingCardData(getPendingCardDetails(), {
+          onSuccessfulFetch(data) {
+            if (data) {
+              console.log('pending Cards', data)
+
+              setPendingCards(data)
+            }
+          }
+        })
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    fetchData()
+  }, [])
+
   useEffect(() => {
     try {
       fetchFullUserData(makeSlugApiUrl(), {
@@ -65,20 +94,22 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="h-full w-full flex flex-row bg-violet-700 self-stretch items-center justify-between">
-        <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
-          <span className="text-white text-l font-semibold">
-            {' '}
-            New cards arriving in{' '}
-          </span>
-          <span className="text-white font-semibold ">
-            <CountdownTimer
-              endDate={convertEpochToISO(user.last_cards_marked + 86400)}
-              isProfilePage={true}
-            />
-          </span>
+      {pendignCards?.length <= 0 && (
+        <div className="h-full w-full flex flex-row bg-violet-700 self-stretch items-center justify-between">
+          <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
+            <span className="text-white text-l font-semibold">
+              {' '}
+              New cards arriving in{' '}
+            </span>
+            <span className="text-white font-semibold ">
+              <CountdownTimer
+                endDate={convertEpochToISO(user.last_cards_marked + 86400)}
+                isProfilePage={true}
+              />
+            </span>
+          </div>
         </div>
-      </div>
+      )}
       <div className="flex mt-4 w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid grid-cols-8 gap-1">
