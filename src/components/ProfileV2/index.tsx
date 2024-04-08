@@ -65,7 +65,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="h-full w-full flex flex-row bg-violet-900 self-stretch items-center justify-between">
+      <div className="h-full w-full flex flex-row bg-violet-700 self-stretch items-center justify-between">
         <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
           <span className="text-white text-l font-semibold">
             {' '}
@@ -79,7 +79,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </span>
         </div>
       </div>
-      <div className="flex w-full items-center mx-auto justify-center">
+      <div className="flex mt-4 w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid grid-cols-8 gap-1">
             {userFullData?.user && createdStaticCards && (
@@ -91,6 +91,14 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
       <div className="flex w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid">
+            <div className="px-2 mb-4 flex flex-col items-center self-stretch ">
+              <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start rounded-lg border border-gray-200 p-2">
+                <ul>
+                  <li>You have not published a new card</li>
+                  <li>Go here and publish now </li>
+                </ul>
+              </div>
+            </div>
             {userFullData?.user && (
               <Feeds
                 data={userFullData?.published_cards}
