@@ -22,7 +22,7 @@ const GitHubSignIn: React.FC<GithubProps> = ({ cards }) => {
     const getCardinCards = (cardType: string) => {
       if (cards?.find((card) => card.cardType == cardType)) {
         const card = cards?.find((card) => card.cardType == cardType)
-        if (card) setUsername((card.metadata as GitCard).username)
+        if (card) setUsername((card.metadata as GitCard).userName)
         return true
       }
       return false
@@ -31,7 +31,6 @@ const GitHubSignIn: React.FC<GithubProps> = ({ cards }) => {
   }, [])
 
   const handleSignIn = () => {
-    console.log(config.github.clientId)
     const clientId = config.github.clientId
     const redirectUri = 'http://localhost:5173/signup/4'
     const scope = 'repo'
