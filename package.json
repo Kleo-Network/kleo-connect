@@ -56,7 +56,8 @@
     "recharts": "^2.8.0",
     "tw-elements": "^1.1.0",
     "web3": "^4.2.2",
-    "arweave": "^1.15.0"
+    "@irys/sdk": "^0.1.21",
+    "vite-plugin-node-polyfills": "^0.21.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",
@@ -88,6 +89,7 @@
     "vite": "^4.1.1",
     "vite-plugin-svgr": "^3.2.0",
     "vitest": "^0.32.2",
-    "arweave": "^1.15.0"
+    "@irys/sdk": "^0.1.21",
+    "vite-plugin-node-polyfills": "^0.21.0"
   }
 }

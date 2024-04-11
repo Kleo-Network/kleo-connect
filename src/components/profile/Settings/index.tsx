@@ -1,30 +1,47 @@
-import React, { useState } from 'react'
-import Privacy from './Privacy'
+import { useMemo, useState } from 'react'
 import { UserData } from '../../constants/SignupData'
 import Mint from './mint'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
+import { clusterApiUrl } from '@solana/web3.js'
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
+import {
+  ConnectionProvider,
+  WalletProvider
+} from '@solana/wallet-adapter-react'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 
 interface User {
   user: UserData
 }
 
 enum TABS {
-  //   PROFILE = 'Pofile',
-  //   WALLET = 'Wallet Connects',
-  //   GITCOIN = 'Gitcoin Passports',
-  // PRIVACY = 'Privacy'
   MINT = 'Mint your cards'
-  //   TERMS = 'Terms & Conditions'
 }
 
 const Settings = ({ user }: User) => {
+  const network = WalletAdapterNetwork.Devnet
+
+  // You can also provide a custom RPC endpoint.
+  const endpoint = useMemo(() => clusterApiUrl(network), [network])
+
+  const phantomWallet = new PhantomWalletAdapter()
+
+  // Pass the wallet adapters to the WalletProvider
+  const wallets = [phantomWallet]
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
 
   const renderTabContent = () => {
     switch (selectedTab) {
       case TABS.MINT:
-        return <Mint />
-      //   case TABS.TERMS:
-      //     return <div>TERMS</div>
+        return (
+          <ConnectionProvider endpoint={endpoint}>
+            <WalletProvider wallets={wallets} autoConnect>
+              <WalletModalProvider>
+                <Mint />
+              </WalletModalProvider>
+            </WalletProvider>
+          </ConnectionProvider>
+        )
       default:
         return null
     }
