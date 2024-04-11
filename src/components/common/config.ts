@@ -27,6 +27,9 @@ const config = {
   },
   googlemap: {
     key: import.meta.env.VITE_GOOGLE_MAP_KEY
+  },
+  irys: {
+    rpcUrl: import.meta.env.VITE_RPC_URL
   }
 }
 

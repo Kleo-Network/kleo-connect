@@ -6,6 +6,7 @@ import '@solana/wallet-adapter-react-ui/styles.css'
 import { fullUserData } from '../../common/interface'
 import CryptoJS from 'crypto-js'
 import { WebIrys } from '@irys/sdk'
+import config from '../../common/config'
 
 export default function Mint() {
   const [irysUriLink, setIrysUriLink] = useState<string>('')
@@ -27,8 +28,7 @@ export default function Mint() {
 
   const getWebIrys = async (): Promise<WebIrys> => {
     // Devnet RPC URLs change often, use a recent one from https://chainlist.org
-    const rpcUrl =
-      'https://mainnet.helius-rpc.com/?api-key=444859c7-2f81-4bb7-aa60-4d3ad9e39e4d'
+    const rpcUrl = config.irys.rpcUrl
     if (solWallet) {
       const wallet = {
         rpcUrl: rpcUrl,
