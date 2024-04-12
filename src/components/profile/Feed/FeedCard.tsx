@@ -34,6 +34,10 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
     handleCardDelete(id)
   }
 
+  const handleOnClick = (url: string) => {
+    window.open(url, '_blank')
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-lg mt-3 p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight] bg-gray-300 bg-opacity-50 backdrop-blur-md border border-white border-opacity-25">
       {/* Header for card*/}
@@ -70,6 +74,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
             style={{
               backgroundColor: '#fff'
             }}
+            onClick={() => handleOnClick(card.urls.url)}
           >
             <img
               className="w-4 h-4 flex-none"
