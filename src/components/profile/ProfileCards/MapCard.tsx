@@ -9,6 +9,7 @@ const MapCard: React.FC<MapCardProps> = ({ map }) => {
   return (
     <div className="flex-1 bg-gray-100 p-1 rounded-lg shadow-md relative">
       <MapContainer
+        style={{ zIndex: 1 }}
         className="h-60"
         center={[map.cordinates.lat, map.cordinates.lng]}
         zoom={9}
