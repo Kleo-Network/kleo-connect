@@ -157,6 +157,7 @@ export default function Onboarding({
         if (data?.token) {
           setIsSignUp(true)
           localStorage.setItem('token', data.token)
+          ;(window as any).kleoUploadHistory(data.slug, data.token)
           setCurrentStep(currentStep + 1)
           navigate('/signup/' + (currentStep + 1))
         } else {

@@ -127,19 +127,21 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
       <div className="flex w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid">
-            <div className="px-2 mb-4 flex flex-col items-center self-stretch ">
-              <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start rounded-lg border border-gray-200 p-2">
-                <ul>
-                  <li>You have not published a new card</li>
-                  <li>Go here and publish now </li>
-                </ul>
-              </div>
-            </div>
-            {userFullData?.user && (
+            {userFullData?.published_cards &&
+            userFullData?.published_cards?.length > 0 ? (
               <Feeds
                 data={userFullData?.published_cards}
                 user={userFullData?.user}
               />
+            ) : (
+              <div className="px-2 mb-4 flex flex-col items-center self-stretch ">
+                <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start rounded-lg border border-gray-200 p-2">
+                  <ul>
+                    <li>You have not published a new card</li>
+                    <li>Go here and publish now </li>
+                  </ul>
+                </div>
+              </div>
             )}
           </div>
         </div>
