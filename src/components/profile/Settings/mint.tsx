@@ -7,6 +7,14 @@ import { fullUserData } from '../../common/interface'
 import CryptoJS from 'crypto-js'
 import { WebIrys } from '@irys/sdk'
 import config from '../../common/config'
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction
+} from '@solana/web3.js'
+import { Metaplex, irysStorage, keypairIdentity } from '@metaplex-foundation/js'
 
 export default function Mint() {
   const [irysUriLink, setIrysUriLink] = useState<string>('')
@@ -25,6 +33,78 @@ export default function Mint() {
     const encryptedData = CryptoJS.AES.encrypt(jsonData, key).toString() // Encrypt the string using AES
     return encryptedData
   }
+
+  // ===================================================================================
+
+  // Function to mint a string
+  async function mintNFT() {
+    if (solWallet) {
+      try {
+        const wallet = Keypair.generate()
+        console.log(wallet)
+        const connection = new Connection(config.irys.rpcUrl)
+
+        const lamports = await connection.getMinimumBalanceForRentExemption(
+          Buffer.byteLength(irysUriLink, 'utf8')
+        )
+        console.log('lam', lamports)
+        console.log('dataL', Buffer.byteLength(irysUriLink, 'utf8'))
+
+        const recentBlockhash = await connection.getRecentBlockhash()
+
+        const transaction = new Transaction({
+          recentBlockhash: recentBlockhash.blockhash
+        }).add(
+          SystemProgram.transfer({
+            fromPubkey: solWallet.publicKey,
+            toPubkey: wallet.publicKey,
+            lamports
+          })
+        )
+
+        const {
+          context: { slot: minContextSlot },
+          value: { blockhash, lastValidBlockHeight }
+        } = await connection.getLatestBlockhashAndContext()
+
+        const signature = await solWallet.sendTransaction(
+          transaction,
+          connection,
+          {
+            minContextSlot
+          }
+        )
+
+        await connection.confirmTransaction({
+          blockhash,
+          lastValidBlockHeight,
+          signature
+        })
+
+        const balance = await connection.getBalance(wallet.publicKey)
+        console.log('balance', balance)
+
+        const metaplex = Metaplex.make(connection)
+          .use(keypairIdentity(wallet))
+          .use(irysStorage())
+
+        // Mint the NFT
+        console.log('meta', metaplex)
+
+        const { nft } = await metaplex.nfts().create({
+          tokenOwner: solWallet.publicKey,
+          uri: irysUriLink,
+          name: `Kleo user data`,
+          sellerFeeBasisPoints: 0 // Represents 5.00%.
+        })
+        console.log('data', nft)
+        return nft.uri
+      } catch (error) {
+        console.log('error:', error)
+      }
+    }
+  }
+  // ===================================================================================
 
   const getWebIrys = async (): Promise<WebIrys> => {
     // Devnet RPC URLs change often, use a recent one from https://chainlist.org
@@ -87,8 +167,12 @@ export default function Mint() {
     }
   }
 
-  const handleMint = () => {
-    setTransactionLink('sadsafsdgtwdcrwfwersdfwef')
+  const handleMint = async () => {
+    const result = await mintNFT()
+    if (result) {
+      setTransactionLink(result)
+    }
+    console.log(result)
   }
 
   return (
