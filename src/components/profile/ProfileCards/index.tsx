@@ -113,6 +113,10 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
 
   const availableDates = getLastFourDates(cards)
 
+  const handleOnClick = (url: string) => {
+    window.open(url, '_blank')
+  }
+
   const removeCard = (id: string, hasToPublished: boolean) => {
     console.log(id)
 
@@ -195,21 +199,24 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
 
                       <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start max-h-40">
                         <>
-                          <button
-                            className="flex items-center  gap-2 rounded-lg border border-gray-200 px-2 py-1"
-                            style={{
-                              backgroundColor: '#fff'
-                            }}
-                          >
-                            <img
-                              className="w-4 h-4 flex-none"
-                              src={`https://www.google.com/s2/favicons?domain=${activeCard.urls.url}`}
-                            />
+                          {activeCard.urls.map((urls) => (
+                            <button
+                              className="flex items-center  gap-2 rounded-lg border border-gray-200 px-2 py-1"
+                              style={{
+                                backgroundColor: '#fff'
+                              }}
+                              onClick={() => handleOnClick(urls.url)}
+                            >
+                              <img
+                                className="w-4 h-4 flex-none"
+                                src={`https://www.google.com/s2/favicons?domain=${urls.url}`}
+                              />
 
-                            <h3 className="text-sm font-medium text-gray-700">
-                              {activeCard.urls.title}
-                            </h3>
-                          </button>
+                              <h3 className="text-sm font-medium text-gray-700">
+                                {urls.title}
+                              </h3>
+                            </button>
+                          ))}
                         </>
                       </div>
                     </div>

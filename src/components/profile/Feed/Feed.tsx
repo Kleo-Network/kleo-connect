@@ -13,7 +13,7 @@ const Feeds: React.FC<Feed> = ({ data, user }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const uniqueCategories = Array.from(
-    new Set(cards.map((card) => card.tags[0]))
+    new Set(cards.map((card) => card.category))
   )
 
   const handleCategoryChange = (category: string | null) => {
@@ -57,7 +57,7 @@ const Feeds: React.FC<Feed> = ({ data, user }) => {
       <div className="grid grid-cols-3 gap-4">
         {selectedCategory
           ? cards
-              .filter((card) => card.tags[0] === selectedCategory)
+              .filter((card) => card.category === selectedCategory)
               .map((cardData) => (
                 <FeedCard
                   handleCardDelete={handleCardDelete}

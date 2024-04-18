@@ -36,7 +36,7 @@ export interface PublishedCard {
   metadata: PublishedCardMetadata
   minted: boolean
   tags: string[]
-  urls: PublishedCardUrls
+  urls: PublishedCardUrls[]
 }
 export enum CardType {
   GitCard = 'GitCard',
@@ -104,5 +104,5 @@ export interface PendingCard {
   metadata: PublishedCardMetadata
   minted: boolean
   tags: string[]
-  urls: PublishedCardUrls
+  urls: PublishedCardUrls[]
 }
