@@ -76,8 +76,9 @@ export default function Onboarding({
           localStorage.setItem('slug', data.slug)
         }
         if (data?.token) {
-          setLogin(true)
           localStorage.setItem('token', data.token)
+          ;(window as any).signIn(data.slug, data.token)
+          setLogin(true)
         } else {
           window.alert('Error while creating user')
         }
