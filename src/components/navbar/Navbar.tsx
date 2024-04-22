@@ -135,7 +135,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
               })}
           </ul>
           <div className="flex items-center justify-center flex-grow">
-            <a href="/profilev2" className="flex items-center">
+            <a href={`/profilev2/${slug}`} className="flex items-center">
               <img
                 src={avatar.src}
                 alt={avatar.alt}

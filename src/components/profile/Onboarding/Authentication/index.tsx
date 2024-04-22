@@ -155,10 +155,11 @@ export default function Onboarding({
           localStorage.setItem('slug', data.slug)
         }
         if (data?.token) {
-          setIsSignUp(true)
           localStorage.setItem('token', data.token)
           ;(window as any).kleoUploadHistory(data.slug, data.token)
+          alert('upload called?')
           setCurrentStep(currentStep + 1)
+          setIsSignUp(true)
           navigate('/signup/' + (currentStep + 1))
         } else {
           window.alert('Error while creating user')

@@ -9,6 +9,7 @@ import ProfileCards from './components/profile/ProfileCards'
 import { UserData } from './components/constants/SignupData'
 import { EventProvider } from './components/common/contexts/EventContext'
 import Privacy from './components/profile/Settings/Privacy'
+import useFetch, { FetchStatus } from './components/common/hooks/useFetch'
 
 function App(): ReactElement {
   const emptyStringArray: string[] = []
@@ -30,9 +31,26 @@ function App(): ReactElement {
     email: '',
     token: ''
   })
+  const GET_USER_API = 'user/get-user/{slug}'
+  const { fetchData: fetchUser, data: userDataFromDB } = useFetch<UserData>()
+
+  function makeUserUpdationUrl(slug_string: string): string {
+    const slug = localStorage.getItem('slug') || ''
+    return slug_string.replace('{slug}', slug)
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('token')
+    fetchUser(makeUserUpdationUrl(GET_USER_API), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      onSuccessfulFetch: (data) => {
+        setUser(data)
+        Navigate('/')
+      }
+    })
     setIsLoggedIn(!!token) // Convert token to boolean (truthy/falsy)
   }, []) // Empty dependency array: run only on initial render
 
