@@ -138,7 +138,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
                 <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start rounded-lg border border-gray-200 p-2">
                   <ul>
                     <li>You have not published a new card</li>
-                    <li>Go here and publish now </li>
+                    <li>Go here and publish now, only minting it will allow you to be eligible for airdrop seasons. </li>
                   </ul>
                 </div>
               </div>
