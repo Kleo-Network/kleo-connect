@@ -50,7 +50,7 @@ export default function Onboarding({
 }: OnboardingProps) {
   const { step } = useParams()
   const [infoExpanded, setInfoExpanded] = useState(false)
-  const [pluginState, setPluginState] = useState(PluginState.INSTALLED)
+  const [pluginState, setPluginState] = useState(PluginState.CHECKING)
   const [currentStep, setCurrentStep] = useState(parseInt(step || '0'))
   const [code, setCode] = useState('')
 
