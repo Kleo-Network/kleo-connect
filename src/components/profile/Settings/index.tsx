@@ -1,14 +1,5 @@
 import { useMemo, useState } from 'react'
 import { UserData } from '../../constants/SignupData'
-import Mint from './mint'
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
-import { clusterApiUrl } from '@solana/web3.js'
-// import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
-import {
-  ConnectionProvider,
-  WalletProvider
-} from '@solana/wallet-adapter-react'
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 
 interface User {
   user: UserData
@@ -19,10 +10,7 @@ enum TABS {
 }
 
 const Settings = ({ user }: User) => {
-  const network = WalletAdapterNetwork.Devnet
-
   // You can also provide a custom RPC endpoint.
-  const endpoint = useMemo(() => clusterApiUrl(network), [network])
 
   // const phantomWallet = new PhantomWalletAdapter()
 
