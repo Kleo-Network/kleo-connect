@@ -30,6 +30,9 @@ const config = {
   },
   irys: {
     rpcUrl: import.meta.env.VITE_RPC_URL
+  },
+  connection: {
+    redirectionUrl: import.meta.env.VITE_REDIRECTED_URL
   }
 }
 
