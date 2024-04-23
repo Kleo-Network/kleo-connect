@@ -36,7 +36,6 @@ export default function BadgesList() {
                 }}
                 type="checkbox"
                 checked={true}
-                onChange={() => {}}
               />
             </div>
           </div>
@@ -67,15 +66,14 @@ export default function BadgesList() {
               }}
               type="checkbox"
               checked={true}
-              onChange={() => {}}
             />
           </div>
         </div>
 
         <div
-          className={`relative ${
-            true ? 'pointer-events-none' : ''
-          }  mx-6 mb-6 h-1/3 bg-violet-200 border border-2 border-violet-600 rounded-lg h-1/3`}
+          className={`relative 
+             pointer-events-none 
+            mx-6 mb-6 h-1/3 bg-violet-200 border border-2 border-violet-600 rounded-lg h-1/3`}
         >
           {/* Overlay */}
           {true && (
