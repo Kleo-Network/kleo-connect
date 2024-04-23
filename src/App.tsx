@@ -105,7 +105,14 @@ function App(): ReactElement {
               path="/cards"
               element={<ProfileCards user={user} setUser={setUser} />}
             />
-            <Route path="*" element={<Navigate to="/" />} />
+            {isLoggedIn ? (
+              <Route
+                path="*"
+                element={<ProfileCards user={user} setUser={setUser} />}
+              />
+            ) : (
+              <Route path="*" element={<Navigate to="/" />} />
+            )}
           </Routes>
         </div>
       </div>
