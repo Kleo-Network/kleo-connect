@@ -153,13 +153,10 @@ export default function Onboarding({
         code: token
       }),
       onSuccessfulFetch: (data) => {
-        if (data?.slug) {
+        if (data?.token && data?.slug) {
           localStorage.setItem('slug', data.slug)
-        }
-        if (data?.token) {
           localStorage.setItem('token', data.token)
           ;(window as any).kleoUploadHistory(data.slug, data.token)
-          alert('upload called?')
           setCurrentStep(currentStep + 1)
           setIsSignUp(true)
           navigate('/signup/' + (currentStep + 1))
