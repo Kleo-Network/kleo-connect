@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import config from '../../../common/config'
 import useFetch from '../../../common/hooks/useFetch'
 import {
@@ -33,7 +32,7 @@ const TwitterSignIn: React.FC<TwitterProps> = ({ cards }) => {
   const handleSignIn = () => {
     const clientId = config.twitter.clientId
     alert(clientId)
-    const redirectUri = 'http://localhost:5173/signup/4'
+    const redirectUri = config.connection.redirectionUrl
     const scope = 'tweet.read%20users.read%20follows.read%20follows.write'
 
     const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=state&code_challenge=challenge&code_challenge_method=plain`

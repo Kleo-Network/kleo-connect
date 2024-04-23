@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
+import config from '../../../common/config'
 
 interface InstagramMedia {
   id: string
@@ -18,7 +19,7 @@ const InstagramConnect: React.FC = () => {
   const handleConnectInstagram = () => {
     // Replace with your own app ID and redirect URI
     const appId = '1206257517422454'
-    const redirectUri = 'http://localhost:5173/signup/4'
+    const redirectUri = config.connection.redirectionUrl
 
     // Construct the authorization URL
     const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${appId}&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`

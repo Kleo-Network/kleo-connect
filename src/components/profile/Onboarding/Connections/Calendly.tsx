@@ -34,9 +34,10 @@ const CalendlyLogin: React.FC<CalendlyLoginProps> = ({ cards }) => {
   }, [])
 
   const handleLogin = () => {
+    alert(config.connection.redirectionUrl)
     // Step 1: Get the authorization code
     const clientId = config.calendly.apiKey
-    const redirectUri = 'http://localhost:5173/signup/4'
+    const redirectUri = config.connection.redirectionUrl
     const responseType = 'code'
 
     const authUrl = `https://calendly.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}`

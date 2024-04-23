@@ -47,8 +47,9 @@ function App(): ReactElement {
         'Content-Type': 'application/json'
       },
       onSuccessfulFetch: (data) => {
-        setUser(data)
-        Navigate('/')
+        if (data) {
+          setUser(data)
+        }
       }
     })
     setIsLoggedIn(!!token) // Convert token to boolean (truthy/falsy)

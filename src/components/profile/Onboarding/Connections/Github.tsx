@@ -32,7 +32,7 @@ const GitHubSignIn: React.FC<GithubProps> = ({ cards }) => {
 
   const handleSignIn = () => {
     const clientId = config.github.clientId
-    const redirectUri = 'http://localhost:5173/signup/4'
+    const redirectUri = config.connection.redirectionUrl
     const scope = 'repo'
 
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`

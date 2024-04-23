@@ -18,7 +18,7 @@ const LinkedInSignIn: React.FC = () => {
   const handleLogin = () => {
     // Step 1: Get the authorization code
     const clientId = config.linkedin.applicationId
-    const redirectUri = 'http://localhost:5173/signup/4'
+    const redirectUri = config.connection.redirectionUrl
 
     const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=r_dma_portability_3rd_party`
 
