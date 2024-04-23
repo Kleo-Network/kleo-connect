@@ -59,7 +59,7 @@ const CalendlyLogin: React.FC<CalendlyLoginProps> = ({ cards }) => {
           client_secret: config.calendly.clientSecret,
           code: code,
           grant_type: 'authorization_code',
-          redirect_uri: 'http://localhost:5173/signup/4'
+          redirect_uri: config.connection.redirectionUrl
         }
       )
 

@@ -36,7 +36,7 @@ const InstagramConnect: React.FC = () => {
           client_id: '1206257517422454',
           client_secret: '6c95cdefe002c75b95f8d3cd8b962452',
           grant_type: 'authorization_code',
-          redirect_uri: 'http://localhost:5173/signup/4',
+          redirect_uri: config.connection.redirectionUrl,
           code: code
         })
       console.log(tokenResponse)
