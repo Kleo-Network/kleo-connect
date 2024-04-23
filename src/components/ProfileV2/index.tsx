@@ -14,16 +14,13 @@ import Modal from '../common/Modal'
 import { NavbarEvents } from '../constants/Events'
 import { EventContext } from '../common/contexts/EventContext'
 import Settings from '../profile/Settings'
+import { useParams } from 'react-router-dom'
+
 export default function ProfileV2({ user, setUser }: UserDataProps) {
-  const [isAccordianOpen, setIsAccordianOpen] = useState<boolean>(false)
   const { event, updateEvent } = useContext(EventContext)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
-  const {
-    status,
-    data,
-    error,
-    fetchData: fetchFullUserData
-  } = useFetch<fullUserData>()
+  const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
+  const { slug } = useParams()
 
   const [createdStaticCards, setCreatedStaticCards] =
     useState<StaticCardType[]>()
@@ -33,8 +30,8 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const GET_STATIC_CARDS = 'cards/static/{slug}'
   const { error: _errorstatic, fetchData: fetchStaticCards } = useFetch()
   function makeUserUpdationUrl(slug_string: string): string {
-    const slug = localStorage.getItem('slug') || ''
-    return slug_string.replace('{slug}', slug)
+    const slug_to_fetch_data = slug || localStorage.getItem('slug') || ''
+    return slug_string.replace('{slug}', slug_to_fetch_data)
   }
   useEffect(() => {
     fetchStaticCards(makeUserUpdationUrl(GET_STATIC_CARDS), {
@@ -51,15 +48,18 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   const GET_USER_DATA = 'user/{slug}/published-cards/info'
   function makeSlugApiUrl(): string {
-    return GET_USER_DATA.replace('{slug}', localStorage.getItem('slug') || '')
+    return GET_USER_DATA.replace(
+      '{slug}',
+      slug || localStorage.getItem('slug') || ''
+    )
   }
 
   const GET_CARD_DETAIL = 'cards/pending/{slug}'
   const { fetchData: fetchPendingCardData } = useFetch<PendingCard[]>()
 
   function getPendingCardDetails() {
-    const slug = localStorage.getItem('slug') || ''
-    return GET_CARD_DETAIL.replace('{slug}', slug)
+    const slug_to_fetch_data = slug || localStorage.getItem('slug') || ''
+    return GET_CARD_DETAIL.replace('{slug}', slug_to_fetch_data)
   }
 
   useEffect(() => {
@@ -118,8 +118,11 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
       <div className="flex mt-4 w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid grid-cols-8 gap-1">
-            {userFullData?.user && createdStaticCards && (
-              <ProfileV3 data={createdStaticCards} user={userFullData.user} />
+            {userFullData?.user && userFullData?.static_cards && (
+              <ProfileV3
+                data={userFullData.static_cards}
+                user={userFullData.user}
+              />
             )}
           </div>
         </div>

@@ -5,9 +5,7 @@ import DataCardBody from './FeedCardBody/DataCardBody'
 import { UserData } from '../../constants/SignupData'
 import { PublishedCard } from '../../common/interface'
 import useFetch from '../../common/hooks/useFetch'
-
-const user1 =
-  'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp'
+import { useEffect, useState } from 'react'
 
 interface Card {
   handleCardDelete: (id: string) => void
@@ -17,10 +15,22 @@ interface Card {
 
 export default function FeedCard({ card, user, handleCardDelete }: Card) {
   const { fetchData: deletePublishedCard } = useFetch<any>()
+  const [isPublic, setIsPublic] = useState<boolean>(true)
   const DELETE_PUBLISHED_CARD = 'cards/published/{slug}'
+
   function getDeleteCardUrl() {
     return DELETE_PUBLISHED_CARD.replace('{slug}', user.slug)
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      setIsPublic(false)
+    } else {
+      setIsPublic(true)
+    }
+  }, [])
+
   const handleDeleteCard = (id: string) => {
     deletePublishedCard(getDeleteCardUrl(), {
       method: 'DELETE',
@@ -94,7 +104,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-500">Posted on {card.date}</span>
         </div>
-        {!card.minted && (
+        {!card.minted && !isPublic && (
           <div className="absolute bottom-0 right-0 mr-2 mb-1">
             <button onClick={() => handleDeleteCard(card.id)}>
               <Bin className="w-5 h-5 text-gray-600" />
