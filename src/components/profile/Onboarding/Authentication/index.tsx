@@ -55,6 +55,7 @@ export default function Onboarding({
   const [code, setCode] = useState('')
 
   const [login, setLogin] = useState(false)
+  const navigate = useNavigate()
 
   // Var and methods for login step 0
   const USER_LOGIN_PATH = 'user/create-user'
@@ -72,15 +73,16 @@ export default function Onboarding({
         code: token
       }),
       onSuccessfulFetch: (data) => {
-        if (data?.slug) {
+        if ((data as any)?.message == 'Please sign up') {
+          navigate('/signup/1')
+          setCurrentStep(1)
+        } else if (data?.slug && data?.token) {
           localStorage.setItem('slug', data.slug)
-        }
-        if (data?.token) {
           localStorage.setItem('token', data.token)
           ;(window as any).signIn(data.slug, data.token)
           setLogin(true)
         } else {
-          window.alert('Error while creating user')
+          navigate('/signup/1')
         }
       }
     })
@@ -90,7 +92,6 @@ export default function Onboarding({
 
   const CHECK_SLUG_FOR_USER = 'user/check_slug?slug={slug}'
   const CREATE_USER_FOR_KLEO = 'user/create-user'
-  const navigate = useNavigate()
   const [userSlug, setUserSlug] = useState('')
   const [isSlugAvailable, setIsSlugAvailable] = useState(false)
   const debouncedIsSlugAvailableTerm = useDebounce(userSlug, 500)
