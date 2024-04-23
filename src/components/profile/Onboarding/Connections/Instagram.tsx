@@ -18,7 +18,7 @@ const InstagramConnect: React.FC = () => {
 
   const handleConnectInstagram = () => {
     // Replace with your own app ID and redirect URI
-    const appId = '1206257517422454'
+    const appId = config.instagram.applicationId
     const redirectUri = config.connection.redirectionUrl
 
     // Construct the authorization URL
@@ -33,8 +33,8 @@ const InstagramConnect: React.FC = () => {
       // Exchange the authorization code for an access token
       const tokenResponse: AxiosResponse<InstagramTokenResponse> =
         await axios.post('https://api.instagram.com/oauth/access_token', {
-          client_id: '1206257517422454',
-          client_secret: '6c95cdefe002c75b95f8d3cd8b962452',
+          client_id: config.instagram.applicationId,
+          client_secret: config.instagram.appSecret,
           grant_type: 'authorization_code',
           redirect_uri: config.connection.redirectionUrl,
           code: code
