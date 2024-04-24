@@ -15,8 +15,6 @@ import SelectCards from './SelectCards'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import CalendlyLogin from '../Connections/Calendly'
 import GitHubSignIn from '../Connections/Github'
-//import InstagramConnect from '../Connections/Instagram'
-//import LinkedInSignIn from '../Connections/LinkedIn'
 import TwitterSignIn from '../Connections/Twitter'
 import CityAutocomplete from '../Connections/Place'
 import useDebounce from '../../../common/hooks/useDebounce'
@@ -251,7 +249,6 @@ export default function Onboarding({
           }
         })
       }
-      setStep4Button(true)
       navigate(`/profilev2/${localStorage.getItem('slug')}`)
     } else {
       alert('Please enter some text')
@@ -741,6 +738,9 @@ export default function Onboarding({
                   {externalToolArray.includes('Github Graph') && (
                     <GitHubSignIn cards={createdStaticCards} />
                   )}
+                  {externalToolArray.includes('Twitter Profile') && (
+                    <TwitterSignIn cards={createdStaticCards} />
+                  )}
                   {externalToolArray.includes('Pin Location') && (
                     <CityAutocomplete
                       city={city}
@@ -749,9 +749,6 @@ export default function Onboarding({
                       setCordinates={setCordinates}
                       cards={createdStaticCards}
                     />
-                  )}
-                  {externalToolArray.includes('Twitter Profile') && (
-                    <TwitterSignIn cards={createdStaticCards} />
                   )}
                   <TextComponent about={userBio} setAbout={setUserBio} />
                 </div>

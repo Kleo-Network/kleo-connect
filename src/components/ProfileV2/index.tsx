@@ -20,7 +20,17 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
   const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
+  const [isPublic, setIsPublic] = useState<boolean>(true)
   const { slug } = useParams()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      setIsPublic(false)
+    } else {
+      setIsPublic(true)
+    }
+  }, [])
 
   const [createdStaticCards, setCreatedStaticCards] =
     useState<StaticCardType[]>()
@@ -99,7 +109,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   return (
     <div className="flex flex-col">
-      {!pendignCards?.length && (
+      {!pendignCards?.length && !isPublic && (
         <div className="h-full w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
           <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
             <span className="text-white text-l font-semibold">
