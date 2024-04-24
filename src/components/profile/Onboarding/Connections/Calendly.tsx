@@ -12,9 +12,13 @@ interface CalendlyTokenResponse {
 }
 interface CalendlyLoginProps {
   cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
+  setIsCalandlyConnected: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CalendlyLogin: React.FC<CalendlyLoginProps> = ({ cards }) => {
+const CalendlyLogin: React.FC<CalendlyLoginProps> = ({
+  cards,
+  setIsCalandlyConnected
+}) => {
   const [username, setUsername] = useState<string>('')
   const { fetchData: UpdateUserData } = useFetch<any>()
   const CREATE_CALENDLY_CARD = 'static-card/calendly/{slug}'
@@ -30,7 +34,6 @@ const CalendlyLogin: React.FC<CalendlyLoginProps> = ({ cards }) => {
       }
       return false
     }
-    getCardinCards('CalendarCard')
   }, [])
 
   const handleLogin = () => {
@@ -77,6 +80,7 @@ const CalendlyLogin: React.FC<CalendlyLoginProps> = ({ cards }) => {
         onSuccessfulFetch: () => {
           setIsCardCreated(true)
           setUsername(slug)
+          setIsCalandlyConnected(true)
         }
       })
     } catch (error) {

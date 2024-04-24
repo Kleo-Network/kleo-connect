@@ -209,7 +209,31 @@ export default function Onboarding({
   const { fetchData: CreatePlaceCard } = useFetch<any>()
   const [city, setCity] = useState('')
   const [cordinates, setCordinates] = useState()
-  const [step4button, setStep4Button] = useState(false)
+  const [isCalandlyConnected, setIsCalandlyConnected] = useState(false)
+  const [isGitConnected, setIsGitConnected] = useState(false)
+  const [isXConnected, setIsXConnected] = useState(false)
+
+  interface ExternalTool {
+    name: string
+    connected: boolean | string
+  }
+
+  const connectedTools: ExternalTool[] = [
+    { name: 'Pin Location', connected: city !== '' },
+    { name: 'Github Graph', connected: isGitConnected },
+    { name: 'Calendly', connected: isCalandlyConnected },
+    { name: 'Twitter Profile', connected: isXConnected }
+  ]
+
+  function areCardsConnected(selectedCards: string[]): boolean {
+    for (const card of connectedTools) {
+      if (selectedCards.includes(card.name) && card.connected) {
+        return true
+      }
+    }
+    return false
+  }
+
   const handleButtonClickStep4 = () => {
     if (userBio.trim() !== '') {
       createTextCard(makeUserUpdationUrl(CREATE_TEXT_CARD), {
@@ -733,13 +757,22 @@ export default function Onboarding({
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
                 <div className="w-full pl-10 pr-10">
                   {externalToolArray.includes('Calendly') && (
-                    <CalendlyLogin cards={createdStaticCards} />
+                    <CalendlyLogin
+                      cards={createdStaticCards}
+                      setIsCalandlyConnected={setIsCalandlyConnected}
+                    />
                   )}
                   {externalToolArray.includes('Github Graph') && (
-                    <GitHubSignIn cards={createdStaticCards} />
+                    <GitHubSignIn
+                      cards={createdStaticCards}
+                      setIsGitConnected={setIsGitConnected}
+                    />
                   )}
                   {externalToolArray.includes('Twitter Profile') && (
-                    <TwitterSignIn cards={createdStaticCards} />
+                    <TwitterSignIn
+                      cards={createdStaticCards}
+                      setIsXConnected={setIsXConnected}
+                    />
                   )}
                   {externalToolArray.includes('Pin Location') && (
                     <CityAutocomplete
@@ -756,7 +789,9 @@ export default function Onboarding({
               <div className="p-2 pb-5">
                 <button
                   className={`px-4 py-3 ${
-                    step4button ? 'bg-primary' : 'bg-gray-400'
+                    areCardsConnected(externalToolArray) && userBio !== ''
+                      ? 'bg-primary'
+                      : 'bg-gray-400'
                   } text-white rounded-lg shadow mx-auto block`}
                   onClick={() => handleButtonClickStep4()}
                 >

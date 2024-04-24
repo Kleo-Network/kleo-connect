@@ -8,9 +8,10 @@ import {
 
 interface TwitterProps {
   cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
+  setIsXConnected: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TwitterSignIn: React.FC<TwitterProps> = ({ cards }) => {
+const TwitterSignIn: React.FC<TwitterProps> = ({ cards, setIsXConnected }) => {
   const [isTwitterConnected, setIsTwitterConnected] = useState(false)
   const { fetchData: createTwitterCard } = useFetch<any>()
   const CREATE_TWITTER_CARD = 'static-card/x/{slug}'
@@ -31,7 +32,6 @@ const TwitterSignIn: React.FC<TwitterProps> = ({ cards }) => {
 
   const handleSignIn = () => {
     const clientId = config.twitter.clientId
-    alert(clientId)
     const redirectUri = config.connection.redirectionUrl
     const scope = 'tweet.read%20users.read%20follows.read%20follows.write'
 
@@ -55,6 +55,7 @@ const TwitterSignIn: React.FC<TwitterProps> = ({ cards }) => {
         onSuccessfulFetch: () => {
           setIsTwitterConnected(true)
           setUsername(slug)
+          setIsXConnected(true)
         }
       })
     }
