@@ -219,7 +219,7 @@ export default function Onboarding({
   }
 
   const connectedTools: ExternalTool[] = [
-    { name: 'Pin Location', connected: city !== '' },
+    { name: 'Pin Location', connected: cordinates },
     { name: 'Github Graph', connected: isGitConnected },
     { name: 'Calendly', connected: isCalandlyConnected },
     { name: 'Twitter Profile', connected: isXConnected }
