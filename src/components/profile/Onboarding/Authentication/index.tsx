@@ -219,13 +219,14 @@ export default function Onboarding({
   }
 
   const connectedTools: ExternalTool[] = [
-    { name: 'Pin Location', connected: city !== '' },
+    { name: 'Pin Location', connected: cordinates },
     { name: 'Github Graph', connected: isGitConnected },
     { name: 'Calendly', connected: isCalandlyConnected },
     { name: 'Twitter Profile', connected: isXConnected }
   ]
 
   function areCardsConnected(selectedCards: string[]): boolean {
+    if (selectedCards.length == 0) return true
     for (const card of connectedTools) {
       if (selectedCards.includes(card.name) && card.connected) {
         return true
@@ -307,6 +308,7 @@ export default function Onboarding({
       })
     }
   }, [])
+
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
@@ -709,13 +711,33 @@ export default function Onboarding({
                   </div>
                 </div>
               </div>
-              <div className="p-2 pb-5">
-                <button
-                  className="px-4 py-3 bg-primary text-white rounded-lg shadow mx-auto block"
-                  onClick={() => handleUserUpdation(externalToolArray)}
-                >
-                  Proceed to Step 3
-                </button>
+              <div className="flex flex-column md:flex-row">
+                <div className="p-2 pb-5">
+                  <button
+                    className={`${
+                      externalToolArray.length == 2
+                        ? 'bg-primary'
+                        : 'bg-gray-400'
+                    } px-4 py-3 text-white rounded-lg shadow mx-auto block`}
+                    onClick={() => handleUserUpdation(externalToolArray)}
+                    disabled={externalToolArray.length < 2}
+                  >
+                    Proceed to Step 3
+                  </button>
+                </div>
+                <div className="p-2 pb-5">
+                  <button
+                    className={`${
+                      externalToolArray.length > 0
+                        ? 'bg-gray-400'
+                        : 'bg-primary'
+                    } px-4 py-3 text-white rounded-lg shadow mx-auto block`}
+                    onClick={() => handleUserUpdation(externalToolArray)}
+                    disabled={externalToolArray.length > 0}
+                  >
+                    Skip
+                  </button>
+                </div>
               </div>
               {loginError && (
                 <div className="m-3">
@@ -751,7 +773,7 @@ export default function Onboarding({
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 text-left">
                 How about some static cards to liven up your profile? <br />
                 <span className="text-gray-400 text-sm font-regular">
-                  STEP 2/3
+                  STEP 3/3
                 </span>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
@@ -794,6 +816,9 @@ export default function Onboarding({
                       : 'bg-gray-400'
                   } text-white rounded-lg shadow mx-auto block`}
                   onClick={() => handleButtonClickStep4()}
+                  disabled={
+                    !(areCardsConnected(externalToolArray) && userBio !== '')
+                  }
                 >
                   Create Profile & Take Me to it!
                 </button>

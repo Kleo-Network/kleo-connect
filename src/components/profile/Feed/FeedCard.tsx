@@ -23,8 +23,8 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
+    const slug_from_local_storage = localStorage.getItem('slug')
+    if (user.slug == slug_from_local_storage) {
       setIsPublic(false)
     } else {
       setIsPublic(true)

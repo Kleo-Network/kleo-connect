@@ -24,8 +24,8 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { slug } = useParams()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
+    const slug_from_local_storage = localStorage.getItem('slug')
+    if (slug_from_local_storage == slug) {
       setIsPublic(false)
     } else {
       setIsPublic(true)
@@ -98,7 +98,9 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           if (data) {
             console.log(data)
             setUserFullData(data)
-            setUser(data.user)
+            if (!isPublic) {
+              setUser(data.user)
+            }
           }
         }
       })
@@ -137,7 +139,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center mx-auto justify-center">
+      <div className="flex w-full items-center mx-auto justify-center mt-2">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid">
             {userFullData?.published_cards &&
