@@ -37,7 +37,6 @@ const CalendlyLogin: React.FC<CalendlyLoginProps> = ({
   }, [])
 
   const handleLogin = () => {
-    alert(config.connection.redirectionUrl)
     // Step 1: Get the authorization code
     const clientId = config.calendly.apiKey
     const redirectUri = config.connection.redirectionUrl
