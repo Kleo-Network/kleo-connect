@@ -773,7 +773,7 @@ export default function Onboarding({
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 text-left">
                 How about some static cards to liven up your profile? <br />
                 <span className="text-gray-400 text-sm font-regular">
-                  STEP 2/3
+                  STEP 3/3
                 </span>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
