@@ -212,6 +212,7 @@ export default function Onboarding({
   const [isCalandlyConnected, setIsCalandlyConnected] = useState(false)
   const [isGitConnected, setIsGitConnected] = useState(false)
   const [isXConnected, setIsXConnected] = useState(false)
+  const [isStaticCardUpdating, setIsStaticCardUpdating] = useState(false)
 
   interface ExternalTool {
     name: string
@@ -274,6 +275,7 @@ export default function Onboarding({
           }
         })
       }
+      sessionStorage.removeItem('isStaticCardUpdating')
       navigate(`/profilev2/${localStorage.getItem('slug')}`)
     } else {
       alert('Please enter some text')
@@ -318,6 +320,13 @@ export default function Onboarding({
           setPluginState(PluginState.NOT_INSTALLED)
         }
       }, 2000)
+    }
+  }, [])
+
+  useEffect(() => {
+    const staticCardFlag = sessionStorage.getItem('isStaticCardUpdating')
+    if (staticCardFlag) {
+      setIsStaticCardUpdating(JSON.parse(staticCardFlag))
     }
   }, [])
 
@@ -668,14 +677,25 @@ export default function Onboarding({
             <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-lg w-full">
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
                 <div className="text-3xl font-shoreline md:text-3xl">
-                  Signup
+                  {isStaticCardUpdating ? (
+                    <>Add | Update static cards</>
+                  ) : (
+                    <>Signup</>
+                  )}
                 </div>
               </div>
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 text-left">
-                How about some static cards to liven up your profile? <br />
-                <span className="text-gray-400 text-sm font-regular">
-                  STEP 2/3
-                </span>
+                {isStaticCardUpdating ? (
+                  <>Add static cards to stand out your profile</>
+                ) : (
+                  <>How about some static cards to liven up your profile?</>
+                )}
+                <br />
+                {!isStaticCardUpdating && (
+                  <span className="text-gray-400 text-sm font-regular">
+                    STEP 2/3
+                  </span>
+                )}
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-6 w-full">
                 <div className="w-2/3">
@@ -722,22 +742,28 @@ export default function Onboarding({
                     onClick={() => handleUserUpdation(externalToolArray)}
                     disabled={externalToolArray.length < 2}
                   >
-                    Proceed to Step 3
+                    {isStaticCardUpdating ? (
+                      <>Update cards</>
+                    ) : (
+                      <>Proceed to Step 3</>
+                    )}
                   </button>
                 </div>
-                <div className="p-2 pb-5">
-                  <button
-                    className={`${
-                      externalToolArray.length > 0
-                        ? 'bg-gray-400'
-                        : 'bg-primary'
-                    } px-4 py-3 text-white rounded-lg shadow mx-auto block`}
-                    onClick={() => handleUserUpdation(externalToolArray)}
-                    disabled={externalToolArray.length > 0}
-                  >
-                    Skip
-                  </button>
-                </div>
+                {!isStaticCardUpdating && (
+                  <div className="p-2 pb-5">
+                    <button
+                      className={`${
+                        externalToolArray.length > 0
+                          ? 'bg-gray-400'
+                          : 'bg-primary'
+                      } px-4 py-3 text-white rounded-lg shadow mx-auto block`}
+                      onClick={() => handleUserUpdation(externalToolArray)}
+                      disabled={externalToolArray.length > 0}
+                    >
+                      Skip
+                    </button>
+                  </div>
+                )}
               </div>
               {loginError && (
                 <div className="m-3">
@@ -767,14 +793,23 @@ export default function Onboarding({
             <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-lg w-full">
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
                 <div className="text-3xl font-shoreline md:text-3xl">
-                  Signup
+                  {isStaticCardUpdating ? <>Connect cards</> : <>Signup</>}
                 </div>
               </div>
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 text-left">
-                How about some static cards to liven up your profile? <br />
-                <span className="text-gray-400 text-sm font-regular">
-                  STEP 3/3
-                </span>
+                {isStaticCardUpdating ? (
+                  <>
+                    Plase connect all the given plugins to create static cards
+                  </>
+                ) : (
+                  <>How about some static cards to liven up your profile?</>
+                )}
+                <br />
+                {!isStaticCardUpdating && (
+                  <span className="text-gray-400 text-sm font-regular">
+                    STEP 3/3
+                  </span>
+                )}
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
                 <div className="w-full pl-10 pr-10">
@@ -820,7 +855,11 @@ export default function Onboarding({
                     !(areCardsConnected(externalToolArray) && userBio !== '')
                   }
                 >
-                  Create Profile & Take Me to it!
+                  {isStaticCardUpdating ? (
+                    <>Add cards to profile</>
+                  ) : (
+                    <>Create Profile & Take Me to it!</>
+                  )}
                 </button>
               </div>
               {loginError && (

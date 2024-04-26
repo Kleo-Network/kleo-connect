@@ -52,8 +52,13 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
     navigate('/')
   }
 
-  const handleSettingsClick = () => {
+  const handleMintClick = () => {
     updateEvent(NavbarEvents.SETTINGS)
+  }
+
+  const handleSettingsClick = () => {
+    sessionStorage.setItem('isStaticCardUpdating', JSON.stringify(true))
+    navigate('/signup/2')
   }
 
   function getSlug(): string {
@@ -150,10 +155,18 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
           <div className="flex items-center">
             <button
               data-te-ripple-init
-              onClick={handleSettingsClick}
+              onClick={handleMintClick}
               className="p-2 mr-1 stroke-black hover:bg-purple-700 hover:text-white hover:font-bold rounded-md"
             >
               mint
+            </button>
+            <button
+              data-te-ripple-init
+              onClick={handleSettingsClick}
+              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+              title="Add/Update static cards"
+            >
+              <Settings className="w-5 h-5 stroke-black " />
             </button>
             <a
               href="/privacy"
