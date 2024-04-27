@@ -1,5 +1,7 @@
 import React, { FC, useCallback } from 'react'
 
-export const SendSOLToRandomAddress: FC = () => {
+const Mint: FC = () => {
   return <button>Mint your profile page</button>
 }
+
+export default Mint

@@ -13,6 +13,7 @@
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@iexec/dataprotector": "^0.5.3",
     "@irys/sdk": "^0.1.21",
     "@react-google-maps/api": "^2.19.3",
     "@react-oauth/google": "^0.12.1",

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { UserData } from '../../constants/SignupData'
-
+import Mint from './iExec'
 interface User {
   user: UserData
 }
@@ -21,16 +21,7 @@ const Settings = ({ user }: User) => {
   const renderTabContent = () => {
     switch (selectedTab) {
       case TABS.MINT:
-        return (
-          // <ConnectionProvider endpoint={endpoint}>
-          //   <WalletProvider wallets={wallets} autoConnect>
-          //     <WalletModalProvider>
-          //       <Mint />
-          //     </WalletModalProvider>
-          //   </WalletProvider>
-          // </ConnectionProvider>
-          <>hi</>
-        )
+        return <Mint />
       default:
         return null
     }

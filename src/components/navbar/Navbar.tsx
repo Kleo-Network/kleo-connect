@@ -153,7 +153,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
               onClick={handleSettingsClick}
               className="p-2 mr-1 stroke-black hover:bg-purple-700 hover:text-white hover:font-bold rounded-md"
             >
-              mint
+              claim points
             </button>
             <a
               href="/privacy"
