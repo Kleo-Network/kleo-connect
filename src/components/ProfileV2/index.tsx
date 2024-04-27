@@ -20,7 +20,17 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
   const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
+  const [isPublic, setIsPublic] = useState<boolean>(true)
   const { slug } = useParams()
+
+  useEffect(() => {
+    const slug_from_local_storage = localStorage.getItem('slug')
+    if (slug_from_local_storage == slug) {
+      setIsPublic(false)
+    } else {
+      setIsPublic(true)
+    }
+  }, [])
 
   const [createdStaticCards, setCreatedStaticCards] =
     useState<StaticCardType[]>()
@@ -88,7 +98,9 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           if (data) {
             console.log(data)
             setUserFullData(data)
-            setUser(data.user)
+            if (!isPublic) {
+              setUser(data.user)
+            }
           }
         }
       })
@@ -99,7 +111,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
   return (
     <div className="flex flex-col">
-      {!pendignCards?.length && (
+      {!pendignCards?.length && !isPublic && (
         <div className="h-full w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
           <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
             <span className="text-white text-l font-semibold">
@@ -127,7 +139,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center mx-auto justify-center">
+      <div className="flex w-full items-center mx-auto justify-center mt-2">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid">
             {userFullData?.published_cards &&

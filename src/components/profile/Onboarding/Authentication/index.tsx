@@ -15,8 +15,6 @@ import SelectCards from './SelectCards'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import CalendlyLogin from '../Connections/Calendly'
 import GitHubSignIn from '../Connections/Github'
-//import InstagramConnect from '../Connections/Instagram'
-//import LinkedInSignIn from '../Connections/LinkedIn'
 import TwitterSignIn from '../Connections/Twitter'
 import CityAutocomplete from '../Connections/Place'
 import useDebounce from '../../../common/hooks/useDebounce'
@@ -211,7 +209,33 @@ export default function Onboarding({
   const { fetchData: CreatePlaceCard } = useFetch<any>()
   const [city, setCity] = useState('')
   const [cordinates, setCordinates] = useState()
-  const [step4button, setStep4Button] = useState(false)
+  const [isCalandlyConnected, setIsCalandlyConnected] = useState(false)
+  const [isGitConnected, setIsGitConnected] = useState(false)
+  const [isXConnected, setIsXConnected] = useState(false)
+  const [isStaticCardUpdating, setIsStaticCardUpdating] = useState(false)
+
+  interface ExternalTool {
+    name: string
+    connected: boolean | string
+  }
+
+  const connectedTools: ExternalTool[] = [
+    { name: 'Pin Location', connected: cordinates },
+    { name: 'Github Graph', connected: isGitConnected },
+    { name: 'Calendly', connected: isCalandlyConnected },
+    { name: 'Twitter Profile', connected: isXConnected }
+  ]
+
+  function areCardsConnected(selectedCards: string[]): boolean {
+    if (selectedCards.length == 0) return true
+    for (const card of connectedTools) {
+      if (selectedCards.includes(card.name) && card.connected) {
+        return true
+      }
+    }
+    return false
+  }
+
   const handleButtonClickStep4 = () => {
     if (userBio.trim() !== '') {
       createTextCard(makeUserUpdationUrl(CREATE_TEXT_CARD), {
@@ -251,7 +275,7 @@ export default function Onboarding({
           }
         })
       }
-      setStep4Button(true)
+      sessionStorage.removeItem('isStaticCardUpdating')
       navigate(`/profilev2/${localStorage.getItem('slug')}`)
     } else {
       alert('Please enter some text')
@@ -286,6 +310,7 @@ export default function Onboarding({
       })
     }
   }, [])
+
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
@@ -295,6 +320,13 @@ export default function Onboarding({
           setPluginState(PluginState.NOT_INSTALLED)
         }
       }, 2000)
+    }
+  }, [])
+
+  useEffect(() => {
+    const staticCardFlag = sessionStorage.getItem('isStaticCardUpdating')
+    if (staticCardFlag) {
+      setIsStaticCardUpdating(JSON.parse(staticCardFlag))
     }
   }, [])
 
@@ -645,14 +677,25 @@ export default function Onboarding({
             <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-lg w-full">
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
                 <div className="text-3xl font-shoreline md:text-3xl">
-                  Signup
+                  {isStaticCardUpdating ? (
+                    <>Add | Update static cards</>
+                  ) : (
+                    <>Signup</>
+                  )}
                 </div>
               </div>
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 text-left">
-                How about some static cards to liven up your profile? <br />
-                <span className="text-gray-400 text-sm font-regular">
-                  STEP 2/3
-                </span>
+                {isStaticCardUpdating ? (
+                  <>Add static cards to stand out your profile</>
+                ) : (
+                  <>How about some static cards to liven up your profile?</>
+                )}
+                <br />
+                {!isStaticCardUpdating && (
+                  <span className="text-gray-400 text-sm font-regular">
+                    STEP 2/3
+                  </span>
+                )}
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-6 w-full">
                 <div className="w-2/3">
@@ -688,13 +731,39 @@ export default function Onboarding({
                   </div>
                 </div>
               </div>
-              <div className="p-2 pb-5">
-                <button
-                  className="px-4 py-3 bg-primary text-white rounded-lg shadow mx-auto block"
-                  onClick={() => handleUserUpdation(externalToolArray)}
-                >
-                  Proceed to Step 3
-                </button>
+              <div className="flex flex-column md:flex-row">
+                <div className="p-2 pb-5">
+                  <button
+                    className={`${
+                      externalToolArray.length == 2
+                        ? 'bg-primary'
+                        : 'bg-gray-400'
+                    } px-4 py-3 text-white rounded-lg shadow mx-auto block`}
+                    onClick={() => handleUserUpdation(externalToolArray)}
+                    disabled={externalToolArray.length < 2}
+                  >
+                    {isStaticCardUpdating ? (
+                      <>Update cards</>
+                    ) : (
+                      <>Proceed to Step 3</>
+                    )}
+                  </button>
+                </div>
+                {!isStaticCardUpdating && (
+                  <div className="p-2 pb-5">
+                    <button
+                      className={`${
+                        externalToolArray.length > 0
+                          ? 'bg-gray-400'
+                          : 'bg-primary'
+                      } px-4 py-3 text-white rounded-lg shadow mx-auto block`}
+                      onClick={() => handleUserUpdation(externalToolArray)}
+                      disabled={externalToolArray.length > 0}
+                    >
+                      Skip
+                    </button>
+                  </div>
+                )}
               </div>
               {loginError && (
                 <div className="m-3">
@@ -724,22 +793,43 @@ export default function Onboarding({
             <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-lg w-full">
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
                 <div className="text-3xl font-shoreline md:text-3xl">
-                  Signup
+                  {isStaticCardUpdating ? <>Connect cards</> : <>Signup</>}
                 </div>
               </div>
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 text-left">
-                How about some static cards to liven up your profile? <br />
-                <span className="text-gray-400 text-sm font-regular">
-                  STEP 2/3
-                </span>
+                {isStaticCardUpdating ? (
+                  <>
+                    Plase connect all the given plugins to create static cards
+                  </>
+                ) : (
+                  <>How about some static cards to liven up your profile?</>
+                )}
+                <br />
+                {!isStaticCardUpdating && (
+                  <span className="text-gray-400 text-sm font-regular">
+                    STEP 3/3
+                  </span>
+                )}
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full">
                 <div className="w-full pl-10 pr-10">
                   {externalToolArray.includes('Calendly') && (
-                    <CalendlyLogin cards={createdStaticCards} />
+                    <CalendlyLogin
+                      cards={createdStaticCards}
+                      setIsCalandlyConnected={setIsCalandlyConnected}
+                    />
                   )}
                   {externalToolArray.includes('Github Graph') && (
-                    <GitHubSignIn cards={createdStaticCards} />
+                    <GitHubSignIn
+                      cards={createdStaticCards}
+                      setIsGitConnected={setIsGitConnected}
+                    />
+                  )}
+                  {externalToolArray.includes('Twitter Profile') && (
+                    <TwitterSignIn
+                      cards={createdStaticCards}
+                      setIsXConnected={setIsXConnected}
+                    />
                   )}
                   {externalToolArray.includes('Pin Location') && (
                     <CityAutocomplete
@@ -750,20 +840,26 @@ export default function Onboarding({
                       cards={createdStaticCards}
                     />
                   )}
-                  {externalToolArray.includes('Twitter Profile') && (
-                    <TwitterSignIn cards={createdStaticCards} />
-                  )}
                   <TextComponent about={userBio} setAbout={setUserBio} />
                 </div>
               </div>
               <div className="p-2 pb-5">
                 <button
                   className={`px-4 py-3 ${
-                    step4button ? 'bg-primary' : 'bg-gray-400'
+                    areCardsConnected(externalToolArray) && userBio !== ''
+                      ? 'bg-primary'
+                      : 'bg-gray-400'
                   } text-white rounded-lg shadow mx-auto block`}
                   onClick={() => handleButtonClickStep4()}
+                  disabled={
+                    !(areCardsConnected(externalToolArray) && userBio !== '')
+                  }
                 >
-                  Create Profile & Take Me to it!
+                  {isStaticCardUpdating ? (
+                    <>Add cards to profile</>
+                  ) : (
+                    <>Create Profile & Take Me to it!</>
+                  )}
                 </button>
               </div>
               {loginError && (

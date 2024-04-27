@@ -9,9 +9,10 @@ import {
 
 interface GithubProps {
   cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
+  setIsGitConnected: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const GitHubSignIn: React.FC<GithubProps> = ({ cards }) => {
+const GitHubSignIn: React.FC<GithubProps> = ({ cards, setIsGitConnected }) => {
   const [isGitHubConnected, setIsGitHubConnected] = useState(false)
   const { fetchData: createGitHubCard } = useFetch<any>()
   const CREATE_GITHUB_CARD = 'static-card/github/{slug}'
@@ -55,6 +56,7 @@ const GitHubSignIn: React.FC<GithubProps> = ({ cards }) => {
         onSuccessfulFetch: () => {
           setIsGitHubConnected(true)
           setUsername(slug)
+          setIsGitConnected(true)
         }
       })
     }

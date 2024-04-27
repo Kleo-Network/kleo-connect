@@ -57,6 +57,7 @@ function App(): ReactElement {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
+    sessionStorage.clear()
     setIsLoggedIn(false) // Update state immediately
   }
 
