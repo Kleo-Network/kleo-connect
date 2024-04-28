@@ -51,11 +51,11 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
       <div className="col-span-2 row-span-1 rounded-[5px] p-2.5">
         <ProfileBio user={user} />
       </div>
-      <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+      <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
         <TextCard metadata={textCard?.metadata as TextCardType} />
       </div>
       {calendlyCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
           <MonthlyCalendarCard
             calendlyUrl={makeCalendyCardUrl(
               calendlyCard.metadata as CalendlyCardType
@@ -64,19 +64,19 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
         </div>
       )}
       {twitterCard && twitterCard.cardType === 'XCard' && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
           <TwitterCard user={twitterCard.metadata as TwitterCardType} />
         </div>
       )}
       {mapCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
           {mapCard.cardType === 'PlaceCard' && (
             <MapCard map={mapCard.metadata as MapCardType} />
           )}
         </div>
       )}
       {gitCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 bg-gray-200 rounded-[5px] p-2.5">
+        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
           {gitCard.cardType === 'GitCard' && (
             <GitHubCard gitData={gitCard.metadata as GitCardType} />
           )}

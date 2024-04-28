@@ -158,7 +158,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
               onClick={handleMintClick}
               className="p-2 mr-1 stroke-black hover:bg-purple-700 hover:text-white hover:font-bold rounded-md"
             >
-              mint
+              claim points
             </button>
             <button
               data-te-ripple-init

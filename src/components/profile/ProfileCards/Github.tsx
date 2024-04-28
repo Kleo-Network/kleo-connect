@@ -60,7 +60,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
 
   return (
     <div
-      className="flex-1 bg-gray-100 p-6 rounded-lg shadow-md relative hover:cursor-pointer"
+      className="flex-1 bg-green-50 p-6 rounded-lg shadow-md relative hover:cursor-pointer"
       onClick={handleOnClick}
     >
       <div className="absolute top-0 right-0 p-4">

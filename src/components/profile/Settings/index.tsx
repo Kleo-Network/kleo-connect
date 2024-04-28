@@ -1,36 +1,21 @@
 import { useMemo, useState } from 'react'
 import { UserData } from '../../constants/SignupData'
-
+import Mint from './iExec'
 interface User {
   user: UserData
 }
 
 enum TABS {
-  MINT = 'Mint your cards'
+  MINT = 'Own your data, earn points'
 }
 
 const Settings = ({ user }: User) => {
-  // You can also provide a custom RPC endpoint.
-
-  // const phantomWallet = new PhantomWalletAdapter()
-
-  // Pass the wallet adapters to the WalletProvider
-  //const wallets = [phantomWallet]
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
 
   const renderTabContent = () => {
     switch (selectedTab) {
       case TABS.MINT:
-        return (
-          // <ConnectionProvider endpoint={endpoint}>
-          //   <WalletProvider wallets={wallets} autoConnect>
-          //     <WalletModalProvider>
-          //       <Mint />
-          //     </WalletModalProvider>
-          //   </WalletProvider>
-          // </ConnectionProvider>
-          <>hi</>
-        )
+        return <Mint />
       default:
         return null
     }
