@@ -33,6 +33,11 @@ const config = {
   },
   connection: {
     redirectionUrl: import.meta.env.VITE_REDIRECTED_URL
+  },
+  aws: {
+    aws_key: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+    aws_secret: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+    aws_region: import.meta.env.VITE_AWS_REGION
   }
 }
 

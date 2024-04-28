@@ -1,20 +1,22 @@
 import AWS from 'aws-sdk'
-import os from 'os'
+import config from '../../../common/config'
 
 export const uploadFileToS3 = async (file: File): Promise<string> => {
   // Configure AWS SDK with your credentials and region
+
+  console.log(config.aws)
   AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION
+    accessKeyId: config.aws.aws_key,
+    secretAccessKey: config.aws.aws_secret,
+    region: config.aws.aws_region
   })
 
   // Create an instance of the S3 service
   const s3 = new AWS.S3()
 
   // Set the S3 bucket name and file key (path)
-  const bucketName = 'cards'
-  const fileKey = `uploads/${file.name}`
+  const bucketName = 'kleocards'
+  const fileKey = `${file.name}`
 
   // Create the upload parameters
   const uploadParams: AWS.S3.PutObjectRequest = {
