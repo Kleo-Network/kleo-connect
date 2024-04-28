@@ -49,7 +49,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg mt-3 p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight] bg-gray-300 bg-opacity-50 backdrop-blur-md border border-white border-opacity-25">
+    <div className="bg-purple-50 rounded-lg shadow-lg mt-3 p-3 px-5 bg-violet-50 flex flex-col justify-between min-h-[desiredMinHeight] bg-gray-300 bg-opacity-50 backdrop-blur-md border border-white border-opacity-25">
       {/* Header for card*/}
       <header className="flex items-center mt-3">
         <img
@@ -77,7 +77,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
           description={card.content}
         />
       )}
-      <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start">
+      <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start pt-5">
         <>
           {card.urls.map((urls) => (
             <button
@@ -93,7 +93,9 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
               />
 
               <h3 className="text-sm font-medium text-gray-700">
-                {urls.title}
+                {card.urls.length > 2 && urls.title.length > 10
+                  ? urls.title.trim().slice(0, 10) + '...'
+                  : urls.title.trim().slice(0, 35) + '...'}
               </h3>
             </button>
           ))}

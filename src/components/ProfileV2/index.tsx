@@ -139,7 +139,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center mx-auto justify-center mt-2">
+      <div className="flex w-full items-center mx-auto justify-center mt-5">
         <div className="flex w-full justify-center">
           <div className="w-[75%] grid">
             {userFullData?.published_cards &&

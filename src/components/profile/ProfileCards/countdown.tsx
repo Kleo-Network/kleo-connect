@@ -66,9 +66,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
         isProfilePage ? 'py-2' : 'p-4'
       }`}
     >
-      {!isProfilePage && (
-        <h1 className="text-2xl font-bold mb-4">New Cards Coming In...</h1>
-      )}
+      {!isProfilePage && <h1 className="text-2xl font-bold mb-4"></h1>}
       <Countdown date={endDate} renderer={renderer} />
     </div>
   )

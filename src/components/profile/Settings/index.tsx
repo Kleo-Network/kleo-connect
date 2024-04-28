@@ -6,16 +6,10 @@ interface User {
 }
 
 enum TABS {
-  MINT = 'Mint your cards'
+  MINT = 'Own your data, earn points'
 }
 
 const Settings = ({ user }: User) => {
-  // You can also provide a custom RPC endpoint.
-
-  // const phantomWallet = new PhantomWalletAdapter()
-
-  // Pass the wallet adapters to the WalletProvider
-  //const wallets = [phantomWallet]
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
 
   const renderTabContent = () => {

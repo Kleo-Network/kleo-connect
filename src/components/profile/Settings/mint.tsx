@@ -1,20 +1,10 @@
 import { useState } from 'react'
 import useFetch from '../../common/hooks/useFetch'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { useWallet } from '@solana/wallet-adapter-react'
 import '@solana/wallet-adapter-react-ui/styles.css'
 import { fullUserData } from '../../common/interface'
 import CryptoJS from 'crypto-js'
 import { WebIrys } from '@irys/sdk'
 import config from '../../common/config'
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  SystemProgram,
-  Transaction
-} from '@solana/web3.js'
-import { Metaplex, irysStorage, keypairIdentity } from '@metaplex-foundation/js'
 
 export default function Mint() {
   const [irysUriLink, setIrysUriLink] = useState<string>('')
@@ -23,7 +13,6 @@ export default function Mint() {
   const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
   const GET_USER_DATA = 'user/{slug}/published-cards/info'
   const key = 'kleoUser'
-  const solWallet = useWallet()
   function makeSlugApiUrl(): string {
     return GET_USER_DATA.replace('{slug}', localStorage.getItem('slug') || '')
   }
