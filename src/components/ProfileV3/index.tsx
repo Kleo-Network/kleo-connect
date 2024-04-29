@@ -48,12 +48,28 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
 
   return (
     <>
-      <div className="col-span-2 row-span-1 rounded-[5px] p-2.5">
+      <div
+        className={`${
+          data.length == 0
+            ? 'col-span-8 row-span-1'
+            : showCardList.length == 0 && textCard
+            ? 'col-span-4 row-span-1'
+            : 'col-span-2 row-span-1'
+        } rounded-[5px] p-2.5`}
+      >
         <ProfileBio user={user} />
       </div>
-      <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
-        <TextCard metadata={textCard?.metadata as TextCardType} />
-      </div>
+      {textCard && (
+        <div
+          className={`flex items-center justify-between rounded-[5px] p-2.5 ${
+            showCardList.length == 0 && textCard
+              ? 'col-span-4 row-span-1'
+              : 'col-span-2 row-span-1'
+          }`}
+        >
+          <TextCard metadata={textCard?.metadata as TextCardType} />
+        </div>
+      )}
       {calendlyCard && (
         <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
           <MonthlyCalendarCard

@@ -20,7 +20,7 @@ interface NavbarProps {
 
 enum Tab {
   PUBLISH_CARDS = 'publish cards',
-  QUESTS = 'quests',
+  // QUESTS = 'quests',
   PRIVACY = 'privacy'
 }
 
@@ -38,7 +38,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
     if (pathname === '/cards') {
       setSelectedTab(Tab.PUBLISH_CARDS)
     } else if (pathname === '/quests') {
-      setSelectedTab(Tab.QUESTS)
+      // setSelectedTab(Tab.QUESTS)
     } else if (pathname === '/privacy') {
       setSelectedTab(Tab.PRIVACY)
     } else if (pathname === '/profile') {
