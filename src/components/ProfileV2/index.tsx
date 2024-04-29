@@ -15,12 +15,14 @@ import { NavbarEvents } from '../constants/Events'
 import { EventContext } from '../common/contexts/EventContext'
 import Settings from '../profile/Settings'
 import { useParams } from 'react-router-dom'
+import { ReactComponent as CloseIcon } from '../../assets/images/cross.svg'
 
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
   const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
   const [isPublic, setIsPublic] = useState<boolean>(true)
+  const [showBanner, setShowBanner] = useState<boolean>(true)
   const { slug } = useParams()
 
   useEffect(() => {
@@ -109,9 +111,13 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
     }
   }, [])
 
+  const handleBannerClick = () => {
+    setShowBanner(false)
+  }
+
   return (
     <div className="flex flex-col">
-      {!pendignCards?.length && !isPublic && (
+      {!pendignCards?.length && !isPublic && showBanner && (
         <div className="h-full w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
           <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
             <span className="text-white text-l font-semibold">
@@ -125,6 +131,12 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
               />
             </span>
           </div>
+          <button
+            className="text-white hover:text-primary hover:bg-white focus:outline-none rounded-md mr-5 p-1"
+            onClick={handleBannerClick}
+          >
+            <CloseIcon className="w-5 h-5" />
+          </button>
         </div>
       )}
       <div className="flex mt-4 w-full items-center mx-auto justify-center">

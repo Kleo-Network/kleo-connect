@@ -28,7 +28,8 @@ module.exports = {
       },
       colors: {
         overlay: 'rgba(52, 64, 84, 0.7)',
-        primary: '#7F56D9'
+        primary: '#7F56D9',
+        secondary: '#F9F5FF'
       }
     }
   }
