@@ -4,8 +4,11 @@ import ImagecardBody from './FeedCardBody/ImageCardBody'
 import DataCardBody from './FeedCardBody/DataCardBody'
 import { UserData } from '../../constants/SignupData'
 import { PublishedCard } from '../../common/interface'
-import useFetch from '../../common/hooks/useFetch'
+import useFetch, { FetchStatus } from '../../common/hooks/useFetch'
 import { useEffect, useState } from 'react'
+import Modal from '../../common/Modal'
+import Alert from '../../common/Alerts'
+import { ReactComponent as AlertIcon } from '../../../assets/images/alert.svg'
 
 interface Card {
   handleCardDelete: (id: string) => void
@@ -14,9 +17,14 @@ interface Card {
 }
 
 export default function FeedCard({ card, user, handleCardDelete }: Card) {
-  const { fetchData: deletePublishedCard } = useFetch<any>()
+  const {
+    data: deleted,
+    fetchData: deletePublishedCard,
+    status: deleteStatus
+  } = useFetch<any>()
   const [isPublic, setIsPublic] = useState<boolean>(true)
   const DELETE_PUBLISHED_CARD = 'cards/published/{slug}'
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   function getDeleteCardUrl() {
     return DELETE_PUBLISHED_CARD.replace('{slug}', user.slug)
@@ -39,9 +47,12 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
       },
       body: JSON.stringify({
         id: id
-      })
+      }),
+      onSuccessfulFetch: () => {
+        handleCardDelete(id)
+        setIsModalOpen(false)
+      }
     })
-    handleCardDelete(id)
   }
 
   const handleOnClick = (url: string) => {
@@ -108,11 +119,68 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
         </div>
         {!card.minted && !isPublic && (
           <div className="absolute bottom-0 right-0 mr-2 mb-1">
-            <button onClick={() => handleDeleteCard(card.id)}>
+            <button onClick={() => setIsModalOpen(true)}>
               <Bin className="w-5 h-5 text-gray-600" />
             </button>
           </div>
         )}
+        <Modal
+          isOpen={isModalOpen}
+          hideCloseButton={deleteStatus === FetchStatus.LOADING}
+          onClose={() => setIsModalOpen(false)}
+        >
+          <div className="flex flex-col items-center justify-center p-6">
+            <div className="rounded-full bg-red-100 p-2 border-8 border-red-50">
+              <Bin className="w-6 h-6 text-red-600" />
+            </div>
+            <span className="text-gray-900 text-lg font-medium mt-4">
+              Delete published card?
+            </span>
+            <span className="text-gray-500 text-sm font-regular mt-1 text-center">
+              Are you sure you want to delete the published card? This action
+              cannot be undone.
+            </span>
+            {deleteStatus === FetchStatus.LOADING && (
+              <div
+                className="inline-block m-1 h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                role="status"
+              >
+                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                  Deleting...
+                </span>
+              </div>
+            )}
+            {deleteStatus === FetchStatus.ERROR && (
+              <div className="w-full my-4">
+                <Alert
+                  type="danger"
+                  message="Could not delete the data, please try again later."
+                  icon={
+                    <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
+                  }
+                />
+              </div>
+            )}
+            <div className="flex flex-row self-stretch justify-center items-center gap-3 mt-6">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                disabled={deleteStatus === FetchStatus.LOADING}
+                className="px-4 py-2 self-stretch flex-1 rounded-lg shadow border border-gray-200 text-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteCard(card.id)}
+                disabled={deleteStatus === FetchStatus.LOADING}
+                className="px-4 py-2 self-stretch flex-1 rounded-lg shadow bg-red-600 text-white"
+              >
+                {deleteStatus === FetchStatus.LOADING
+                  ? 'Deleting...'
+                  : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </Modal>
       </footer>
     </div>
   )

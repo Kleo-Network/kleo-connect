@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ReactComponent as Kleo } from '../../../../assets/images/kleoWithBg.svg'
-import { ReactComponent as MetaMaskLogo } from '../../../../assets/images/solanaLogoMark.svg'
 import { ReactComponent as Arrow } from '../../../../assets/images/arrow.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
-import { ReactComponent as RightArrow } from '../../../../assets/images/arrow2.svg'
+import { ReactComponent as LeftArrow } from '../../../../assets/images/backArrow.svg'
 import animationDataProcessing from '../../../../assets/images/welcome.json'
 import Accordion from '../../../common/Accordion'
 import useFetch, { FetchStatus } from '../../../common/hooks/useFetch'
@@ -359,6 +358,10 @@ export default function Onboarding({
       handleLogin(user?.slug || '')
     }
   }, [isSignUp, login])
+
+  const handleGoBack = () => {
+    setCurrentStep(2)
+  }
 
   return (
     <GoogleOAuthProvider clientId="236440189889-c391vfab4cpsqnep0lo31ndg8g8qmq25.apps.googleusercontent.com">
@@ -797,7 +800,12 @@ export default function Onboarding({
           <>
             <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-lg w-full">
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
-                <div className="text-3xl font-shoreline md:text-3xl">
+                <div className="mr-32 w-1/12">
+                  <button onClick={handleGoBack}>
+                    <LeftArrow className="w-5 h-5 text-gray-600 hover:text-black" />
+                  </button>
+                </div>
+                <div className="text-3xl font-shoreline md:text-3xl w-11/12">
                   {isStaticCardUpdating ? <>Connect cards</> : <>Signup</>}
                 </div>
               </div>
