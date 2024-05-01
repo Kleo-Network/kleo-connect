@@ -1,10 +1,48 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { StaticCard } from '../../../common/interface'
 import useFetch from '../../../common/hooks/useFetch'
 interface TextComponentProps {
   about: string
   setAbout: (value: string) => void
 }
 const TextComponent: React.FC<TextComponentProps> = ({ about, setAbout }) => {
+  const [isDataFetched, setIsDataFetched] = useState(false)
+  const [isStaticCardUpdating, setIsStaticCardUpdating] = useState(false)
+  const GET_STATIC_CARDS = 'cards/static/{slug}'
+  const { error: _errorstatic, fetchData: fetchStaticCards } = useFetch()
+
+  useEffect(() => {
+    const staticCardFlag = sessionStorage.getItem('isStaticCardUpdating')
+    if (staticCardFlag) {
+      setIsStaticCardUpdating(JSON.parse(staticCardFlag))
+    }
+  }, [])
+
+  function makeUserUpdationUrl(slug_string: string): string {
+    const slug = localStorage.getItem('slug') || ''
+    return slug_string.replace('{slug}', slug)
+  }
+
+  useEffect(() => {
+    if (isStaticCardUpdating && !isDataFetched) {
+      fetchStaticCards(makeUserUpdationUrl(GET_STATIC_CARDS), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        onSuccessfulFetch: (data) => {
+          const textCard = (data as StaticCard[])?.find(
+            (card) => card.cardType === 'TextCard'
+          )
+          if (textCard) {
+            setAbout(textCard.metadata.text)
+          }
+          setIsDataFetched(true)
+        }
+      })
+    }
+  }, [isStaticCardUpdating])
+
   return (
     <div className="flex">
       <div className="w-1/2 pt-2 pl-1 pr-3">
@@ -27,13 +65,6 @@ const TextComponent: React.FC<TextComponentProps> = ({ about, setAbout }) => {
           value={about}
           onChange={(e) => setAbout(e.target.value)}
         ></textarea>
-        {/* <button
-            className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={handleButtonClick}
-            disabled={textData.length === 0}
-          >
-            {textData.length === 0 ? 'Loading...' : 'Add Data'}
-          </button> */}
       </div>
     </div>
   )
