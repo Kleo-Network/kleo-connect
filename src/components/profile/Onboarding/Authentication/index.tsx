@@ -802,7 +802,7 @@ export default function Onboarding({
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
                 <div className="mr-32 w-1/12">
                   <button onClick={handleGoBack}>
-                    <LeftArrow className="w-5 h-5 text-gray-600 hover:text-black" />
+                    <LeftArrow className="w-5 h-3 fill-gray-400 hover:fill-gray-700" />
                   </button>
                 </div>
                 <div className="text-3xl font-shoreline md:text-3xl w-11/12">
