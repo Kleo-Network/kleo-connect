@@ -14,8 +14,9 @@ import Modal from '../common/Modal'
 import { NavbarEvents } from '../constants/Events'
 import { EventContext } from '../common/contexts/EventContext'
 import Settings from '../profile/Settings'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { ReactComponent as CloseIcon } from '../../assets/images/cross.svg'
+import { zeroStateCardData } from '../mocks/LandingPage'
 
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
@@ -24,6 +25,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const [isPublic, setIsPublic] = useState<boolean>(true)
   const [showBanner, setShowBanner] = useState<boolean>(true)
   const { slug } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const slug_from_local_storage = localStorage.getItem('slug')
@@ -115,6 +117,10 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
     setShowBanner(false)
   }
 
+  const handlePublishCardCreation = () => {
+    navigate('/cards')
+  }
+
   return (
     <div className="flex flex-col">
       {!pendignCards?.length && !isPublic && showBanner && (
@@ -161,17 +167,36 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
                 user={userFullData?.user}
               />
             ) : (
-              <div className="px-2 mb-4 flex flex-col items-center self-stretch ">
-                <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start rounded-lg border border-gray-200 p-2">
-                  <ul>
-                    <li>You have not published a new card</li>
-                    <li>
-                      Go here and publish now, only minting it will allow you to
-                      be eligible for airdrop seasons.{' '}
-                    </li>
-                  </ul>
+              userFullData?.user && (
+                <div className="relative">
+                  {true && (
+                    <div className="absolute inset-0 bg-white-900 opacity-[0.98] backdrop-filter backdrop-blur-md rounded-lg z-10">
+                      <div className="h-full px-2 mb-4 flex flex-col items-center self-stretch ">
+                        <div className="flex h-full flex-row flex-wrap gap-2 self-stretch items-center justify-center rounded-lg p-2">
+                          <ul>
+                            <div className="flex self-stretch items-end justify-center">
+                              <button
+                                className="bg-primary text-white px-4 py-3 rounded-lg shadow block"
+                                onClick={handlePublishCardCreation}
+                              >
+                                Publish Now
+                              </button>
+                            </div>
+                            <li className="flex font-bold text-black items-center justify-center">
+                              You have not published a new card
+                            </li>
+                            <li className="flex text-black items-center justify-center">
+                              Publish now, only minting it will allow you to be
+                              eligible for airdrop seasons.{' '}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <Feeds data={zeroStateCardData} user={userFullData?.user} />
                 </div>
-              </div>
+              )
             )}
           </div>
         </div>

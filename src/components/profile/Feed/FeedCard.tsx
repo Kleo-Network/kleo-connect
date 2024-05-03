@@ -79,12 +79,15 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
       {card.cardType == 'DataCard' && <TextCardBody textData={card.content} />}
       {card.cardType == 'ImageCard' && (
         <ImagecardBody
-          data={{ imageUrl: card.metadata.activity, description: card.content }}
+          data={{
+            imageUrl: card.metadata.activity[0],
+            description: card.content
+          }}
         />
       )}
       {card.cardType == 'DomainVisitCard' && (
         <DataCardBody
-          data={card.metadata.activity}
+          data={card.metadata.activity[0]}
           description={card.content}
         />
       )}
