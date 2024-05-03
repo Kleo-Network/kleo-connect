@@ -350,3 +350,84 @@ export const GraphBrowsingHistory = [
     ]
   }
 ]
+
+export const zeroStateCardData = [
+    {
+      cardType: 'DataCard',
+      category: 'Entertainment',
+      content:
+        'Accessed Google Account for personal or professional use',
+      date: 'dd mmm YYYY',
+      id: '663383e98a58df2174ac26da',
+      metadata: {
+        activity: ['signed in'],
+        description:
+          'Accessed Google Account for personal or professional use',
+        entities: [
+          'Google Account'
+        ],
+        titles: [
+          'Sign In - Google Accounts'
+        ]
+      },
+      minted: false,
+      tags: ['Google Account'],
+      urls: [{
+          id: '66297e1f08e52483a9205239',
+          title: 'Sign In - Google Accounts',
+          url: 'https://demo.url'
+        }]
+    },
+    {
+      cardType: 'DataCard',
+      category: 'Miscellaneous',
+      content: 'Accessed Google accounts and connected with Kleo Connect',
+      date: 'dd mmm yyyy',
+      id: '663383fd8a58df2174ac26db',
+      metadata: {
+        activity: ['signed in', 'connected'],
+        description:
+          'Accessed Google accounts and connected with Kleo Connect',
+        entities: ['Google Accounts', 'Kleo Connect'],
+        titles: ['Kleo Connect', 'Login - Google Accounts']
+      },
+      minted: false,
+      tags: ['Google Accounts', 'Kleo Connect'],
+      urls: [
+        {
+          title: "Sign In - Google Accounts",
+          url: "https://demo.url",
+          id: "662a1e0208e52483a92058af"
+        },
+        {
+          id: '66297e2508e52483a9205246',
+          title: 'Kleo Connect',
+          url: 'https://demo.url'
+        }
+      ]
+    },
+    {
+      cardType: 'DataCard',
+      category: 'Miscellaneous',
+      content:
+        'User was interacting with Kleo Connect on the Chrome Web Store',
+      date: '22 Apr 2024',
+      id: '66279fd8b6edc00d67c6616d',
+      metadata: {
+        activity: ['connected'],
+        description:
+          'User was interacting with Kleo Connect on the Chrome Web Store',
+        entities: ['Kleo Connect'],
+        titles: ['Kleo Connect']
+      },
+      minted: true,
+      tags: ['Kleo Connect'],
+      urls: [
+        {
+          id: '662692233b39e648ac4bf5de',
+          title: 'Kleo Connect',
+          url: 'https://demo.url'
+        }
+      ]
+    }
+  ]
