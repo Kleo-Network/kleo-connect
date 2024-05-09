@@ -17,7 +17,7 @@ export interface UserData {
 }
 
 interface PublishedCardMetadata {
-  activity: string
+  activity: string[]
   description: string
   entities: string[]
 }
