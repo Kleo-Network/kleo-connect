@@ -84,6 +84,7 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
               setCards(data)
               setActiveCardList(data)
               setActiveCard(data[0])
+              ;(window as any).updateCounter((data as PendingCard[]).length)
             }
           }
         })
@@ -137,6 +138,7 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
     )
     const active = activeCardList.filter((card) => card.id !== id)[0]
     setActiveCard(active)
+    ;(window as any).updateCounter(cards.length - 1)
   }
 
   const user1 =
