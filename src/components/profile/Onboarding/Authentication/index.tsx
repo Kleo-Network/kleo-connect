@@ -363,6 +363,15 @@ export default function Onboarding({
     setCurrentStep(2)
   }
 
+  const handleGoBackProfile = () => {
+    if (isStaticCardUpdating) {
+      sessionStorage.removeItem('isStaticCardUpdating')
+      navigate(`/profilev2/${localStorage.getItem('slug')}`)
+    } else {
+      setCurrentStep(1)
+    }
+  }
+
   return (
     <GoogleOAuthProvider clientId="236440189889-c391vfab4cpsqnep0lo31ndg8g8qmq25.apps.googleusercontent.com">
       <div className="flex flex-col items-center justify-center mx-auto max-w-3xl">
@@ -684,7 +693,12 @@ export default function Onboarding({
           <>
             <div className="flex flex-col items-center justify-center bg-white shadow-lg rounded-lg w-full">
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
-                <div className="text-3xl font-shoreline md:text-3xl">
+                <div className="mr-32 w-1/12">
+                  <button onClick={handleGoBackProfile}>
+                    <LeftArrow className="w-5 h-3 fill-gray-400 hover:fill-gray-700" />
+                  </button>
+                </div>
+                <div className="text-3xl font-shoreline md:text-3xl w-11/12">
                   {isStaticCardUpdating ? (
                     <>Add | Update static cards</>
                   ) : (
@@ -743,12 +757,12 @@ export default function Onboarding({
                 <div className="p-2 pb-5">
                   <button
                     className={`${
-                      externalToolArray.length == 2
+                      externalToolArray.length > 0
                         ? 'bg-primary text-white'
                         : 'bg-secondary text-primary'
                     } px-4 py-3 rounded-lg shadow mx-auto block`}
                     onClick={() => handleUserUpdation(externalToolArray)}
-                    disabled={externalToolArray.length < 2}
+                    disabled={externalToolArray.length < 1}
                   >
                     {isStaticCardUpdating ? (
                       <>Update cards</>
@@ -757,21 +771,19 @@ export default function Onboarding({
                     )}
                   </button>
                 </div>
-                {!isStaticCardUpdating && (
-                  <div className="p-2 pb-5">
-                    <button
-                      className={`${
-                        externalToolArray.length > 0
-                          ? 'bg-secondary text-primary'
-                          : 'bg-primary text-white'
-                      } px-4 py-3 rounded-lg shadow mx-auto block`}
-                      onClick={() => handleUserUpdation(externalToolArray)}
-                      disabled={externalToolArray.length > 0}
-                    >
-                      Skip
-                    </button>
-                  </div>
-                )}
+                <div className="p-2 pb-5">
+                  <button
+                    className={`${
+                      externalToolArray.length > 0
+                        ? 'bg-secondary text-primary'
+                        : 'bg-primary text-white'
+                    } px-4 py-3 rounded-lg shadow mx-auto block`}
+                    onClick={() => handleUserUpdation(externalToolArray)}
+                    disabled={externalToolArray.length > 0}
+                  >
+                    Skip
+                  </button>
+                </div>
               </div>
               {loginError && (
                 <div className="m-3">
@@ -802,7 +814,7 @@ export default function Onboarding({
               <div className="p-6 text-lg w-full font-medium text-gray-900 border-b border-gray-200 flex justify-center items-center">
                 <div className="mr-32 w-1/12">
                   <button onClick={handleGoBack}>
-                    <LeftArrow className="w-5 h-5 text-gray-600 hover:text-black" />
+                    <LeftArrow className="w-5 h-3 fill-gray-400 hover:fill-gray-700" />
                   </button>
                 </div>
                 <div className="text-3xl font-shoreline md:text-3xl w-11/12">
