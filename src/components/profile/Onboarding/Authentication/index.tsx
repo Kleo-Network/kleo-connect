@@ -16,6 +16,7 @@ import CalendlyLogin from '../Connections/Calendly'
 import GitHubSignIn from '../Connections/Github'
 import TwitterSignIn from '../Connections/Twitter'
 import CityAutocomplete from '../Connections/Place'
+import InstagramConnect from '../Connections/Instagram'
 import useDebounce from '../../../common/hooks/useDebounce'
 import { SlugData, UserData } from '../../../constants/SignupData'
 import TextComponent from '../Connections/Text'
@@ -211,6 +212,7 @@ export default function Onboarding({
   const [isCalandlyConnected, setIsCalandlyConnected] = useState(false)
   const [isGitConnected, setIsGitConnected] = useState(false)
   const [isXConnected, setIsXConnected] = useState(false)
+  const [isInstaConnected, setIsInstaConnected] = useState(false)
   const [isStaticCardUpdating, setIsStaticCardUpdating] = useState(false)
 
   interface ExternalTool {
@@ -222,7 +224,8 @@ export default function Onboarding({
     { name: 'Pin Location', connected: cordinates },
     { name: 'Github Graph', connected: isGitConnected },
     { name: 'Calendly', connected: isCalandlyConnected },
-    { name: 'Twitter Profile', connected: isXConnected }
+    { name: 'Twitter Profile', connected: isXConnected },
+    { name: 'Instagram Profile', connected: isInstaConnected }
   ]
 
   function areCardsConnected(selectedCards: string[]): boolean {
@@ -854,6 +857,12 @@ export default function Onboarding({
                     <TwitterSignIn
                       cards={createdStaticCards}
                       setIsXConnected={setIsXConnected}
+                    />
+                  )}
+                  {externalToolArray.includes('Instagram Profile') && (
+                    <InstagramConnect
+                      cards={createdStaticCards}
+                      setIsInstaConnected={setIsInstaConnected}
                     />
                   )}
                   {externalToolArray.includes('Pin Location') && (
