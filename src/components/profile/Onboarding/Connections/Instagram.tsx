@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import config from '../../../common/config'
+import {
+  InstagramCard,
+  StaticCard as StaticCardType
+} from '../../../common/interface'
+import useFetch from '../../../common/hooks/useFetch'
 
 interface InstagramMedia {
   id: string
@@ -13,19 +18,36 @@ interface InstagramTokenResponse {
   user_id: number
 }
 
-const InstagramConnect: React.FC = () => {
-  const [userPhoto, setUserPhoto] = useState<string | null>(null)
+interface InstagramProps {
+  cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
+  setIsInstaConnected: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const InstagramConnect: React.FC<InstagramProps> = ({
+  cards,
+  setIsInstaConnected
+}) => {
+  const [username, setUsername] = useState<string>('')
+  const { fetchData: UpdateUserData } = useFetch<any>()
+  const CREATE_INSTAGRAM_CARD = 'static-card/instagram/{slug}'
+  const [isInstagramConnected, setIsInstagramConnected] = useState(false)
+  const slug = localStorage.getItem('slug') || ''
 
   const handleConnectInstagram = () => {
-    // Replace with your own app ID and redirect URI
+    //Step 1: Get the authorization code
     const appId = config.instagram.applicationId
     const redirectUri = config.connection.redirectionUrl
-
+    console.log('rdu', redirectUri)
+    console.log('aid', appId)
     // Construct the authorization URL
     const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${appId}&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`
 
     // Redirect the user to the authorization URL
     window.location.href = authUrl
+  }
+
+  function makeInstaCardUrl(): string {
+    return CREATE_INSTAGRAM_CARD.replace('{slug}', slug)
   }
 
   const handleInstagramCallback = async (code: string) => {
@@ -44,19 +66,20 @@ const InstagramConnect: React.FC = () => {
       const accessToken = tokenResponse.data.access_token
       console.log(accessToken)
 
-      // Fetch the user's media
-      const mediaResponse: AxiosResponse<{ data: InstagramMedia[] }> =
-        await axios.get(
-          `https://graph.instagram.com/me/media?fields=id,caption,media_url&access_token=${accessToken}`
-        )
-
-      const media = mediaResponse.data.data
-
-      // Select a random photo from the user's media
-      const randomIndex = Math.floor(Math.random() * media.length)
-      const randomPhoto = media[randomIndex].media_url
-
-      setUserPhoto(randomPhoto)
+      UpdateUserData(makeInstaCardUrl(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: accessToken
+        }),
+        onSuccessfulFetch: () => {
+          setIsInstaConnected(true)
+          setUsername(slug)
+          setIsInstagramConnected(true)
+        }
+      })
     } catch (error) {
       console.error('Error fetching Instagram photo:', error)
     }
@@ -67,18 +90,41 @@ const InstagramConnect: React.FC = () => {
   const authorizationCode = urlParams.get('code')
 
   // If there is an authorization code, handle the Instagram callback
-  if (authorizationCode) {
+  if (authorizationCode && username === '') {
     console.log(authorizationCode)
     handleInstagramCallback(authorizationCode)
   }
 
   return (
-    <div>
-      {userPhoto ? (
-        <img src={userPhoto} alt="Random Instagram Photo" />
-      ) : (
-        <button onClick={handleConnectInstagram}>Connect to Instagram</button>
-      )}
+    <div className="flex">
+      <div className="w-1/2 pt-2 pl-1 pr-3">
+        <div className="flex flex-col items-start justify-center">
+          <div className="flex mb-20 flex-col items-start justify-center">
+            <span className="text-gray-900 text-base font-sm">
+              Instagram Card
+            </span>
+            <span className="text-gray-400 text-sm font-regular">
+              We will put your{' '}
+              <u className="text-gray-800 bold">random image</u> in a beautiful
+              card!
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="w-1/2 mt-7">
+        {isInstagramConnected || username ? (
+          <div>
+            <h2 className="text-green-800">Connected @{username} instagram.</h2>
+          </div>
+        ) : (
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            onClick={handleConnectInstagram}
+          >
+            Login with instagram
+          </button>
+        )}
+      </div>
     </div>
   )
 }

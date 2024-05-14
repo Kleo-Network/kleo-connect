@@ -1,62 +1,42 @@
-import React from 'react'
-import { ReactComponent as Like } from '../../../assets/images/heart.svg'
-import { ReactComponent as Comment } from '../../../assets/images/commentOutline.svg'
+import React, { useState } from 'react'
+import { InstagramCard } from '../../common/interface'
+import { ReactComponent as Arrow } from '../../../assets/images/arrow.svg'
 
 interface InstagramPostCardProps {
-  username: string
-  userImage: string
-  postImage: string
-  caption: string
-  likes: number
-  comments: number
-  postDate: string // Assuming ISO format for simplicity
+  instaData: InstagramCard
 }
 
-const InstagramPostCard: React.FC<InstagramPostCardProps> = ({
-  username,
-  userImage,
-  postImage,
-  caption,
-  likes,
-  comments,
-  postDate
-}) => {
-  // Format the date
-  const formatDate = (isoString: string) => {
-    return new Date(isoString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+const InstagramPostCard: React.FC<InstagramPostCardProps> = ({ instaData }) => {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const nextSlide = () => {
+    setActiveIndex((prevIndex: number) =>
+      prevIndex === instaData.urls.length - 1 ? 0 : prevIndex + 1
+    )
   }
-
+  const prevSlide = () => {
+    setActiveIndex((prevIndex: number) =>
+      prevIndex === 0 ? instaData.urls.length - 1 : prevIndex - 1
+    )
+  }
   return (
-    <div className="flex-1 flex  border rounded-lg overflow-hidden shadow-lg max-w-2xl mx-auto my-5">
-      <div className="flex-none w-1/2">
-        <img
-          src={postImage}
-          alt="Post"
-          className="object-cover w-full h-full"
-        />
-      </div>
-      <div className="flex-grow p-4 space-y-2">
-        <div className="flex items-center space-x-2">
-          <img
-            src={userImage}
-            alt={username}
-            className="w-8 h-8 rounded-full"
-          />
-          <span className="font-bold text-sm">{username}</span>
-        </div>
-        <p className="text-sm">{caption}</p>
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <Like className="w-5 h-5 fill-red-500" />
-          <span>{likes} likes</span>
-          <Comment className="w-5 h-5" />
-          <span>{comments} comments</span>
-        </div>
-        <p className="text-xs text-gray-500">{formatDate(postDate)}</p>
-      </div>
+    <div className="relative max-w-full h-[250px] overflow-hidden rounded-lg">
+      <img
+        src={instaData.urls[activeIndex]}
+        alt={`Slide ${activeIndex}`}
+        className="w-full h-full block transition-transform duration-300 ease-in-out"
+      />
+      <button
+        onClick={prevSlide}
+        className="absolute rounded-full ml-1 left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-lg border-none px-2 py-2 cursor-pointer z-10 transition duration-300 hover:bg-opacity-75 "
+      >
+        <Arrow className="w-5 h-5 -rotate-90" />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute rounded-full mr-1 right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-lg border-none px-2 py-2 cursor-pointer z-10 transition duration-300 hover:bg-opacity-75 "
+      >
+        <Arrow className="w-5 h-5 rotate-90" />
+      </button>
     </div>
   )
 }

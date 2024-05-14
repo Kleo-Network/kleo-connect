@@ -14,17 +14,17 @@ interface ImageButton {
 
 const imageButtons: ImageButton[] = [
   {
-    icon: 'https://cdn-icons-png.flaticon.com/512/747/747310.png',
+    icon: 'https://cdn-icons-png.flaticon.com/512/1172/1172079.png',
     alt: 'Allow people to book an appointment',
     name: 'Calendly'
   },
   {
-    icon: 'https://cdn-icons-png.flaticon.com/512/2838/2838912.png',
+    icon: 'https://cdn-icons-png.flaticon.com/512/1865/1865083.png',
     alt: 'Showcase a specific location on map',
     name: 'Pin Location'
   },
   {
-    icon: 'https://cdn-icons-png.flaticon.com/512/733/733579.png',
+    icon: 'https://cdn-icons-png.flaticon.com/512/5968/5968830.png',
     alt: 'Pinned tweet, bio, following and followers',
     name: 'Twitter Profile'
   },
@@ -33,6 +33,11 @@ const imageButtons: ImageButton[] = [
     alt: 'Your github contributions graph for last 3 months',
     name: 'Github Graph'
   }
+  //   {
+  //     icon: 'https://cdn-icons-png.flaticon.com/512/1400/1400829.png',
+  //     alt: 'Instagram image for your kleo profile',
+  //     name: 'Instagram Profile'
+  //   }
 ]
 
 const App: React.FC<SelectCardsProps> = ({
@@ -96,6 +101,43 @@ const App: React.FC<SelectCardsProps> = ({
             )}
           </div>
         ))}
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        {(localStorage.getItem('slug') == 'SpareKhatu' ||
+          localStorage.getItem('slug') == 'vaibhavgeek') && (
+          <div
+            key={5}
+            className={`relative p-6 rounded-lg shadow-md cursor-pointer ${
+              selectedButtons.includes('Instagram Profile')
+                ? 'bg-violet-100'
+                : 'bg-white'
+            }`}
+            onClick={() => handleButtonClick('Instagram Profile')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1400/1400829.png"
+                  alt={'instab'}
+                  className="w-8 h-8 mr-4"
+                />
+                <div className="flex flex-col">
+                  <span className="text-gray-900 text-base font-sm">
+                    Instagram Profile
+                  </span>
+                  <span className="text-gray-400 text-sm font-regular">
+                    Instagram image for your kleo profile
+                  </span>
+                </div>
+              </div>
+            </div>
+            {selectedButtons.includes('Instagram Profile') && (
+              <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white">
+                <Tick className="w-3 h-3 fill-white" />
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <p className="mt-4">{selectedButtons.length} / 2 selected</p>
     </div>

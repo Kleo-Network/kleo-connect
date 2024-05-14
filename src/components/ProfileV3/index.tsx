@@ -4,6 +4,7 @@ import TwitterCard from '../profile/ProfileCards/Twitter'
 import MonthlyCalendarCard from '../profile/ProfileCards/Calendly'
 import MapCard from '../profile/ProfileCards/MapCard'
 import TextCard from '../profile/ProfileCards/TextCard'
+import InstagramPostCard from '../profile/ProfileCards/Instagram'
 import {
   StaticCard,
   TwitterCard as TwitterCardType,
@@ -11,7 +12,8 @@ import {
   MapCard as MapCardType,
   GitCard as GitCardType,
   UserData,
-  TextCard as TextCardType
+  TextCard as TextCardType,
+  InstagramCard
 } from '../common/interface'
 
 const calendlyUrl = 'https://calendly.com/{slug}/'
@@ -44,6 +46,9 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
     showCardList.includes('Calendly') && getCardByType(data, 'CalendarCard')
   const twitterCard =
     showCardList.includes('Twitter Profile') && getCardByType(data, 'XCard')
+  const instaCard =
+    showCardList.includes('Instagram Profile') &&
+    getCardByType(data, 'InstaCard')
   const textCard = getCardByType(data, 'TextCard')
 
   return (
@@ -95,6 +100,15 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
         <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
           {gitCard.cardType === 'GitCard' && (
             <GitHubCard gitData={gitCard.metadata as GitCardType} />
+          )}
+        </div>
+      )}
+      {instaCard && (
+        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
+          {instaCard.cardType === 'InstaCard' && (
+            <InstagramPostCard
+              instaData={instaCard.metadata as InstagramCard}
+            />
           )}
         </div>
       )}

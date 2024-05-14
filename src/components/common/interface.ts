@@ -77,11 +77,15 @@ export interface TwitterCard {
   bio: string
   is_verified: boolean
 }
+
+export interface InstagramCard {
+  urls: string[]
+}
 export interface StaticCard {
   cardType: string
   id: string
   last_connected: string
-  metadata: GitCard | CalendlyCard | MapCard | TwitterCard | TextCard
+  metadata: GitCard | CalendlyCard | MapCard | TwitterCard | TextCard | InstagramCard
 }
 
 export interface fullUserData {

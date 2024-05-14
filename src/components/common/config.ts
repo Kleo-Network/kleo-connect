@@ -9,8 +9,8 @@ const config = {
     webhookSigningKey: import.meta.env.VITE_CALENDLY_WEBHOOK_SIGNING_KEY
   },
   instagram: {
-    applicationId: import.meta.env.INSTAGRAM_APPLICATION_ID,
-    appSecret: import.meta.env.INSTAGRAM_APP_SECRET
+    applicationId: import.meta.env.VITE_INSTAGRAM_APPLICATION_ID,
+    appSecret: import.meta.env.VITE_INSTAGRAM_APP_SECRET
   },
   linkedin: {
     applicationId: import.meta.env.VITE_LINKEDIN_APPLICATION_ID,
