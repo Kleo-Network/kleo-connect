@@ -53,26 +53,13 @@ const InstagramConnect: React.FC<InstagramProps> = ({
   const handleInstagramCallback = async (code: string) => {
     try {
       // Exchange the authorization code for an access token
-      const tokenResponse: AxiosResponse<InstagramTokenResponse> =
-        await axios.post('https://api.instagram.com/oauth/access_token', {
-          client_id: config.instagram.applicationId,
-          client_secret: config.instagram.appSecret,
-          grant_type: 'authorization_code',
-          redirect_uri: config.connection.redirectionUrl,
-          code: code
-        })
-      console.log(tokenResponse)
-
-      const accessToken = tokenResponse.data.access_token
-      console.log(accessToken)
-
       UpdateUserData(makeInstaCardUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          token: accessToken
+          code: code
         }),
         onSuccessfulFetch: () => {
           setIsInstaConnected(true)
