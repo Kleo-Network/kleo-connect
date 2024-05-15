@@ -7,17 +7,6 @@ import {
 } from '../../../common/interface'
 import useFetch from '../../../common/hooks/useFetch'
 
-interface InstagramMedia {
-  id: string
-  caption: string
-  media_url: string
-}
-
-interface InstagramTokenResponse {
-  access_token: string
-  user_id: number
-}
-
 interface InstagramProps {
   cards?: StaticCardType[] // Replace 'any' with the actual type of createdStaticCards
   setIsInstaConnected: React.Dispatch<React.SetStateAction<boolean>>

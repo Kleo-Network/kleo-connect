@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { InstagramCard } from '../../common/interface'
 import { ReactComponent as Arrow } from '../../../assets/images/arrow.svg'
+import { ReactComponent as InstagramIcon } from '../../../assets/images/instagram.svg'
 
 interface InstagramPostCardProps {
   instaData: InstagramCard
@@ -8,6 +9,17 @@ interface InstagramPostCardProps {
 
 const InstagramPostCard: React.FC<InstagramPostCardProps> = ({ instaData }) => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const username =
+    instaData.username.length > 13
+      ? instaData.username.slice(0, 13) + '...'
+      : instaData.username
+  const INSTA_PROFILE_URL = 'https://www.instagram.com/{username}/'
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
+    return () => clearInterval(interval)
+  }, [activeIndex])
+
   const nextSlide = () => {
     setActiveIndex((prevIndex: number) =>
       prevIndex === instaData.urls.length - 1 ? 0 : prevIndex + 1
@@ -18,25 +30,45 @@ const InstagramPostCard: React.FC<InstagramPostCardProps> = ({ instaData }) => {
       prevIndex === 0 ? instaData.urls.length - 1 : prevIndex - 1
     )
   }
+
+  const goToSlide = (index) => {
+    setActiveIndex(index)
+  }
+
+  const handleInstagramClick = () => {
+    const url = INSTA_PROFILE_URL.replace('{username}', instaData.username)
+    window.open(url, '_blank')
+  }
+
   return (
     <div className="relative max-w-full h-[250px] overflow-hidden rounded-lg">
       <img
-        src={instaData.urls[activeIndex]}
+        src={instaData.urls[activeIndex].url}
         alt={`Slide ${activeIndex}`}
         className="w-full h-full block transition-transform duration-300 ease-in-out"
       />
       <button
-        onClick={prevSlide}
-        className="absolute rounded-full ml-1 left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-lg border-none px-2 py-2 cursor-pointer z-10 transition duration-300 hover:bg-opacity-75 "
+        className="absolute rounded-full mt-3 ml-2 left-0 top-0 bg-white w-[150px] h-7"
+        onClick={handleInstagramClick}
       >
-        <Arrow className="w-5 h-5 -rotate-90" />
+        <div className="flex flex-row">
+          <InstagramIcon className="mt-auto ml-1 w-5 h-5" />
+          <div className=" mt-auto ml-1 text-sm" title={instaData.username}>
+            {username}
+          </div>
+        </div>
       </button>
-      <button
-        onClick={nextSlide}
-        className="absolute rounded-full mr-1 right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-lg border-none px-2 py-2 cursor-pointer z-10 transition duration-300 hover:bg-opacity-75 "
-      >
-        <Arrow className="w-5 h-5 rotate-90" />
-      </button>
+      <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex">
+        {instaData.urls.map((_, index) => (
+          <div
+            key={index}
+            className={`w-14 h-1 bg-white rounded-full mx-2 cursor-pointer ${
+              index === activeIndex ? 'active bg-white' : 'bg-opacity-50'
+            }`}
+            onClick={() => goToSlide(index)}
+          />
+        ))}
+      </div>
     </div>
   )
 }

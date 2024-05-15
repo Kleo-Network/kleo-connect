@@ -78,9 +78,16 @@ export interface TwitterCard {
   is_verified: boolean
 }
 
-export interface InstagramCard {
-  urls: string[]
+interface UrlMetadata {
+  url: string,
+  caption: string
 }
+
+export interface InstagramCard {
+  urls: UrlMetadata[],
+  username: string
+}
+
 export interface StaticCard {
   cardType: string
   id: string
