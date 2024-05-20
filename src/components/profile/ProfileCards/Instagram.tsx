@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { InstagramCard } from '../../common/interface'
-import { ReactComponent as Arrow } from '../../../assets/images/arrow.svg'
 import { ReactComponent as InstagramIcon } from '../../../assets/images/instagram.svg'
 
 interface InstagramPostCardProps {
@@ -25,13 +24,8 @@ const InstagramPostCard: React.FC<InstagramPostCardProps> = ({ instaData }) => {
       prevIndex === instaData.urls.length - 1 ? 0 : prevIndex + 1
     )
   }
-  const prevSlide = () => {
-    setActiveIndex((prevIndex: number) =>
-      prevIndex === 0 ? instaData.urls.length - 1 : prevIndex - 1
-    )
-  }
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setActiveIndex(index)
   }
 
@@ -41,14 +35,14 @@ const InstagramPostCard: React.FC<InstagramPostCardProps> = ({ instaData }) => {
   }
 
   return (
-    <div className="relative max-w-full h-[250px] overflow-hidden rounded-lg">
+    <div className="relative w-full h-full overflow-hidden rounded-lg">
       <img
         src={instaData.urls[activeIndex].url}
         alt={`Slide ${activeIndex}`}
         className="w-full h-full block transition-transform duration-300 ease-in-out"
       />
       <button
-        className="absolute rounded-full mt-3 ml-2 left-0 top-0 bg-white w-[150px] h-7"
+        className="absolute inline-block rounded-full mt-3 ml-2 pr-2 left-0 top-0 bg-white h-7"
         onClick={handleInstagramClick}
       >
         <div className="flex flex-row">
