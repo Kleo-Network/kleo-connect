@@ -1,5 +1,6 @@
 import React from 'react'
-import { ReactComponent as Twitter } from '../../../assets/images/twitter.svg'
+import { ReactComponent as Twitter } from '../../../assets/images/X.svg'
+import { ReactComponent as Pin } from '../../../assets/images/pushPin.svg'
 import { TwitterCard as UserCard } from '../../common/interface'
 
 interface Tweet {
@@ -13,29 +14,55 @@ interface TwitterCardProps {
 }
 
 const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
+  function formatNumberToKM(num: number) {
+    if (num >= 1e6) {
+      return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+    } else if (num >= 1e3) {
+      return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
+    }
+    return num.toString()
+  }
+
   return (
-    <div className="flex-1 h-full bg-blue-50 p-6 rounded-lg shadow-md relative">
-      <div className="absolute top-0 right-0 p-4">
-        <Twitter className="text-gray-800 w-8 h-8" />
-      </div>
-      <div className="flex items-center space-x-4">
-        <div>
-          <div className="font-bold text-md mb-2">{user.bio}</div>
-          <p className="text-gray-700 text-sm">
-            {user.pinned_tweet.slice(0, 177)} {'...'}
+    <div className="flex-1 h-full bg-gray-800 p-6 rounded-lg shadow-md relative">
+      <div className="absolute flex flex-col top-0 left-0 w-[246px] h-[208px] p-4">
+        <div className="flex flex-row w-[246px] h-[32px]">
+          <Twitter className="text-gray-800 w-[32px] h-[32px] border border-white rounded-full" />
+          <div className="flex items-center ml-2 text-white font-semibold">
+            {user.username}
+          </div>
+        </div>
+        <div className="flex flex-col w-full items-left mt-4">
+          <div className="flex flex-row">
+            <Pin className="font-bold w-4 h-4" />
+            <div className="ml-2 font-semibold text-sm text-white"> Pinned</div>
+          </div>
+
+          {/* <div className="w-full font-bold text-md mb-2">{user.bio}</div> */}
+          <p
+            className="max-h-[140px] text-sm font-thin text-white font-inter overflow-hidden overflow-ellipsis text-left line-clamp-[7]"
+            title={user.pinned_tweet}
+          >
+            {user.pinned_tweet}
           </p>
         </div>
       </div>
-      <div className="py-3">
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          <span className="text-xs">{user.followers_count} followers</span>
-        </span>
-      </div>
-      {pinnedTweet && (
-        <div className="border-t border-gray-300 p-3">
-          <p className="text-gray-500 text-xs mt-2">{pinnedTweet.date}</p>
+      <div className="absolute flex flex-row bottom-1 left-0 mb-4 ml-8 space-x-3">
+        <div className="text-center">
+          <span className="inline-block bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2">
+            <p className="text-xs">
+              {formatNumberToKM(user.followers_count)} Followers
+            </p>
+          </span>
         </div>
-      )}
+        <div className="text-center">
+          <span className="inline-block bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-white ">
+            <p className="text-xs">
+              {formatNumberToKM(user.following_count)} Following
+            </p>
+          </span>
+        </div>
+      </div>
     </div>
   )
 }

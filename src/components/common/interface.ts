@@ -73,7 +73,7 @@ export interface TwitterCard {
   username: string
   pinned_tweet: string
   followers_count: number
-  following: number
+  following_count: number
   bio: string
   is_verified: boolean
 }
