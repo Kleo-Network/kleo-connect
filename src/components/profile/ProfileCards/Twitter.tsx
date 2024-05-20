@@ -24,39 +24,39 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
   }
 
   return (
-    <div className="flex-1 h-full bg-gray-800 p-6 rounded-lg shadow-md relative">
-      <div className="absolute flex flex-col top-0 left-0 w-[246px] h-[208px] p-4">
-        <div className="flex flex-row w-[246px] h-[32px]">
+    <div className="flex-1 h-full bg-gray-800 p-6 rounded-lg shadow-md relative space-y-4">
+      <div className="flex flex-col">
+        <div className="flex flex-row w-full h-[32px]">
           <Twitter className="text-gray-800 w-[32px] h-[32px] border border-white rounded-full" />
           <div className="flex items-center ml-2 text-white font-semibold">
             {user.username}
           </div>
         </div>
-        <div className="flex flex-col w-full items-left mt-4">
-          <div className="flex flex-row">
-            <Pin className="font-bold w-4 h-4" />
-            <div className="ml-2 font-semibold text-sm text-white"> Pinned</div>
-          </div>
-
-          {/* <div className="w-full font-bold text-md mb-2">{user.bio}</div> */}
-          <p
-            className="max-h-[140px] text-sm font-thin text-white font-inter overflow-hidden overflow-ellipsis text-left line-clamp-[7]"
-            title={user.pinned_tweet}
-          >
-            {user.pinned_tweet}
-          </p>
-        </div>
       </div>
-      <div className="absolute flex flex-row bottom-1 left-0 mb-4 ml-8 space-x-3">
+      <div className="flex flex-col w-full items-left mt-4 mb-4">
+        <div className="flex flex-row">
+          <Pin className="font-bold w-4 h-4" />
+          <div className="ml-2 font-semibold text-sm text-white"> Pinned</div>
+        </div>
+
+        {/* <div className="w-full font-bold text-md mb-2">{user.bio}</div> */}
+        <p
+          className="max-h-[140px] text-sm font-thin text-white font-inter overflow-hidden overflow-ellipsis text-left line-clamp-[7]"
+          title={user.pinned_tweet}
+        >
+          {user.pinned_tweet}
+        </p>
+      </div>
+      <div className="w-full flex flex-row mb-1 justify-evenly">
         <div className="text-center">
-          <span className="inline-block bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2">
+          <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white">
             <p className="text-xs">
               {formatNumberToKM(user.followers_count)} Followers
             </p>
           </span>
         </div>
         <div className="text-center">
-          <span className="inline-block bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-white ">
+          <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white ">
             <p className="text-xs">
               {formatNumberToKM(user.following_count)} Following
             </p>
