@@ -50,7 +50,7 @@ const App: React.FC<SelectCardsProps> = ({
       setSelectedButtons((prevSelectedButtons: string[]) =>
         prevSelectedButtons.filter((nm: string) => nm !== name)
       )
-    } else if (selectedButtons.length < 2) {
+    } else if (selectedButtons.length < 6) {
       setSelectedButtons((prevSelectedButtons) => [
         ...prevSelectedButtons,
         name
@@ -139,7 +139,7 @@ const App: React.FC<SelectCardsProps> = ({
           </div>
         )}
       </div>
-      <p className="mt-4">{selectedButtons.length} / 2 selected</p>
+      <p className="mt-4">{selectedButtons.length} / 5 selected</p>
     </div>
   )
 }

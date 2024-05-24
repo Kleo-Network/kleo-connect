@@ -44,7 +44,7 @@ export enum CardType {
   MapCard = 'PlaceCard',
   TwitterCard = 'XCard'
 }
-interface Contribution {
+export interface Contribution {
   date: string
   count: number
 }
