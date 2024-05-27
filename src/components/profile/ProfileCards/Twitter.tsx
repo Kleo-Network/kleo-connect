@@ -48,20 +48,24 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
         </p>
       </div>
       <div className="w-full flex flex-row mb-1 justify-evenly">
-        <div className="text-center">
-          <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white">
-            <p className="text-xs">
-              {formatNumberToKM(user.followers_count)} Followers
-            </p>
-          </span>
-        </div>
-        <div className="text-center">
-          <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white ">
-            <p className="text-xs">
-              {formatNumberToKM(user.following_count)} Following
-            </p>
-          </span>
-        </div>
+        {user.followers_count >= 0 && (
+          <div className="text-center">
+            <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white">
+              <p className="text-xs">
+                {formatNumberToKM(user.followers_count)} Followers
+              </p>
+            </span>
+          </div>
+        )}
+        {user.following_count >= 0 && (
+          <div className="text-center">
+            <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white ">
+              <p className="text-xs">
+                {formatNumberToKM(user.following_count)} Following
+              </p>
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
