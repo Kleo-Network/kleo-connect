@@ -16,10 +16,17 @@ export interface UserData {
   token: any
 }
 
+export interface VisitCountMap {
+  category: string
+  count: number
+}
+
 interface PublishedCardMetadata {
-  activity: string[]
+  activity: string[] | VisitCountMap[]
   description: string
   entities: string[]
+  dateFrom?: number
+  dateTo?: number
 }
 
 interface PublishedCardUrls {

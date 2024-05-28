@@ -7,7 +7,7 @@ interface TextCardProps {
 
 const TextCard: React.FC<TextCardProps> = ({ metadata, date }) => {
   return (
-    <div className="relative flex flex-1 flex-col self-stretch items-center justify-center h-full w-full bg-purple-100 p-6 rounded-lg shadow-lg shadow-opacity-50 shadow-[rgba(191,186,171,0.5)]">
+    <div className="relative flex flex-1 flex-col self-stretch items-center justify-center h-full w-full bg-purple-100 p-6 rounded-lg">
       <p
         className="absolute left-0 top-0 text-violet-800 font-inter font-semibold text-lg mt-4 mx-4 text-wrap overflow-hidden overflow-ellipsis text-left line-clamp-3"
         title={metadata.text}

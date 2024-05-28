@@ -122,7 +122,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-gray-50">
       {!pendignCards?.length && !isPublic && showBanner && (
         <div className="h-full w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
           <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
