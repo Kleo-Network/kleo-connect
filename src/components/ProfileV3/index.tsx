@@ -5,6 +5,10 @@ import MonthlyCalendarCard from '../profile/ProfileCards/Calendly'
 import MapCard from '../profile/ProfileCards/MapCard'
 import TextCard from '../profile/ProfileCards/TextCard'
 import InstagramPostCard from '../profile/ProfileCards/Instagram'
+import MiniInstagramPostCard from '../profile/ProfileCards/InstagramMini'
+import MiniTwitterCard from '../profile/ProfileCards/TwitterMini'
+import MiniGitHubCard from '../profile/ProfileCards/GithubMini'
+import MiniMonthlyCalendarCard from '../profile/ProfileCards/CalendlyMini'
 import {
   StaticCard,
   TwitterCard as TwitterCardType,
@@ -38,6 +42,7 @@ const getCardByType = (cards: StaticCard[], cardType: string) => {
 export default function ProfileV3({ data, user }: fullUserDataProp) {
   console.log('staticCards', data)
   const showCardList = user.settings.static_cards
+  const userCardCount = showCardList.length + 1
   const mapCard =
     showCardList.includes('Pin Location') && getCardByType(data, 'PlaceCard')
   const gitCard =
@@ -56,62 +61,145 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
       <div
         className={`${
           data.length == 0
-            ? 'col-span-8 row-span-1'
-            : showCardList.length == 0 && textCard
-            ? 'col-span-4 row-span-1'
-            : 'col-span-2 row-span-1'
-        } rounded-[5px] p-2.5`}
+            ? 'w-full'
+            : userCardCount == 1 ||
+              (userCardCount == 2 && mapCard && textCard) ||
+              (userCardCount == 2 && twitterCard && instaCard) ||
+              (userCardCount == 2 && gitCard && calendlyCard)
+            ? 'w-1/2'
+            : userCardCount == 2 ||
+              (userCardCount == 3 && mapCard && textCard) ||
+              (userCardCount == 3 && twitterCard && instaCard) ||
+              (userCardCount == 3 && gitCard && calendlyCard)
+            ? 'w-1/3'
+            : 'w-1/4'
+        }  rounded-[5px] p-2`}
       >
         <ProfileBio user={user} />
       </div>
-      {textCard && (
+      {(mapCard || textCard) && (
         <div
-          className={`flex items-center justify-between rounded-[5px] p-2.5 ${
-            showCardList.length == 0 && textCard
-              ? 'col-span-4 row-span-1'
-              : 'col-span-2 row-span-1'
+          className={`flex flex-col h-full mr-1 ${
+            userCardCount > 3
+              ? 'w-1/4'
+              : !(userCardCount == 2 && mapCard && textCard) &&
+                userCardCount > 1 &&
+                userCardCount <= 3
+              ? 'w-1/3'
+              : 'w-1/2'
           }`}
         >
-          <TextCard metadata={textCard?.metadata as TextCardType} />
-        </div>
-      )}
-      {calendlyCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
-          <MonthlyCalendarCard
-            calendlyUrl={makeCalendyCardUrl(
-              calendlyCard.metadata as CalendlyCardType
-            )}
-          />
-        </div>
-      )}
-      {twitterCard && twitterCard.cardType === 'XCard' && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
-          <TwitterCard user={twitterCard.metadata as TwitterCardType} />
-        </div>
-      )}
-      {mapCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
-          {mapCard.cardType === 'PlaceCard' && (
-            <MapCard map={mapCard.metadata as MapCardType} />
+          {mapCard && (
+            <div
+              className={`flex items-center justify-between w-full rounded-[5px]  ${
+                textCard ? 'h-1/2 mb-1 pb-1' : 'h-full'
+              }`}
+            >
+              {mapCard.cardType === 'PlaceCard' && (
+                <MapCard map={mapCard.metadata as MapCardType} />
+              )}
+            </div>
+          )}
+          {textCard && (
+            <div
+              className={`flex items-center justify-between w-full rounded-[5px] ${
+                mapCard ? 'h-1/2 mt-1' : 'h-full'
+              }`}
+            >
+              <TextCard
+                metadata={textCard?.metadata as TextCardType}
+                date={textCard?.last_connected}
+              />
+            </div>
           )}
         </div>
       )}
-      {gitCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
-          {gitCard.cardType === 'GitCard' && (
-            <GitHubCard gitData={gitCard.metadata as GitCardType} />
-          )}
+      {(twitterCard || instaCard) && (
+        <div
+          className={`flex flex-col h-full mr-1 ${
+            userCardCount > 3
+              ? 'w-1/4'
+              : !(userCardCount == 2 && twitterCard && instaCard) &&
+                userCardCount > 1 &&
+                userCardCount <= 3
+              ? 'w-1/3'
+              : 'w-1/2'
+          }`}
+        >
+          {twitterCard &&
+            twitterCard.cardType === 'XCard' &&
+            (instaCard ? (
+              <div className="flex items-center justify-between w-full h-1/2 rounded-[5px] pb-2">
+                <MiniTwitterCard
+                  user={twitterCard.metadata as TwitterCardType}
+                />
+              </div>
+            ) : (
+              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+                <TwitterCard user={twitterCard.metadata as TwitterCardType} />
+              </div>
+            ))}
+          {instaCard &&
+            instaCard.cardType === 'InstaCard' &&
+            (twitterCard ? (
+              <div className="flex items-center justify-between w-full rounded-[5px] mt-1 h-1/2">
+                <MiniInstagramPostCard
+                  instaData={instaCard.metadata as InstagramCard}
+                />
+              </div>
+            ) : (
+              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+                <InstagramPostCard
+                  instaData={instaCard.metadata as InstagramCard}
+                />
+              </div>
+            ))}
         </div>
       )}
-      {instaCard && (
-        <div className="flex items-center justify-between col-span-2 row-span-1 rounded-[5px] p-2.5">
-          {instaCard.cardType === 'InstaCard' && (
-            <InstagramPostCard
-              instaData={instaCard.metadata as InstagramCard}
-            />
-          )}
+      {(gitCard || calendlyCard) && (
+        <div
+          className={`flex flex-col h-full mr-1 ${
+            userCardCount > 3
+              ? 'w-1/4'
+              : !(userCardCount == 2 && gitCard && calendlyCard) &&
+                userCardCount > 1 &&
+                userCardCount <= 3
+              ? 'w-1/3'
+              : 'w-1/2'
+          }`}
+        >
+          {gitCard &&
+            gitCard.cardType === 'GitCard' &&
+            (calendlyCard ? (
+              <div className="flex items-center justify-between w-full h-1/2 rounded-[5px] mb-1 pb-1">
+                <MiniGitHubCard gitData={gitCard.metadata as GitCardType} />
+              </div>
+            ) : (
+              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+                <GitHubCard gitData={gitCard.metadata as GitCardType} />
+              </div>
+            ))}
+          {calendlyCard &&
+            calendlyCard.cardType === 'CalendarCard' &&
+            (gitCard ? (
+              <div className="flex items-center justify-between w-full rounded-[5px] mt-1 h-1/2">
+                <MiniMonthlyCalendarCard
+                  calendlyUrl={makeCalendyCardUrl(
+                    calendlyCard.metadata as CalendlyCardType
+                  )}
+                />
+              </div>
+            ) : (
+              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+                <MonthlyCalendarCard
+                  calendlyUrl={makeCalendyCardUrl(
+                    calendlyCard.metadata as CalendlyCardType
+                  )}
+                />
+              </div>
+            ))}
         </div>
-      )}
+      )}{' '}
     </>
   )
 }

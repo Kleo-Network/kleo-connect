@@ -13,7 +13,7 @@ interface TooltipData {
   count: number
 }
 
-const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
+const MiniGitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
   const userName =
     gitData.userName.length > 10
       ? gitData.userName.slice(0, 10) + '...'
@@ -31,7 +31,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
     )
     const startDate =
       sortedContributions.length > 0
-        ? new Date(sortedContributions[0].date)
+        ? new Date(sortedContributions[29].date)
         : new Date()
     const endDate =
       sortedContributions.length > 0
@@ -66,43 +66,48 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
   }
 
   if (gitData.contribution.length === 0) {
-    return <div>No contribution data available.</div>
+    return <div>No contribution</div>
   }
 
   return (
     <div
-      className="flex flex-1 flex-col h-full bg-white p-5 rounded-lg shadow-md relative justify-evenly hover:cursor-pointer"
+      className="flex flex-1 h-full flex-row py-4 px-1 bg-white rounded-lg shadow-md relative justify-evenly hover:cursor-pointer"
       onClick={handleOnClick}
     >
-      <div className="flex flex-row w-full h-8">
-        <Github className="text-gray-800 w-8 h-8" />
-        <div className="flex items-center h-full ml-2">
-          <div>
-            <h2
-              className="text-base font-inter font-normal"
-              title={gitData.userName}
-            >
-              {userName}
-            </h2>
+      <div className="flex flex-col h-full w-1/2 justify-between p-1">
+        <div className="flex flex-col">
+          <div className="flex flex-col w-full">
+            <div className="flex flex-row w-full h-31">
+              <Github className="text-gray-800 w-[31px] h-[31px]" />
+              <div className="flex items-center h-full ml-1">
+                <h2
+                  className="flex text-[16px] font-inter font-normal"
+                  title={gitData.userName}
+                >
+                  {userName}
+                </h2>
+              </div>
+            </div>
+            <div className="flex flex-row w-full mt-2">
+              <div className="flex items-center h-full relative mr-2">
+                <div className="bg-green-100 h-2 w-2 rounded-full flex items-center justify-center">
+                  <div className="bg-green-400 h-1 w-1 rounded-full"></div>
+                </div>
+                <div className="absolute top-0 left-0 h-2 w-full rounded-full bg-grey-200 opacity-50 shadow-lg"></div>
+              </div>
+              <span className="text-[10px] font-inter font-medium">
+                {getTotalCount(gitData.contribution)} contributions
+              </span>
+            </div>
           </div>
         </div>
-        <span className="inline-block items-center bg-gray-100 rounded-full px-2 py-1 text-sm font-semibold text-gray-700 ml-auto">
-          <span className="text-xs"> {gitData.followers} followers</span>
+
+        <span className="inline-block items-center bg-gray-100 rounded-full px-2 py-1 text-xs font-semibold text-gray-700 mr-auto">
+          {gitData.followers} followers
         </span>
       </div>
 
-      <div className="flex flex-row w-full">
-        <div className="relative mr-2">
-          <div className="bg-green-100 h-4 w-4 rounded-full flex items-center justify-center">
-            <div className="bg-green-400 h-2 w-2 rounded-full"></div>
-          </div>
-          <div className="absolute top-0 left-0 h-4 w-full rounded-full bg-grey-200 opacity-50 shadow-lg"></div>
-        </div>
-        <span className="text-xs font-inter">
-          {getTotalCount(gitData.contribution)} contributions
-        </span>
-      </div>
-      <div className="mt-4">
+      <div className="flex w-1/2 h-full items-center">
         <CalendarHeatmap
           startDate={startDate}
           endDate={endDate}
@@ -118,4 +123,4 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
   )
 }
 
-export default GitHubCard
+export default MiniGitHubCard

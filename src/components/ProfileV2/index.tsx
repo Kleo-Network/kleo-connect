@@ -147,7 +147,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
       )}
       <div className="flex mt-4 w-full items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
-          <div className="w-[75%] grid grid-cols-8 gap-1">
+          <div className="flex md:flex-row flex-col w-[75%] gap-1 min-h-72 max-h-80">
             {userFullData?.user && userFullData?.static_cards && (
               <ProfileV3
                 data={userFullData.static_cards}

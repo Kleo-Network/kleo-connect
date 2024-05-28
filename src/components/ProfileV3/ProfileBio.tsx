@@ -27,7 +27,7 @@ function formatDate(epochTimestamp: number) {
 
 export default function ProfileBio({ user }: User) {
   return (
-    <div className="flex flex-col self-stretch items-center justify-start">
+    <div className="flex flex-col h-full w-full self-stretch items-center justify-start rounded-lg">
       <div className="flex flex-col justify-center items-center px-24 pt-6 pb-1">
         <img
           src={user.pfp}
@@ -35,7 +35,7 @@ export default function ProfileBio({ user }: User) {
         />
         <h3 className="text-2xl font-medium text-gray-900">{user.slug}</h3>
       </div>
-      <div className="max-w-sm text-center text-gray-400">
+      <div className="max-w-sm text-center text-gray-400 mt-auto">
         last minted on {formatDate(user.last_attested)}
       </div>
     </div>
