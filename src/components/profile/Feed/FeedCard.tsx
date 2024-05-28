@@ -11,7 +11,8 @@ import Alert from '../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../assets/images/alert.svg'
 import { ReactComponent as Arrow } from '../../../assets/images/postArrow.svg'
 import { ReactComponent as Frame } from '../../../assets/images/backFrameDataCard.svg'
-import { VisitCountMap } from '../../common/interface'
+import { ReactComponent as Hamburger } from '../../../assets/images/hamburgerDot.svg'
+import { ReactComponent as Pin } from '../../../assets/images/pin.svg'
 import VisitChartCard from './FeedCardBody/VisitChartCard'
 
 interface Card {
@@ -29,6 +30,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
   const [isPublic, setIsPublic] = useState<boolean>(true)
   const DELETE_PUBLISHED_CARD = 'cards/published/{slug}'
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
   const [tumble, setTumble] = useState(false)
 
   useEffect(() => {
@@ -60,12 +62,18 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
       onSuccessfulFetch: () => {
         handleCardDelete(id)
         setIsModalOpen(false)
+        setShowOptions(false)
       }
     })
   }
 
   const handleOnClick = (url: string) => {
     window.open(url, '_blank')
+  }
+
+  const handleModelClose = () => {
+    setIsModalOpen(false)
+    setShowOptions(false)
   }
 
   const getDaysAgo = (date: string) => {
@@ -140,16 +148,51 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                 {getDaysAgo(card.date)}
               </div>
             </div>
+            {!isPublic && (
+              <div className="relative">
+                <button
+                  className="p-2"
+                  onClick={() => setShowOptions(!showOptions)}
+                >
+                  <Hamburger className="w-3 h-4 stroke-gray-400" />
+                </button>
+                {showOptions && (
+                  <div className="absolute mt-8 p-2 bg-white shadow-md rounded-lg top-0 right-0 min-w-[160px]">
+                    <div className="flex flex-row px-[6px] py-[2px]">
+                      <button className="flex flex-row w-full text-left px-[10px] py-[8px] items-center">
+                        <Pin className="w-4 h-4 mr-3 stroke-current text-gray-700" />
+                        <div className="text-sm font-inter text-gray-700">
+                          Pin Card
+                        </div>
+                      </button>
+                    </div>
+                    {!card.minted && (
+                      <div className="flex flex-row px-[6px] py-[2px]">
+                        <button
+                          className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
+                          onClick={() => setIsModalOpen(true)}
+                        >
+                          <Bin className="w-4 h-4 mr-3 stroke-current text-gray-700" />
+                          <div className="text-sm font-inter text-gray-700">
+                            Delete Card
+                          </div>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </header>
           {/* Body for feed card */}
           {card.cardType == 'DataCard' && (
             <TextCardBody textData={card.content} />
           )}
-          <div className="flex flex-row flex-wrap gap-2 self-stretch items-center justify-start pt-5">
+          <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-5">
             <>
               {card.urls.map((urls) => (
                 <button
-                  className="flex items-center  gap-2 rounded-3xl border border-gray-200 px-2 py-1"
+                  className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1"
                   style={{
                     backgroundColor: '#fff'
                   }}
@@ -171,21 +214,15 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
           </div>
           {/* Footer for feed card */}
           <footer>
-            {!card.minted && !isPublic && (
-              <div className="absolute bottom-0 right-0 mr-2 mb-1">
-                <button onClick={() => setIsModalOpen(true)}>
-                  <Bin className="w-5 h-5 text-gray-600" />
-                </button>
-              </div>
-            )}
             <Modal
               isOpen={isModalOpen}
               hideCloseButton={deleteStatus === FetchStatus.LOADING}
-              onClose={() => setIsModalOpen(false)}
+              onClose={handleModelClose}
+              fixWidth={true}
             >
-              <div className="flex flex-col items-center justify-center p-6">
+              <div className="flex flex-col items-center justify-center p-6 max-w-[400px]">
                 <div className="rounded-full bg-red-100 p-2 border-8 border-red-50">
-                  <Bin className="w-6 h-6 text-red-600" />
+                  <Bin className="w-6 h-6 text-red-600 stroke-current" />
                 </div>
                 <span className="text-gray-900 text-lg font-medium mt-4">
                   Delete published card?
@@ -217,7 +254,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                 )}
                 <div className="flex flex-row self-stretch justify-center items-center gap-3 mt-6">
                   <button
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={handleModelClose}
                     disabled={deleteStatus === FetchStatus.LOADING}
                     className="px-4 py-2 self-stretch flex-1 rounded-lg shadow border border-gray-200 text-gray-700"
                   >
@@ -251,7 +288,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
       {card.cardType == 'DomainVisitCard' && (
         <div className=" rounded-lg shadow-lg p-3 px-5 bg-[#42307D]  flex flex-col justify-between min-h-[desiredMinHeight] border border-white border-opacity-25 overflow-hidden bg-gradient-to-r from-violet-950 to-violet-900">
           {/* Header for card*/}
-          <header className="relative flex items-center mt-3">
+          <header className="relative flex flex-row items-center mt-3 justify-between">
             <div className="flex flex-row items-center bg-opacity-50 backdrop-blur-md bg-white py-1 px-2 rounded-3xl">
               {card.urls.map((urls, index) => (
                 <img
@@ -264,6 +301,42 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                 {parseUrl(card.urls[0].url)}
               </div>
             </div>
+            {!isPublic && (
+              <div className="relative z-20">
+                <button
+                  className="p-2"
+                  onClick={() => setShowOptions(!showOptions)}
+                >
+                  <Hamburger className="w-3 h-4 stroke-[#FCFCFD]" />
+                </button>
+
+                {showOptions && (
+                  <div className="absolute mt-8 p-2 bg-white border rounded-lg top-0 right-0 min-w-[160px]">
+                    <div className="flex flex-row px-[6px] py-[2px]">
+                      <button className="flex flex-row w-full text-left px-[10px] py-[8px] items-center">
+                        <Pin className="w-4 h-4 mr-3 stroke-current text-gray-700" />
+                        <div className="text-sm font-inter text-gray-700">
+                          Pin Card
+                        </div>
+                      </button>
+                    </div>
+                    {!card.minted && (
+                      <div className="flex flex-row px-[6px] py-[2px]">
+                        <button
+                          className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
+                          onClick={() => setIsModalOpen(true)}
+                        >
+                          <Bin className="w-4 h-4 mr-3 stroke-current text-gray-700" />
+                          <div className="text-sm font-inter text-gray-700">
+                            Delete Card
+                          </div>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             <Frame className="absolute right-0 top-0 translate-x-16 -translate-y-8 z-10" />
           </header>
 
@@ -272,9 +345,68 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
             <DataCardBody
               data={card.metadata.activity[0]}
               description={card.content}
+              direction={card.metadata.activity[1]}
             />
           )}
           {/* Footer for feed card */}
+          <Modal
+            isOpen={isModalOpen}
+            hideCloseButton={deleteStatus === FetchStatus.LOADING}
+            onClose={handleModelClose}
+            fixWidth={true}
+          >
+            <div className="flex flex-col items-center justify-center p-6 max-w-[400px]">
+              <div className="rounded-full bg-red-100 p-2 border-8 border-red-50">
+                <Bin className="w-6 h-6 text-red-600 stroke-current" />
+              </div>
+              <span className="text-gray-900 text-lg font-medium mt-4">
+                Delete published card?
+              </span>
+              <span className="text-gray-500 text-sm font-regular mt-1 text-center">
+                Are you sure you want to delete the published card? This action
+                cannot be undone.
+              </span>
+              {deleteStatus === FetchStatus.LOADING && (
+                <div
+                  className="inline-block m-1 h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                >
+                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                    Deleting...
+                  </span>
+                </div>
+              )}
+              {deleteStatus === FetchStatus.ERROR && (
+                <div className="w-full my-4">
+                  <Alert
+                    type="danger"
+                    message="Could not delete the data, please try again later."
+                    icon={
+                      <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
+                    }
+                  />
+                </div>
+              )}
+              <div className="flex flex-row self-stretch justify-center items-center gap-3 mt-6">
+                <button
+                  onClick={handleModelClose}
+                  disabled={deleteStatus === FetchStatus.LOADING}
+                  className="px-4 py-2 self-stretch flex-1 rounded-lg shadow border border-gray-200 text-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDeleteCard(card.id)}
+                  disabled={deleteStatus === FetchStatus.LOADING}
+                  className="px-4 py-2 self-stretch flex-1 rounded-lg shadow bg-red-600 text-white"
+                >
+                  {deleteStatus === FetchStatus.LOADING
+                    ? 'Deleting...'
+                    : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </Modal>
         </div>
       )}
     </>
