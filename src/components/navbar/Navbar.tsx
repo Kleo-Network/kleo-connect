@@ -19,13 +19,16 @@ interface NavbarProps {
 }
 
 enum Tab {
-  PUBLISH_CARDS = 'publish cards',
+  PROFILE = 'Profile',
+  PUBLISH_CARDS = 'Publish Cards',
+  CLAIM_POINTS = 'Claim Points',
   // QUESTS = 'quests',
   PRIVACY = 'privacy'
 }
 
 const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   const [selectedTab, setSelectedTab] = React.useState('null')
+  const [showProfileOptions, setShowProfileOptions] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { updateEvent } = useContext(EventContext)
@@ -35,15 +38,17 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   }, [])
 
   useEffect(() => {
-    if (pathname === '/cards') {
+    if (pathname === `/profileV2/${getSlug()}`) {
+      setSelectedTab(Tab.PROFILE)
+    } else if (pathname === '/cards') {
       setSelectedTab(Tab.PUBLISH_CARDS)
     } else if (pathname === '/quests') {
       // setSelectedTab(Tab.QUESTS)
     } else if (pathname === '/privacy') {
       setSelectedTab(Tab.PRIVACY)
-    } else if (pathname === '/profile') {
-      setSelectedTab('null')
-    }
+    } else if (pathname === '/setting') {
+      setSelectedTab(Tab.CLAIM_POINTS)
+    } else setSelectedTab('null')
   }, [pathname])
 
   const handleLogoutClick = () => {
@@ -122,13 +127,19 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                       data-te-nav-item-ref
                     >
                       <a
-                        className={`px-3 py-2 text-gray-700 rounded-md font-medium text-base hover:bg-purple-50 ${
+                        className={`px-3 py-2 rounded-md font-inter font-medium text-base ${
                           selectedTab === tab
-                            ? 'text-purple-700 bg-purple-100'
-                            : ''
+                            ? 'text-purple-700 bg-purple-50'
+                            : 'text-gray-700 bg-white'
                         }`}
                         href={`/${
-                          tab === Tab.PUBLISH_CARDS ? 'cards' : 'badges'
+                          tab === Tab.PROFILE
+                            ? `profileV2/${getSlug()}`
+                            : tab === Tab.PUBLISH_CARDS
+                            ? 'cards'
+                            : tab === Tab.CLAIM_POINTS
+                            ? 'setting'
+                            : 'badges'
                         }`}
                         data-te-nav-link-ref
                       >
@@ -139,27 +150,10 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                 )
               })}
           </ul>
-          <div className="flex items-center justify-center flex-grow">
-            <a href={`/profilev2/${slug}`} className="flex items-center">
-              <img
-                src={avatar.src}
-                alt={avatar.alt}
-                className="w-10 h-10 rounded-full mr-2"
-              />
-              <span className="text-gray-700 font-medium">@{slug}</span>
-            </a>
-          </div>
 
           {/* <!-- Right elements --> */}
 
           <div className="flex items-center">
-            <button
-              data-te-ripple-init
-              onClick={handleMintClick}
-              className="p-2 mr-1 stroke-black hover:bg-purple-700 hover:text-white hover:font-bold rounded-md"
-            >
-              claim points
-            </button>
             <button
               data-te-ripple-init
               onClick={handleSettingsClick}
@@ -175,13 +169,43 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
             >
               <Privacy className="w-5 h-5 stroke-current" />
             </a>
-            <button
-              data-te-ripple-init
-              className="p-2 hover:bg-purple-100 stroke-gray-500 hover:stroke-purple-700 rounded-md"
-              onClick={handleLogoutClick}
+            <div
+              className="relative flex items-center justify-center flex-grow"
+              onMouseEnter={() => setShowProfileOptions(true)}
+              onMouseLeave={() => setShowProfileOptions(false)}
             >
-              <Logout className="w-5 h-5 stroke-current" />
-            </button>
+              <img
+                src={avatar.src}
+                alt={avatar.alt}
+                className="w-10 h-10 rounded-full ml-2"
+              />
+              {showProfileOptions && (
+                <div className="absolute mt-8 p-2 bg-white shadow-md rounded-lg top-0 right-0 min-w-[160px]">
+                  <div className="flex flex-row px-[6px] py-[2px] tems-center justify-center">
+                    <img
+                      src={avatar.src}
+                      alt={avatar.alt}
+                      className="w-5 h-5 rounded-full mr-3"
+                    />
+                    {/* <Pin className="w-4 h-4 mr-3 stroke-current text-gray-700" /> */}
+                    <div className="text-sm font-inter text-gray-700">
+                      {slug}
+                    </div>
+                  </div>
+                  <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
+                    <button
+                      className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
+                      onClick={() => handleLogoutClick()}
+                    >
+                      <Logout className="w-4 h-4 mr-3 stroke-current text-gray-700" />
+                      <div className="text-sm font-inter text-gray-700">
+                        Logout
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

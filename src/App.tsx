@@ -10,6 +10,7 @@ import { UserData } from './components/constants/SignupData'
 import { EventProvider } from './components/common/contexts/EventContext'
 import Privacy from './components/profile/Settings/Privacy'
 import useFetch, { FetchStatus } from './components/common/hooks/useFetch'
+import Settings from './components/profile/Settings'
 
 function App(): ReactElement {
   const emptyStringArray: string[] = []
@@ -106,6 +107,7 @@ function App(): ReactElement {
               path="/cards"
               element={<ProfileCards user={user} setUser={setUser} />}
             />
+            <Route path="/setting" element={<Settings user={user} />} />
             {isLoggedIn ? (
               <Route
                 path="*"
