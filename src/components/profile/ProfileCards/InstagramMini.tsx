@@ -21,7 +21,7 @@ const MiniInstagramPostCard: React.FC<InstagramPostCardProps> = ({
   }
 
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden rounded-lg shadow-lg shadow-opacity-50 shadow-[rgba(191,186,171,0.5)]">
+    <div className="flex flex-col w-full h-full overflow-hidden rounded-lg bg-white">
       <div className="flex items-centerh-9 w-full">
         <button
           className="rounded-full mt-2 ml-2 pr-2 mb-1 bg-white h-7"

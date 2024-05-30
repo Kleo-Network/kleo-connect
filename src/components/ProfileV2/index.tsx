@@ -16,7 +16,8 @@ import { EventContext } from '../common/contexts/EventContext'
 import Settings from '../profile/Settings'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ReactComponent as CloseIcon } from '../../assets/images/cross.svg'
-import { zeroStateCardData } from '../mocks/LandingPage'
+import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
+import { ReactComponent as Plus } from '../../assets/images/plus.svg'
 
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
@@ -122,9 +123,9 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full bg-gray-50">
       {!pendignCards?.length && !isPublic && showBanner && (
-        <div className="h-full w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
+        <div className="max-h-[50px] w-full flex flex-row bg-purple-700 self-stretch items-center justify-between">
           <div className="h-full w-full flex flex-row items-center justify-center self-stretch">
             <span className="text-white text-l font-semibold">
               {' '}
@@ -157,8 +158,8 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center mx-auto justify-center mt-5">
-        <div className="flex w-full justify-center">
+      <div className="flex w-full items-center mx-auto justify-center mt-5 bg-gray-50">
+        <div className="flex w-full justify-center bg-gray-50">
           <div className="w-[75%] grid">
             {userFullData?.published_cards &&
             userFullData?.published_cards?.length > 0 ? (
@@ -168,33 +169,54 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
               />
             ) : (
               userFullData?.user && (
-                <div className="relative">
-                  {true && (
-                    <div className="absolute inset-0 bg-white-900 opacity-[0.98] backdrop-filter backdrop-blur-md rounded-lg z-10">
-                      <div className="h-full px-2 mb-4 flex flex-col items-center self-stretch ">
-                        <div className="flex h-full flex-row flex-wrap gap-2 self-stretch items-center justify-center rounded-lg p-2">
-                          <ul>
-                            <div className="flex self-stretch items-end justify-center">
-                              <button
-                                className="bg-primary text-white px-4 py-3 rounded-lg shadow block"
-                                onClick={handlePublishCardCreation}
-                              >
+                <div className="relative h-full bg-gray-50 self-stretch">
+                  <div className="px-2 mb-4 flex flex-col items-center self-stretch">
+                    {/* Filter options */}
+                    <span className="flex w-full justify-start font-inter text-[32px] font-semibold text-gray-700">
+                      My Cards
+                    </span>
+                    <div
+                      className={
+                        'flex flex-col w-[352px] rounded-xl relative items-center justify-center my-20'
+                      }
+                    >
+                      {isPublic ? (
+                        <>
+                          <Cat className="h-[250px] w-[250px] mb-4" />
+                          <div className="font-inter font-semibold text-gray-800 text-[24px] mb-2">
+                            Wow so empty!
+                          </div>
+                          <div className="flex font-inter font-semibold text-gray-500 text-[14px] justify-center text-center">
+                            Looks like {slug} has not published any cards yet,
+                            Check back soon!
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="font-inter font-semibold text-gray-800 text-[24px] mb-2">
+                            Wow so empty!
+                          </div>
+                          <div className="flex font-inter font-semibold text-gray-500 text-[14px] justify-center text-center mb-4">
+                            Publish your activities on the internet and show
+                            them your true personality!
+                          </div>
+                          <div className="flex flex-row self-stretch items-end justify-center w-full px-3">
+                            <button
+                              className="flex flex-row bg-primary text-white px-2 py-[10px] rounded-lg shadow items-center justify-center"
+                              onClick={handlePublishCardCreation}
+                            >
+                              <div className="flex items-center h-full mr-2">
+                                <Plus className="stroke-white w-5 h-5" />
+                              </div>
+                              <div className="w-full text-white font-inter text-base">
                                 Publish Now
-                              </button>
-                            </div>
-                            <li className="flex font-bold text-black items-center justify-center">
-                              You have not published a new card
-                            </li>
-                            <li className="flex text-black items-center justify-center">
-                              Publish now, only minting it will allow you to be
-                              eligible for airdrop seasons.{' '}
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
+                              </div>
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  )}
-                  <Feeds data={zeroStateCardData} user={userFullData?.user} />
+                  </div>
                 </div>
               )
             )}

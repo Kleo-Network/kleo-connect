@@ -43,7 +43,7 @@ const MapCard: React.FC<MapCardProps> = ({ map }) => {
             <Popup>{map.location}</Popup>
           </Marker>
         </MapContainer>
-        <div className="absolute flex rounded-full w-auto max-w-[70%] mb-2 ml-2 pr-2 left-0 bottom-0 bg-white h-7 z-50">
+        <div className="absolute flex rounded-full w-auto max-w-[70%] mb-2 ml-2 pr-2 left-0 bottom-0 bg-white h-7 z-30">
           <div className="flex flex-row items-center h-full w-full">
             <Pin className="flex ml-1 w-4 h-4" />
             <div

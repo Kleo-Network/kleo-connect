@@ -19,6 +19,10 @@ import {
   TextCard as TextCardType,
   InstagramCard
 } from '../common/interface'
+import { useEffect, useState } from 'react'
+import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
+import { ReactComponent as Plus } from '../../assets/images/plus.svg'
+import { useNavigate } from 'react-router-dom'
 
 const calendlyUrl = 'https://calendly.com/{slug}/'
 
@@ -42,7 +46,6 @@ const getCardByType = (cards: StaticCard[], cardType: string) => {
 export default function ProfileV3({ data, user }: fullUserDataProp) {
   console.log('staticCards', data)
   const showCardList = user.settings.static_cards
-  const userCardCount = showCardList.length + 1
   const mapCard =
     showCardList.includes('Pin Location') && getCardByType(data, 'PlaceCard')
   const gitCard =
@@ -55,17 +58,33 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
     showCardList.includes('Instagram Profile') &&
     getCardByType(data, 'InstaCard')
   const textCard = getCardByType(data, 'TextCard')
+  const userCardCount = textCard ? showCardList.length + 1 : showCardList.length
+  const [isPublic, setIsPublic] = useState<boolean>(true)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const slug_from_local_storage = localStorage.getItem('slug')
+    if (slug_from_local_storage == user.slug) {
+      setIsPublic(false)
+    } else {
+      setIsPublic(true)
+    }
+  }, [])
+
+  const handleStaticCardCreation = () => {
+    sessionStorage.setItem('isStaticCardUpdating', JSON.stringify(true))
+    navigate('/signup/2')
+  }
 
   return (
     <>
       <div
         className={`${
-          data.length == 0
-            ? 'w-full'
-            : userCardCount == 1 ||
-              (userCardCount == 2 && mapCard && textCard) ||
-              (userCardCount == 2 && twitterCard && instaCard) ||
-              (userCardCount == 2 && gitCard && calendlyCard)
+          userCardCount == 0 ||
+          userCardCount == 1 ||
+          (userCardCount == 2 && mapCard && textCard) ||
+          (userCardCount == 2 && twitterCard && instaCard) ||
+          (userCardCount == 2 && gitCard && calendlyCard)
             ? 'w-1/2'
             : userCardCount == 2 ||
               (userCardCount == 3 && mapCard && textCard) ||
@@ -77,6 +96,37 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
       >
         <ProfileBio user={user} />
       </div>
+      {userCardCount == 0 && !textCard && !isPublic && (
+        <div className="flex flex-row w-1/2 h-full bg-gray-100 rounded-[14px] px-8 py-4">
+          <div className="flex flex-row h-full w-full items-center">
+            <div className="flex h-full items-center mr-8">
+              <Cat className="h-full w-full" />
+            </div>
+          </div>
+          <div className="flex flex-col h-full w-full items-start justify-center">
+            <div className="font-inter text-2xl text-gray-800 mb-2 text-start">
+              Wow so empty!
+            </div>
+            <div className="font-inter text-[14px] text-gray-500 mb-4">
+              It's time to flaunt your internet identity! Get started by adding
+              your cards.
+            </div>
+            <div className="flex flex-row self-stretch items-start justify-start w-full">
+              <button
+                className="flex flex-row bg-primary text-white px-2 py-[10px] rounded-lg shadow items-center justify-start"
+                onClick={handleStaticCardCreation}
+              >
+                <div className="flex items-center h-full mr-2">
+                  <Plus className="stroke-white w-5 h-5" />
+                </div>
+                <div className="w-full text-white font-inter text-base">
+                  Add Card
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {(mapCard || textCard) && (
         <div
           className={`flex flex-col h-full mr-1 ${
