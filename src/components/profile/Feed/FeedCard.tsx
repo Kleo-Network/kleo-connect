@@ -138,7 +138,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                 <img
                   className={`absolute w-8 h-8 flex-none rounded-full border-white border-2 ml-4 fill-white`}
                   style={{ left: `${index * 1.3}rem` }}
-                  src={`https://www.google.com/s2/favicons?domain=${urls.url}`}
+                  src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=32`}
                 />
               </div>
             ))}
@@ -200,7 +200,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                 >
                   <img
                     className="w-4 h-4 flex-none rounded-full"
-                    src={`https://www.google.com/s2/favicons?domain=${urls.url}`}
+                    src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=16`}
                   />
 
                   <h3 className="inline-block text-sm font-medium text-gray-700 overflow-hidden overflow-ellipsis line-clamp-1">
