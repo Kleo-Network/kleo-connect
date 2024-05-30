@@ -44,7 +44,6 @@ const getCardByType = (cards: StaticCard[], cardType: string) => {
 }
 
 export default function ProfileV3({ data, user }: fullUserDataProp) {
-  console.log('staticCards', data)
   const showCardList = user.settings.static_cards
   const mapCard =
     showCardList.includes('Pin Location') && getCardByType(data, 'PlaceCard')
@@ -92,7 +91,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
               (userCardCount == 3 && gitCard && calendlyCard)
             ? 'w-1/3'
             : 'w-1/4'
-        }  rounded-[5px] p-2`}
+        }  rounded-[5px] px-2`}
       >
         <ProfileBio user={user} />
       </div>
@@ -113,7 +112,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
             </div>
             <div className="flex flex-row self-stretch items-start justify-start w-full">
               <button
-                className="flex flex-row bg-primary text-white px-2 py-[10px] rounded-lg shadow items-center justify-start"
+                className="flex flex-row bg-primary text-white px-[18px] py-[10px] rounded-lg shadow items-center justify-start"
                 onClick={handleStaticCardCreation}
               >
                 <div className="flex items-center h-full mr-2">
@@ -129,7 +128,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
       )}
       {(mapCard || textCard) && (
         <div
-          className={`flex flex-col h-full mr-1 ${
+          className={`flex flex-col h-full mr-1 gap-6 ${
             userCardCount > 3
               ? 'w-1/4'
               : !(userCardCount == 2 && mapCard && textCard) &&
@@ -141,8 +140,8 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
         >
           {mapCard && (
             <div
-              className={`flex items-center justify-between w-full rounded-[5px]  ${
-                textCard ? 'h-1/2 mb-1 pb-1' : 'h-full'
+              className={`flex items-center justify-between w-full rounded-[14px]  ${
+                textCard ? 'h-1/2 ' : 'h-full'
               }`}
             >
               {mapCard.cardType === 'PlaceCard' && (
@@ -152,8 +151,8 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
           )}
           {textCard && (
             <div
-              className={`flex items-center justify-between w-full rounded-[5px] ${
-                mapCard ? 'h-1/2 mt-1' : 'h-full'
+              className={`flex items-center justify-between w-full rounded-[14px] ${
+                mapCard ? 'h-1/2' : 'h-full'
               }`}
             >
               <TextCard
@@ -166,7 +165,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
       )}
       {(twitterCard || instaCard) && (
         <div
-          className={`flex flex-col h-full mr-1 ${
+          className={`flex flex-col h-full gap-6 ${
             userCardCount > 3
               ? 'w-1/4'
               : !(userCardCount == 2 && twitterCard && instaCard) &&
@@ -179,26 +178,26 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
           {twitterCard &&
             twitterCard.cardType === 'XCard' &&
             (instaCard ? (
-              <div className="flex items-center justify-between w-full h-1/2 rounded-[5px] pb-2">
+              <div className="flex items-center justify-between w-full max-h-1/2 rounded-[14px]">
                 <MiniTwitterCard
                   user={twitterCard.metadata as TwitterCardType}
                 />
               </div>
             ) : (
-              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+              <div className="flex h-full w-full items-center justify-between rounded-[14px]">
                 <TwitterCard user={twitterCard.metadata as TwitterCardType} />
               </div>
             ))}
           {instaCard &&
             instaCard.cardType === 'InstaCard' &&
             (twitterCard ? (
-              <div className="flex items-center justify-between w-full rounded-[5px] mt-1 h-1/2">
+              <div className="flex items-center justify-between w-full rounded-[14px] h-1/2">
                 <MiniInstagramPostCard
                   instaData={instaCard.metadata as InstagramCard}
                 />
               </div>
             ) : (
-              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+              <div className="flex h-full w-full items-center justify-between rounded-[14px]">
                 <InstagramPostCard
                   instaData={instaCard.metadata as InstagramCard}
                 />
@@ -208,7 +207,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
       )}
       {(gitCard || calendlyCard) && (
         <div
-          className={`flex flex-col h-full mr-1 ${
+          className={`flex flex-col h-full gap-6 ${
             userCardCount > 3
               ? 'w-1/4'
               : !(userCardCount == 2 && gitCard && calendlyCard) &&
@@ -221,18 +220,18 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
           {gitCard &&
             gitCard.cardType === 'GitCard' &&
             (calendlyCard ? (
-              <div className="flex items-center justify-between w-full h-1/2 rounded-[5px] mb-1 pb-1">
+              <div className="flex items-center justify-between w-full h-1/2 rounded-[14px]">
                 <MiniGitHubCard gitData={gitCard.metadata as GitCardType} />
               </div>
             ) : (
-              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+              <div className="flex h-full w-full items-center justify-between rounded-[14px]">
                 <GitHubCard gitData={gitCard.metadata as GitCardType} />
               </div>
             ))}
           {calendlyCard &&
             calendlyCard.cardType === 'CalendarCard' &&
             (gitCard ? (
-              <div className="flex items-center justify-between w-full rounded-[5px] mt-1 h-1/2">
+              <div className="flex items-center justify-between w-full rounded-[14px] h-1/2">
                 <MiniMonthlyCalendarCard
                   calendlyUrl={makeCalendyCardUrl(
                     calendlyCard.metadata as CalendlyCardType
@@ -240,7 +239,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
                 />
               </div>
             ) : (
-              <div className="flex h-full w-full items-center justify-between rounded-[5px]">
+              <div className="flex h-full w-full items-center justify-between rounded-[14px]">
                 <MonthlyCalendarCard
                   calendlyUrl={makeCalendyCardUrl(
                     calendlyCard.metadata as CalendlyCardType

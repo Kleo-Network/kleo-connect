@@ -53,7 +53,7 @@ const Settings = ({ user }: User) => {
   // )
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-50 backdrop-blur-md flex justify-center items-center -z-50">
+    <div className="w-full h-full bg-gray-50 backdrop-blur-md flex justify-center items-center">
       <div
         className={
           'flex flex-col max-w-[400px] h rounded-xl relative items-center justify-center'

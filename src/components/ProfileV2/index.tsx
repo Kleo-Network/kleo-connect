@@ -146,9 +146,9 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           </button>
         </div>
       )}
-      <div className="flex mt-4 w-full items-center mx-auto justify-center">
+      <div className="flex w-full mt-[50px] items-center mx-auto justify-center">
         <div className="flex w-full justify-center">
-          <div className="flex md:flex-row flex-col w-[75%] gap-1 min-h-72 max-h-80">
+          <div className="flex md:flex-row flex-col w-[75%] gap-6 h-80">
             {userFullData?.user && userFullData?.static_cards && (
               <ProfileV3
                 data={userFullData.static_cards}

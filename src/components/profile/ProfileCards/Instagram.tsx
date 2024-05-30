@@ -35,7 +35,7 @@ const InstagramPostCard: React.FC<InstagramPostCardProps> = ({ instaData }) => {
   }
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-lg">
+    <div className="relative w-full h-full overflow-hidden rounded-[14px]">
       <img
         src={instaData.urls[activeIndex].url}
         alt={`Slide ${activeIndex}`}

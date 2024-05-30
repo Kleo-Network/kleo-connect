@@ -21,8 +21,8 @@ const MiniInstagramPostCard: React.FC<InstagramPostCardProps> = ({
   }
 
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden rounded-lg bg-white">
-      <div className="flex items-centerh-9 w-full">
+    <div className="flex flex-col w-full h-[148px] rounded-[14px] bg-white">
+      <div className="flex items-center w-full">
         <button
           className="rounded-full mt-2 ml-2 pr-2 mb-1 bg-white h-7"
           onClick={handleInstagramClick}
@@ -35,15 +35,15 @@ const MiniInstagramPostCard: React.FC<InstagramPostCardProps> = ({
           </div>
         </button>
       </div>
-      <div className="flex flex-row w-full h-[70%]">
-        <div className="flex h-full w-1/2 p-1 ml-1 h-">
+      <div className="flex flex-row w-full h-[60%]">
+        <div className="flex h-full w-1/2 px-1 ml-1">
           <img
             src={instaData.urls[0].url}
             alt={`Slide 1`}
             className="w-full h-full object-fill rounded-[5px]"
           />
         </div>
-        <div className="flex h-full w-1/2 p-1 mr-1">
+        <div className="flex h-full w-1/2 px-1 mr-1">
           <img
             src={instaData.urls[1].url}
             alt={`Slide 2`}
