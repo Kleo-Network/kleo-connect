@@ -113,7 +113,7 @@ export default function ProfileV3({ data, user }: fullUserDataProp) {
             </div>
             <div className="flex flex-row self-stretch items-start justify-start w-full">
               <button
-                className="flex flex-row bg-primary text-white px-2 py-[10px] rounded-lg shadow items-center justify-start"
+                className="flex flex-row bg-primary text-white px-[18px] py-[10px] rounded-lg shadow items-center justify-start"
                 onClick={handleStaticCardCreation}
               >
                 <div className="flex items-center h-full mr-2">

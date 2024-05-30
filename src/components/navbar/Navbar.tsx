@@ -79,19 +79,24 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
     return `/profileV2/${getSlug()}`
   }
 
+  function handleLogin(step: number) {
+    navigate(`/signup/${step}`)
+  }
+
+  function handleSignUp(step: number) {
+    navigate(`/signup/${step}`)
+  }
+
   return (
     <nav
-      className="relative flex w-full flex-wrap items-center justify-between py-2  border-b border-gray-200 bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 lg:py-3"
+      className="relative flex w-full flex-wrap items-center justify-between border-b border-gray-200 bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 h-[72px] px-20"
       data-te-navbar-ref
     >
-      <div className="flex w-full flex-wrap items-center justify-between px-12">
-        <a
-          className="my-2 gap-2 flex items-center justify-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0"
-          href={getHomeLink()}
-        >
+      <div className="flex w-full flex-wrap items-center justify-between px-8">
+        <div className="my-2 gap-2 flex items-center justify-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0">
           <Logo className="w-8 h-8" />
           <h3 className="font-bold text-xl">KLEO</h3>
-        </a>
+        </div>
         {/* <!-- Hamburger button for mobile view --> */}
         <button
           className="block border-0 bg-transparent px-2 text-neutral-500 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
@@ -108,17 +113,17 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
         </button>
 
         {/* <!-- Collapsible navigation container --> */}
-        <div
-          className="!visible mt-2 ml-4 hidden flex-grow basis-[100%] items-center lg:mt-0 lg:!flex lg:basis-auto"
-          id="navbarSupportedContent"
-          data-te-collapse-item
-        >
-          <ul
-            className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
-            data-te-navbar-nav-ref
+        {localStorage.getItem('token') ? (
+          <div
+            className="!visible mt-2 ml-4 hidden flex-grow basis-[100%] items-center lg:mt-0 lg:!flex lg:basis-auto"
+            id="navbarSupportedContent"
+            data-te-collapse-item
           >
-            {localStorage.getItem('token') &&
-              Object.values(Tab).map((tab, i) => {
+            <ul
+              className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
+              data-te-navbar-nav-ref
+            >
+              {Object.values(Tab).map((tab, i) => {
                 return (
                   tab !== Tab.PRIVACY && (
                     <li
@@ -149,65 +154,80 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                   )
                 )
               })}
-          </ul>
+            </ul>
 
-          {/* <!-- Right elements --> */}
-
-          <div className="flex items-center">
-            <button
-              data-te-ripple-init
-              onClick={handleSettingsClick}
-              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
-              title="Add/Update static cards"
-            >
-              <Settings className="w-5 h-5 stroke-black " />
-            </button>
-            <a
-              href="/privacy"
-              data-te-ripple-init
-              className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
-            >
-              <Privacy className="w-5 h-5 stroke-current" />
-            </a>
-            <div
-              className="relative flex items-center justify-center flex-grow"
-              onMouseEnter={() => setShowProfileOptions(true)}
-              onMouseLeave={() => setShowProfileOptions(false)}
-            >
-              <img
-                src={avatar.src}
-                alt={avatar.alt}
-                className="w-10 h-10 rounded-full ml-2"
-              />
-              {showProfileOptions && (
-                <div className="absolute mt-8 p-2 bg-white shadow-md rounded-lg top-0 right-0 min-w-[160px]">
-                  <div className="flex flex-row px-[6px] py-[2px] tems-center justify-center">
-                    <img
-                      src={avatar.src}
-                      alt={avatar.alt}
-                      className="w-5 h-5 rounded-full mr-3"
-                    />
-                    {/* <Pin className="w-4 h-4 mr-3 stroke-current text-gray-700" /> */}
-                    <div className="text-sm font-inter text-gray-700">
-                      {slug}
+            {/* <!-- Right elements --> */}
+            <div className="flex items-center">
+              <button
+                data-te-ripple-init
+                onClick={handleSettingsClick}
+                className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+                title="Add/Update static cards"
+              >
+                <Settings className="w-5 h-5 stroke-black " />
+              </button>
+              <a
+                href="/privacy"
+                data-te-ripple-init
+                className="p-2 mr-1 stroke-gray-500 hover:stroke-purple-700 hover:bg-purple-100 rounded-md"
+              >
+                <Privacy className="w-5 h-5 stroke-current" />
+              </a>
+              <div
+                className="relative flex items-center justify-center flex-grow"
+                onMouseEnter={() => setShowProfileOptions(true)}
+                onMouseLeave={() => setShowProfileOptions(false)}
+              >
+                <img
+                  src={avatar.src}
+                  alt={avatar.alt}
+                  className="w-10 h-10 rounded-full ml-2"
+                />
+                {showProfileOptions && (
+                  <div className="absolute mt-8 p-2 bg-white shadow-md rounded-lg top-0 right-0 min-w-[160px]">
+                    <div className="flex flex-row px-[6px] py-[2px] tems-center justify-center">
+                      <img
+                        src={avatar.src}
+                        alt={avatar.alt}
+                        className="w-5 h-5 rounded-full mr-3"
+                      />
+                      {/* <Pin className="w-4 h-4 mr-3 stroke-current text-gray-700" /> */}
+                      <div className="text-sm font-inter text-gray-700">
+                        {slug}
+                      </div>
+                    </div>
+                    <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
+                      <button
+                        className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
+                        onClick={() => handleLogoutClick()}
+                      >
+                        <Logout className="w-4 h-4 mr-3 stroke-current text-gray-700" />
+                        <div className="text-sm font-inter text-gray-700">
+                          Logout
+                        </div>
+                      </button>
                     </div>
                   </div>
-                  <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
-                    <button
-                      className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                      onClick={() => handleLogoutClick()}
-                    >
-                      <Logout className="w-4 h-4 mr-3 stroke-current text-gray-700" />
-                      <div className="text-sm font-inter text-gray-700">
-                        Logout
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-row ml-auto gap-4">
+            <button
+              className="flex flex-row my-[14px] px-[18px] py-[10px] rounded-lg items-center justify-center bg-gray-100 text-gray-700 font-inter font-medium"
+              onClick={() => handleLogin(0)}
+            >
+              Log In
+            </button>
+            <button
+              className="flex flex-row my-[14px] px-[18px] py-[10px] rounded-lg items-center justify-center bg-violet-600 text-white font-inter font-medium"
+              onClick={() => handleSignUp(1)}
+            >
+              Create Account
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   )
