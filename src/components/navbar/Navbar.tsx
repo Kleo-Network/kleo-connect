@@ -181,17 +181,6 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
               />
               {showProfileOptions && (
                 <div className="absolute mt-8 p-2 bg-white shadow-md rounded-lg top-0 right-0 min-w-[160px]">
-                  <div className="flex flex-row px-[6px] py-[2px] tems-center justify-center">
-                    <img
-                      src={avatar.src}
-                      alt={avatar.alt}
-                      className="w-5 h-5 rounded-full mr-3"
-                    />
-                    {/* <Pin className="w-4 h-4 mr-3 stroke-current text-gray-700" /> */}
-                    <div className="text-sm font-inter text-gray-700">
-                      {slug}
-                    </div>
-                  </div>
                   <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                     <button
                       className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
