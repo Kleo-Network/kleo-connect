@@ -19,6 +19,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@react-oauth/google": "^0.12.1",
     "@react-spring/rafz": "^9.7.3",
+    "@thirdweb-dev/react": "^4.6.30",
     "@types/axios": "^0.14.0",
     "@types/crypto-js": "^4.2.0",
     "@types/d3": "^7.4.0",
@@ -26,6 +27,7 @@
     "@types/react-calendar-heatmap": "^1.6.7",
     "aws-sdk": "^2.1608.0",
     "bs58": "^5.0.0",
+    "chroma-js": "^2.4.2",
     "classnames": "^2.3.2",
     "d3": "^7.8.5",
     "dotenv": "^16.4.5",
@@ -48,8 +50,7 @@
     "recharts": "^2.8.0",
     "tw-elements": "^1.1.0",
     "vite-plugin-node-polyfills": "^0.21.0",
-    "web3": "^4.2.2",
-    "chroma-js": "^2.4.2"
+    "web3": "^4.2.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",
@@ -58,6 +59,7 @@
     "@irys/sdk": "^0.1.21",
     "@tailwindcss/forms": "^0.5.3",
     "@types/bn.js": "^5.1.5",
+    "@types/chroma-js": "^2.4.4",
     "@types/classnames": "^2.3.1",
     "@types/crypto-js": "^4.2.0",
     "@types/keccak": "^3.0.4",
@@ -71,7 +73,6 @@
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "@vitejs/plugin-react": "^3.1.0",
-    "@types/chroma-js": "^2.4.4",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",

@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import { UserData } from '../../constants/SignupData'
 import Mint from './iExec'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
+import { ConnectWallet } from '@thirdweb-dev/react'
+
 interface User {
   user: UserData
 }
@@ -53,19 +55,23 @@ const Settings = ({ user }: User) => {
   // )
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-50 backdrop-blur-md flex justify-center items-center -z-50">
-      <div
-        className={
-          'flex flex-col max-w-[400px] h rounded-xl relative items-center justify-center'
-        }
-      >
-        <Cat className="h-[250px] w-[250px] mb-4" />
-        <div className="font-inter font-semibold text-gray-800 text-[24px] mb-2">
-          Comming Soon!!
-        </div>
-        <div className="flex font-inter font-semibold text-gray-500 text-[14px] justify-center text-center">
-          Mint your data on our on-chain social platform to gain unparalleled
-          control and ownership over your online presence. Stay tuned!
+    <div>
+      <ConnectWallet />
+      <div className="fixed top-0 left-0 w-full h-full bg-gray-50 backdrop-blur-md flex justify-center items-center -z-50">
+        <div
+          className={
+            'flex flex-col max-w-[400px] h rounded-xl relative items-center justify-center'
+          }
+        >
+          <Cat className="h-[250px] w-[250px] mb-4" />
+
+          <div className="font-inter font-semibold text-gray-800 text-[24px] mb-2">
+            Comming Soon!!
+          </div>
+          <div className="flex font-inter font-semibold text-gray-500 text-[14px] justify-center text-center">
+            Mint your data on our on-chain social platform to gain unparalleled
+            control and ownership over your online presence. Stay tuned!
+          </div>
         </div>
       </div>
     </div>
