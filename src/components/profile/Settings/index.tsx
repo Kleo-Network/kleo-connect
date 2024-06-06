@@ -3,7 +3,11 @@ import { UserData } from '../../constants/SignupData'
 import Mint from './iExec'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
 import { ConnectWallet } from '@thirdweb-dev/react'
-
+import { createThirdwebClient, getContract, resolveMethod } from 'thirdweb'
+import { defineChain } from 'thirdweb/chains'
+import { ThirdwebProvider } from 'thirdweb/react'
+import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
+import { ReactComponent as Tick } from '../../../assets/images/tick.svg'
 interface User {
   user: UserData
 }
@@ -12,8 +16,146 @@ enum TABS {
   MINT = 'Own your data, earn points'
 }
 
+const MediaLeft = () => (
+  <div>
+    <Explorer />
+  </div>
+)
+
+const ConnectRight = () => (
+  <h1 className="text-4xl text-center mt-40">
+    <div>
+      <div className="relative">
+        <div className="absolute top-4 h-full w-0.5 bg-gray-200"></div>
+        <ol className="relative text-gray-500">
+          <li className="mb-10 ml-12">
+            <span className="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white bg-purple-500">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </span>
+            <div className="ml-4 text-left">
+              <h3 className="font-medium leading-tight text-gray-900">
+                Connect your wallet
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor
+              </p>
+
+              <ConnectWallet />
+            </div>
+          </li>
+          <li className="mb-10 ml-12">
+            <span className="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white bg-purple-500">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </span>
+            <h3 className="font-medium leading-tight">
+              Select the cards you want to mint
+            </h3>
+            <div className="mt-2 space-y-2">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-purple-500"
+                />
+                <label className="ml-2 text-sm">Keep me anonymous</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-purple-500"
+                  checked
+                />
+                <label className="ml-2 text-sm">Profile Picture</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-purple-500"
+                />
+                <label className="ml-2 text-sm">Username</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-purple-500"
+                  checked
+                />
+                <label className="ml-2 text-sm">Static Cards</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-purple-500"
+                />
+                <label className="ml-2 text-sm">Dynamic Cards</label>
+              </div>
+            </div>
+          </li>
+          <li className="ml-12">
+            <div className="absolute h-1/2 border-l-2 border-dashed border-gray-200"></div>
+            <span className="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white bg-purple-100 text-purple-500">
+              3
+            </span>
+            <h3 className="font-medium leading-tight">
+              Mint and earn from your data
+            </h3>
+            <p className="text-sm">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod
+            </p>
+          </li>
+        </ol>
+      </div>
+
+      <button className="px-4 py-2 mt-8 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
+        Start Minting
+      </button>
+    </div>
+  </h1>
+)
+
 const Settings = ({ user }: User) => {
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
+
+  const clientId =
+    process.env.VITE_KLEO_THIRDWEB_CLIENT_KEY ||
+    '9af290ad929c4b6241475020bc16ab09'
+  const contractAddress = process.env.VITE_CONTRACT_ADDR || ''
+  const client = createThirdwebClient({
+    clientId
+  })
+
+  const contract = getContract({
+    client,
+    chain: defineChain(10),
+    address: contractAddress
+  })
 
   const renderTabContent = () => {
     switch (selectedTab) {
@@ -23,55 +165,15 @@ const Settings = ({ user }: User) => {
         return null
     }
   }
-  //umcomment when we implement mint functionality
-  // return (
-  //   <div className="flex flex-col items-start self-stretch">
-  //     <div className="px-6 py-5 border-b border-gray-200 justify-between items-center flex self-stretch">
-  //       <div className="text-gray-900 text-lg font-medium">Settings</div>
-  //     </div>
-  //     <div className="justify-start items-start flex">
-  //       <div className="py-4 border-r border-gray-200 justify-start items-start gap-2.5 flex self-stretch">
-  //         <div className="grow shrink min-w-[150px] basis-0 flex-col justify-start items-start gap-1 flex">
-  //           {Object.values(TABS).map((tab) => (
-  //             <button
-  //               key={tab}
-  //               className={`self-stretch pl-6 pr-3 py-2 justify-start items-start gap-2 flex rounded-md hover:bg-gray-100 ${
-  //                 tab === selectedTab && 'bg-gray-200'
-  //               }`}
-  //               onClick={() => setSelectedTab(tab)}
-  //             >
-  //               <span className="text-gray-500 text-sm font-medium text-left">
-  //                 {tab}
-  //               </span>
-  //             </button>
-  //           ))}
-  //         </div>
-  //       </div>
-  //       <div className="p-6 flex-col justify-start items-start flex">
-  //         {renderTabContent()}
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
 
   return (
-    <div>
-      <ConnectWallet />
-      <div className="fixed top-0 left-0 w-full h-full bg-gray-50 backdrop-blur-md flex justify-center items-center -z-50">
-        <div
-          className={
-            'flex flex-col max-w-[400px] h rounded-xl relative items-center justify-center'
-          }
-        >
-          <Cat className="h-[250px] w-[250px] mb-4" />
-
-          <div className="font-inter font-semibold text-gray-800 text-[24px] mb-2">
-            Comming Soon!!
-          </div>
-          <div className="flex font-inter font-semibold text-gray-500 text-[14px] justify-center text-center">
-            Mint your data on our on-chain social platform to gain unparalleled
-            control and ownership over your online presence. Stay tuned!
-          </div>
+    <div className="flex h-screen justify-screen container mx-auto">
+      <div className="w-full flex p-10">
+        <div className="w-1/2">
+          <MediaLeft />
+        </div>
+        <div className="w-1/2 pl-20">
+          <ConnectRight />
         </div>
       </div>
     </div>
