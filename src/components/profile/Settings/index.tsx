@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { UserData } from '../../constants/SignupData'
 import Mint from './iExec'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
@@ -7,8 +7,11 @@ import { createThirdwebClient, getContract, resolveMethod } from 'thirdweb'
 import { defineChain } from 'thirdweb/chains'
 import { ThirdwebProvider } from 'thirdweb/react'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
-import { ReactComponent as Tick } from '../../../assets/images/tick.svg'
-
+import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
+import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
+import { ReactComponent as Lock } from '../../../assets/images/lock.svg'
+import { ReactComponent as ThumbsUp } from '../../../assets/images/up.svg'
+import { ReactComponent as Clicker } from '../../../assets/images/clicker.svg'
 interface User {
   user: UserData
 }
@@ -17,11 +20,123 @@ enum TABS {
   MINT = 'Own your data, earn points'
 }
 
-const MediaLeft = () => (
-  <div>
-    <Explorer />
-  </div>
-)
+const MediaLeft = () => {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const titles = [
+    'Connect with your tribe!',
+    'Be eligible for an airdrop season',
+    'Connect with third party apps'
+  ]
+
+  const description = [
+    'Unlock benefits with explorer and connect with right people and <br /> communities',
+    'Receive regular airdrops from our partners, be a part of their success',
+    'Unlock more personalised dating applications, shopping experience with <br /> your privacy protected!'
+  ]
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
+    return () => clearInterval(interval)
+  }, [activeIndex])
+
+  const nextSlide = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % 3)
+  }
+
+  const goToSlide = (index: number) => {
+    setActiveIndex(index)
+  }
+
+  return (
+    <div>
+      <div
+        style={{
+          position: 'absolute',
+          zIndex: 900,
+          top: '395px',
+          left: '233px'
+        }}
+      >
+        <ThumbsUp />
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          zIndex: 900,
+          top: '296px',
+          left: '619px'
+        }}
+      >
+        <Lock />
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          zIndex: 900,
+          top: '557px',
+          left: '512px'
+        }}
+      >
+        <Clicker />
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          zIndex: 900,
+          top: '732px',
+          left: '180px'
+        }}
+      >
+        <h1 className="text-white text-3xl">{titles[activeIndex]}</h1>
+
+        <p
+          className="text-gray-200"
+          dangerouslySetInnerHTML={{ __html: description[activeIndex] }}
+        ></p>
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          zIndex: 900,
+          top: '832px',
+          left: '300px'
+        }}
+      >
+        <div
+          key={`1`}
+          className={`${
+            0 === activeIndex ? 'w-14' : 'w-3'
+          } h-2 bg-white rounded-full mx-2 cursor-pointer ${
+            0 === activeIndex ? 'active bg-white w-14' : 'bg-opacity-50 w-3'
+          }`}
+          onClick={() => goToSlide(0)}
+        ></div>
+        <div
+          key={`2`}
+          className={` bottom-[8px] relative h-2 bg-white rounded-full mx-2 cursor-pointer ${
+            1 === activeIndex
+              ? 'active bg-white w-14 left-[45px]'
+              : 'bg-opacity-50 w-3 left-[70px]'
+          }`}
+          onClick={() => goToSlide(1)}
+        ></div>
+        <div
+          key={`2`}
+          className={` bottom-[16px] relative h-2 bg-white rounded-full mx-2 cursor-pointer ${
+            2 === activeIndex
+              ? 'active bg-white w-14 left-[76px]'
+              : 'bg-opacity-50 w-3 left-[90px]'
+          }`}
+          onClick={() => goToSlide(2)}
+        ></div>
+      </div>
+      {activeIndex === 0 && <Explorer />}
+      {activeIndex === 1 && <Airdrop />}
+      {activeIndex === 2 && <ThirdParty />}
+    </div>
+  )
+}
 
 const ConnectRight = () => {
   const [activeStep, setActiveStep] = useState(3)
@@ -41,13 +156,13 @@ const ConnectRight = () => {
             <span className="absolute flex items-center justify-center w-7 h-7 rounded-full -left-3 ring-4 ring-white bg-purple-500">
               <span className="text-white">1</span>
             </span>
+            <h3 className="font-medium leading-tight text-gray-900">
+              Connect your wallet
+            </h3>
             <div className="ml-4 text-left">
-              <h3 className="font-medium leading-tight text-gray-900">
-                Connect your wallet
-              </h3>
               <p className="mt-1 text-sm text-gray-500">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor
+                Connect with your tribe . Earn from your profile and connect
+                different applications!
               </p>
               <div className="content-center w-full">
                 <ConnectWallet
@@ -63,97 +178,99 @@ const ConnectRight = () => {
                 activeStep >= 3 ? 'border-dashed' : 'border-solid'
               } border-gray-200`}
             ></div>
-            <span className="absolute -left-0 inline-flex items-center justify-center">
+            <span className="absolute mt-3 -left-0 inline-flex items-center justify-center">
               <span className="absolute flex items-center justify-center w-8 h-8 rounded-full ring-4 ring-purple-100 bg-purple-100">
                 <span className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-500">
                   <span className="text-white">2</span>
                 </span>
               </span>
             </span>
-            <h3 className="font-medium leading-tight">
-              Select the cards you want to mint
+            <h3 className="font-medium text-black leading-tight">
+              Set your privacy settings.
             </h3>
-            <div className="flex items-center mb-4">
-              <input
-                id="default-checkbox"
-                type="checkbox"
-                value=""
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 "
-              />
-              <label
-                for="default-checkbox"
-                className="ms-2 text-sm font-medium text-gray-900 "
-              >
-                Default checkbox
-              </label>
-            </div>
-            <div className="mt-2 space-y-2">
-              <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="vue-checkbox-list"
-                      type="checkbox"
-                      value=""
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                    />
-                    <label
-                      for="vue-checkbox-list"
-                      className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Profile Picture
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="react-checkbox-list"
-                      type="checkbox"
-                      value=""
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                    />
-                    <label
-                      for="react-checkbox-list"
-                      className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Static Cards
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="angular-checkbox-list"
-                      type="checkbox"
-                      value=""
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                    />
-                    <label
-                      for="angular-checkbox-list"
-                      className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Dynamic Cards
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full dark:border-gray-600">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="laravel-checkbox-list"
-                      type="checkbox"
-                      value=""
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                    />
-                    <label
-                      for="laravel-checkbox-list"
-                      className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Username
-                    </label>
-                  </div>
-                </li>
-              </ul>
+            <div className="ml-4 text-left">
+              <div className="flex items-center mb-2 pt-2">
+                <input
+                  id="default-checkbox"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 "
+                />
+                <label
+                  for="default-checkbox"
+                  className="ms-2 text-sm font-medium text-gray-500 "
+                >
+                  Keep me Entirely Anonymous
+                </label>
+              </div>
+              <div className="mt-2 space-y-2">
+                <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg grid grid-cols-2 dark:bg-[#363F72] dark:border-gray-600 dark:text-white">
+                  <li className="w-full border-b border-gray-200 border-r dark:border-gray-600">
+                    <div className="flex items-center ps-3">
+                      <input
+                        id="profile-picture-checkbox"
+                        type="checkbox"
+                        value=""
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        for="profile-picture-checkbox"
+                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >
+                        Profile Picture
+                      </label>
+                    </div>
+                  </li>
+                  <li className="w-full border-b dark:border-gray-600">
+                    <div className="flex items-center ps-3">
+                      <input
+                        id="username-checkbox"
+                        type="checkbox"
+                        value=""
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        for="username-checkbox"
+                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >
+                        Username
+                      </label>
+                    </div>
+                  </li>
+                  <li className="w-full border-r dark:border-gray-600">
+                    <div className="flex items-center ps-3">
+                      <input
+                        id="static-cards-checkbox"
+                        type="checkbox"
+                        value=""
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        for="static-cards-checkbox"
+                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >
+                        Static Cards
+                      </label>
+                    </div>
+                  </li>
+                  <li className="w-full">
+                    <div className="flex items-center ps-3">
+                      <input
+                        id="dynamic-cards-checkbox"
+                        type="checkbox"
+                        value=""
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        for="dynamic-cards-checkbox"
+                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >
+                        Dynamic Cards
+                      </label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </li>
 
@@ -161,16 +278,17 @@ const ConnectRight = () => {
             <span className="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white bg-purple-100 text-purple-500">
               3
             </span>
-            <h3 className="font-medium leading-tight">
-              Mint and earn from your data
+            <h3 className="font-medium text-black leading-tight">
+              Mint your data identity
             </h3>
-            <p className="text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod
-            </p>
-            <button className="px-4 py-2 w-full mt-8 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
-              Start Minting
-            </button>
+            <div className="ml-4">
+              <p className="text-sm">
+                This ensures your data is safe, decentralised and owned by you!
+              </p>
+              <button className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
+                Mint my data identity
+              </button>
+            </div>
           </li>
         </ol>
       </div>
