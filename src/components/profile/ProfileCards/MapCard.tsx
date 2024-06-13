@@ -47,10 +47,7 @@ const mapStyles = [
     elementType: 'labels.text.stroke',
     stylers: [
       {
-        visibility: 'on'
-      },
-      {
-        color: '#333333'
+        visibility: 'off'
       }
     ]
   },
@@ -279,7 +276,6 @@ const mapStyles = [
       }
     ]
   }
-  // Add the rest of the Snazzy Maps style JSON here
 ]
 
 const blueCircleIcon = {
