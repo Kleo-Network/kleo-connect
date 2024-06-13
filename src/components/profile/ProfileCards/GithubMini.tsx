@@ -71,7 +71,7 @@ const MiniGitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
 
   return (
     <div
-      className="flex flex-1 h-full flex-row py-4 px-1 bg-white rounded-lg shadow-md relative justify-evenly hover:cursor-pointer"
+      className="flex flex-1 h-[148px] flex-row py-[11px] px-1 bg-white rounded-[14px] justify-evenly hover:cursor-pointer "
       onClick={handleOnClick}
     >
       <div className="flex flex-col h-full w-1/2 justify-between p-1">
@@ -107,13 +107,13 @@ const MiniGitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
         </span>
       </div>
 
-      <div className="flex w-1/2 h-full items-center">
+      <div className="flex w-[152px] h-[128px] items-center">
         <CalendarHeatmap
           startDate={startDate}
           endDate={endDate}
           values={heatmapValues}
           classForValue={getClassForValue}
-          gutterSize={2}
+          gutterSize={3}
           tooltipDataAttrs={(value: TooltipData) => ({
             'data-tip': `${value.date} has count: ${value.count}`
           })}

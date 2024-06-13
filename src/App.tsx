@@ -64,17 +64,15 @@ function App(): ReactElement {
 
   return (
     <EventProvider>
-      <div className="h-full w-full">
+      <div className="h-full w-full bg-gray-50">
         <div className="flex flex-col font-inter self-stretch h-full">
-          {isLoggedIn && (
-            <header className="flex flex-row self-stretch items-center">
-              <Navbar
-                handleLogout={handleLogout}
-                avatar={{ src: user.pfp, alt: 'Profile' }}
-                slug={user.slug}
-              />
-            </header>
-          )}
+          <header className="flex flex-row self-stretch items-center">
+            <Navbar
+              handleLogout={handleLogout}
+              avatar={{ src: user.pfp, alt: 'Profile' }}
+              slug={user.slug}
+            />
+          </header>
 
           <Routes>
             <Route

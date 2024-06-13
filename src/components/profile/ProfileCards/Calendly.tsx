@@ -19,7 +19,7 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
   }
 
   return (
-    <div className="flex-1 h-full w-full bg-white relative rounded-lg">
+    <div className="flex-1 h-full w-full bg-white relative rounded-[14px]">
       <div className="bg-white overflow-hidden rounded-[5px] mx-2 mt-3 text-gray-900 font-semibold text-center opacity-60 pointer-events-none">
         <div className="flex items-center justify-around px-2 py-4">
           <div className="text-sm">

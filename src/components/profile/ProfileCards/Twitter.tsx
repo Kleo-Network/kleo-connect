@@ -24,7 +24,7 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
   }
 
   return (
-    <div className="flex flex-col flex-1 h-full bg-gray-800 p-6 rounded-lg shadow-md relative justify-evenly">
+    <div className="flex flex-col flex-1 h-full bg-gray-800 p-6 rounded-[14px] shadow-md relative justify-evenly">
       <div className="flex flex-col">
         <div className="flex flex-row w-full h-[32px]">
           <Twitter className="text-gray-800 w-[32px] h-[32px] border border-white rounded-full" />
