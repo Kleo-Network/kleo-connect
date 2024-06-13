@@ -283,10 +283,11 @@ const mapStyles = [
 ]
 
 const blueCircleIcon = {
-  path: 'M 0, 0 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
-  fillColor: 'blue',
+  path: 'M 0, 0 m -8, 0 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0',
+  fillColor: '#2970FF',
   fillOpacity: 1,
-  strokeWeight: 0,
+  strokeColor: 'rgba(41, 112, 255, 0.30)',
+  strokeWeight: 4,
   scale: 1
 }
 
