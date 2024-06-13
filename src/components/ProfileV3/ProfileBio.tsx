@@ -31,7 +31,7 @@ export default function ProfileBio({ user }: User) {
       <div className="flex flex-col h-full w-full items-center px-24 pt-6 pb-1">
         <img
           src={user.pfp}
-          className="w-24 h-24 rounded-full border-4 border-white"
+          className="min-w-16 min-h-16 md:min-h-24 md:min-w-24 rounded-full border-4 border-white"
         />
         <h3 className="text-2xl font-medium text-gray-900">{user.slug}</h3>
       </div>
