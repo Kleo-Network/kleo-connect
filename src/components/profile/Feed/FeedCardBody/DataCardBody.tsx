@@ -4,15 +4,21 @@ interface DataCardBodyData {
   description: string
   data: string
   direction: string
+  pendingCard: boolean
 }
 
 export default function DataCardBody({
   description,
   data,
-  direction
+  direction,
+  pendingCard = false
 }: DataCardBodyData) {
   return (
-    <div className="flex flex-col items-center justify-end gap-2 self-stretch mt-4 font-medium flex-1 mb-2">
+    <div
+      className={`${
+        pendingCard && 'w-[500px]'
+      } flex flex-col justify-end gap-2 self-stretch mt-4 font-medium flex-1 mb-2`}
+    >
       <div className="flex flex-row items-center justify-start w-full">
         <span className="text-6xl font-bold text-white">{data}</span>
         <Arrow
@@ -21,7 +27,13 @@ export default function DataCardBody({
           }`}
         />
       </div>
-      <span className="text-sm text-white">{description}</span>
+      <span
+        className={`${
+          pendingCard && 'w-[400px] flex items-start'
+        } text-sm text-white`}
+      >
+        {description}
+      </span>
     </div>
   )
 }
