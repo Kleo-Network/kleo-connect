@@ -9,9 +9,8 @@ import { ThirdwebProvider } from 'thirdweb/react'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
 import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
-import { ReactComponent as Lock } from '../../../assets/images/lock.svg'
-import { ReactComponent as ThumbsUp } from '../../../assets/images/up.svg'
-import { ReactComponent as Clicker } from '../../../assets/images/clicker.svg'
+import { Lit } from '../Settings/LitProtocol/index'
+
 interface User {
   user: UserData
 }
@@ -48,38 +47,6 @@ const MediaLeft = () => {
 
   return (
     <div>
-      <div
-        style={{
-          position: 'absolute',
-          zIndex: 900,
-          top: '395px',
-          left: '233px'
-        }}
-      >
-        <ThumbsUp />
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          zIndex: 900,
-          top: '296px',
-          left: '619px'
-        }}
-      >
-        <Lock />
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          zIndex: 900,
-          top: '557px',
-          left: '512px'
-        }}
-      >
-        <Clicker />
-      </div>
-
       <div
         style={{
           position: 'absolute',
@@ -143,7 +110,7 @@ const ConnectRight = () => {
   return (
     <div className="bg-white p-10 w-full h-full rounded-2xl font-inter tracking-[-0.02em] text-left">
       <h1 className="text-4xl leading-10 pb-3">
-        Mint Publish and connect your{' '}
+        Mint your identity and secure {` `}
         <span className="text-primary">your data!</span>
       </h1>
       <p className="font-inter text-left text-md leading-md text-gray-500 pb-5">
@@ -298,6 +265,31 @@ const ConnectRight = () => {
 
 const Settings = ({ user }: User) => {
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
+  const [litInstance, setLitInstance] = useState<Lit | null>(null)
+  const [encryptedData, setEncryptedData] = useState<any>(null)
+
+  useEffect(() => {
+    const initializeLit = async () => {
+      const lit = new Lit('ethereum')
+      await lit.connect()
+      setLitInstance(lit)
+    }
+
+    initializeLit()
+  }, [])
+  const accessControlConditions = [
+    {
+      contractAddress: '',
+      standardContractType: '',
+      chain: 'ethereum',
+      method: 'eth_getBalance',
+      parameters: [':userAddress', 'latest'],
+      returnValueTest: {
+        comparator: '>=',
+        value: '1000000000000' // 0.000001 ETH
+      }
+    }
+  ]
 
   const clientId =
     process.env.VITE_KLEO_THIRDWEB_CLIENT_KEY ||
@@ -321,11 +313,30 @@ const Settings = ({ user }: User) => {
         return null
     }
   }
+  const encryptData = async () => {
+    if (litInstance) {
+      const data = 'Hello, Lit!'
+      const chain = 'ethereum'
+
+      try {
+        const encryptedResult = await litInstance.enryptString(
+          data,
+          chain,
+          accessControlConditions
+        )
+        console.log('encryptedResult', encryptedResult)
+        setEncryptedData(encryptedResult)
+      } catch (error) {
+        console.error('Error encrypting data:', error)
+      }
+    }
+  }
 
   return (
     <div className="bg-gray-50">
       <div className="w-full flex p-10 container mx-auto">
         <div className="w-1/2">
+          <button onClick={() => encryptData()}>Encryption Check</button>
           <MediaLeft />
         </div>
         <div className="w-1/2 pl-5">
