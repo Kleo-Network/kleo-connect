@@ -130,15 +130,15 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
   return (
     <>
       {card.cardType == 'DataCard' && (
-        <div className=" rounded-lg p-5 bg-white flex flex-col justify-between min-h-[desiredMinHeight] backdrop-blur-md border border-white">
+        <div className=" rounded-[14px] md:rounded-[24px] p-5 bg-white flex flex-col justify-between min-h-[desiredMinHeight] backdrop-blur-md border border-white">
           {/* Header for card*/}
           <header className="flex items-center mt-3">
             {card.urls.map((urls, index) => (
               <div className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white">
                 <img
-                  className={`absolute w-8 h-8 flex-none rounded-full border-white border-2 ml-4 fill-white`}
+                  className={`absolute w-10 h-10 flex-none rounded-full border-white border-[3.5px] ml-4 fill-white stroke-current stroke-opacity-40`}
                   style={{ left: `${index * 1.3}rem` }}
-                  src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=32`}
+                  src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=40`}
                 />
               </div>
             ))}
@@ -192,10 +192,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
             <>
               {card.urls.map((urls) => (
                 <button
-                  className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1"
-                  style={{
-                    backgroundColor: '#fff'
-                  }}
+                  className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1 bg-gray-100"
                   onClick={() => handleOnClick(urls.url)}
                 >
                   <img
@@ -286,7 +283,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
       )}
 
       {card.cardType == 'DomainVisitCard' && (
-        <div className=" rounded-lg shadow-lg p-3 px-5 bg-[#42307D]  flex flex-col justify-between min-h-[desiredMinHeight] border border-white border-opacity-25 overflow-hidden bg-gradient-to-r from-violet-950 to-violet-900">
+        <div className=" rounded-[14px] md:rounded-[24px] p-3 px-5 bg-[#42307D]  flex flex-col justify-between min-h-[desiredMinHeight] border border-white border-opacity-25 overflow-hidden bg-gradient-to-r from-violet-950 to-violet-900">
           {/* Header for card*/}
           <header className="relative flex flex-row items-center mt-3 justify-between">
             <div className="flex flex-row items-center bg-opacity-50 backdrop-blur-md bg-white py-1 px-2 rounded-3xl">

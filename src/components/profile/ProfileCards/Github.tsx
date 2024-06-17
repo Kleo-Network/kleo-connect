@@ -71,7 +71,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
 
   return (
     <div
-      className="flex flex-1 flex-col h-full bg-white p-5 rounded-[14px] shadow-md relative justify-evenly hover:cursor-pointer"
+      className="flex flex-1 flex-col h-full bg-white p-5 rounded-[14px] relative justify-evenly hover:cursor-pointer"
       onClick={handleOnClick}
     >
       <div className="flex flex-row w-full h-8">
@@ -91,7 +91,7 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
         </span>
       </div>
 
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full mt-4">
         <div className="relative mr-2">
           <div className="bg-green-100 h-4 w-4 rounded-full flex items-center justify-center">
             <div className="bg-green-400 h-2 w-2 rounded-full"></div>
@@ -102,17 +102,19 @@ const GitHubCard: React.FC<GitHubCardProps> = ({ gitData }) => {
           {getTotalCount(gitData.contribution)} contributions
         </span>
       </div>
-      <div className="mt-4">
-        <CalendarHeatmap
-          startDate={startDate}
-          endDate={endDate}
-          values={heatmapValues}
-          classForValue={getClassForValue}
-          gutterSize={2}
-          tooltipDataAttrs={(value: TooltipData) => ({
-            'data-tip': `${value.date} has count: ${value.count}`
-          })}
-        />
+      <div className="flex justify-center items-center mt-4 w-full flex-col">
+        <div className="flex w-[80%]">
+          <CalendarHeatmap
+            startDate={startDate}
+            endDate={endDate}
+            values={heatmapValues}
+            classForValue={getClassForValue}
+            gutterSize={2}
+            tooltipDataAttrs={(value: TooltipData) => ({
+              'data-tip': `${value.date} has count: ${value.count}`
+            })}
+          />
+        </div>
       </div>
     </div>
   )

@@ -19,7 +19,7 @@ const LinkedInCard: React.FC<LinkedInCardProps> = ({
   experiences
 }) => {
   return (
-    <div className="relative max-w-lg rounded-lg overflow-hidden shadow-lg bg-white p-6">
+    <div className="relative max-w-lg rounded-lg overflow-hidden bg-white p-6">
       <div className="absolute top-0 right-0 p-4">
         <LinkedIn className="text-gray-800 w-8 h-8" />
       </div>
