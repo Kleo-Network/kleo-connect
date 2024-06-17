@@ -60,7 +60,7 @@ const Feeds: React.FC<Feed> = ({ data, user }) => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-4 pt-5">
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-6 pt-5">
         {selectedCategory
           ? cards
               .filter((card) => card.category === selectedCategory)

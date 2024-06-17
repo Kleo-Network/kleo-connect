@@ -37,12 +37,11 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
             {currentMonth}
           </div>
           <button
-            className="flex flex-row items-center bg-blue-500 text-white px-1 py-1 rounded-md hover:bg-blue-600 mt-auto h-[36px]"
+            className="flex flex-row items-center justify-center bg-blue-500 text-white px-1 py-1 rounded-md hover:bg-blue-600 mt-auto h-[36px]"
             onClick={openPopUp}
           >
-            <Calendly className="text-gray-100 w-4 h-4" />
-            <div className="border-l border-gray-300 mx-1 h-5"></div>
-            <span className="text-xs">Book a meeting</span>
+            <Calendly className="text-gray-100 w-4 h-4 mr-2" />
+            <span className="text-xs justify-center">Book a meeting</span>
           </button>
         </div>
       </div>

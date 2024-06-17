@@ -1,13 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M14 22H10C6.22876 22 4.34315 22 3.17157 20.8284C2 19.6569 2 17.7712 2 14V12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12V14C22 17.7712 22 19.6569 20.8284 20.8284C20.1752 21.4816 19.3001 21.7706 18 21.8985" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="M7 4V2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="M17 4V2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="M21.5 9H16.625H10.75M2 9H5.875" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  <circle cx="17" cy="17" r="1" fill="currentColor"/>
-  <circle cx="17" cy="13" r="1" fill="currentColor"/>
-  <circle cx="12" cy="17" r="1" fill="currentColor"/>
-  <circle cx="12" cy="13" r="1" fill="currentColor"/>
-  <circle cx="7" cy="17" r="1" fill="currentColor"/>
-  <circle cx="7" cy="13" r="1" fill="currentColor"/>
+<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="calendar">
+<path id="Icon" d="M18 8.33317H3M13.8333 1.6665V4.99984M7.16667 1.6665V4.99984M7 18.3332H14C15.4001 18.3332 16.1002 18.3332 16.635 18.0607C17.1054 17.821 17.4878 17.4386 17.7275 16.9681C18 16.4334 18 15.7333 18 14.3332V7.33317C18 5.93304 18 5.23297 17.7275 4.69819C17.4878 4.22779 17.1054 3.84534 16.635 3.60565C16.1002 3.33317 15.4001 3.33317 14 3.33317H7C5.59987 3.33317 4.8998 3.33317 4.36502 3.60565C3.89462 3.84534 3.51217 4.22779 3.27248 4.69819C3 5.23297 3 5.93304 3 7.33317V14.3332C3 15.7333 3 16.4334 3.27248 16.9681C3.51217 17.4386 3.89462 17.821 4.36502 18.0607C4.8998 18.3332 5.59987 18.3332 7 18.3332Z" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
 </svg>

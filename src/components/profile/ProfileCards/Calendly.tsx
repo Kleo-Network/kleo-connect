@@ -53,7 +53,6 @@ const MonthlyCalendarCard: React.FC<MonthlyCalendarCardProps> = ({
           onClick={openPopUp}
         >
           <Calendly className="text-gray-100 w-5 h-5 mr-2" />
-          <div className="border-l border-gray-300 mx-2 h-4"></div>
           <span className="text-sm">Book a meeting</span>
         </button>
       </div>

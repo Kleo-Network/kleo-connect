@@ -290,7 +290,7 @@ const blueCircleIcon = {
 const MapCard: React.FC<MapCardProps> = ({ map }) => {
   return (
     <>
-      <div className="flex-1 h-full bg-gray-100 rounded-[14px] shadow-md">
+      <div className="flex-1 h-full bg-gray-100 rounded-[14px]">
         <div className="relative h-full">
           <LoadScript googleMapsApiKey={config.googlemap.key}>
             <GoogleMap
@@ -318,11 +318,11 @@ const MapCard: React.FC<MapCardProps> = ({ map }) => {
               />
             </GoogleMap>
           </LoadScript>
-          <div className="absolute flex rounded-full w-auto max-w-[70%] mb-2 ml-2 pr-2 left-0 bottom-0 bg-white h-7 z-30">
+          <div className="absolute flex rounded-full w-auto max-w-[70%] mb-2 ml-2 py-2 pr-2 pl-[12px] left-0 bottom-0 bg-white h-7 z-30">
             <div className="flex flex-row items-center h-full w-full">
               <Pin className="flex ml-1 w-4 h-4" />
               <div
-                className="flex ml-1 w-full text-xs font-semibold text-black text-wrap overflow-hidden overflow-ellipsis line-clamp-1"
+                className="flex ml-1 w-full text-[14px] font-semibold text-black text-wrap overflow-hidden overflow-ellipsis line-clamp-1"
                 title={map.location}
               >
                 {map.location}

@@ -53,7 +53,7 @@ const VisitChartCard: React.FC<VisitMetadata> = ({ data, date }) => {
   }
 
   return (
-    <div className="flex flex-col justify-between items-center bg-gray-700 p-5 rounded-lg row-span-2">
+    <div className="flex flex-col justify-between items-center bg-gray-700 p-5 rounded-[14px] md:rounded-[24px] row-span-2">
       <div className="flex flex-col mb-5">
         <div className="flex font-semibold font-inter text-2xl text-white">
           Tag Used

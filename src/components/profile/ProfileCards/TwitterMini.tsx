@@ -24,10 +24,10 @@ const MiniTwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
   }
 
   return (
-    <div className="flex flex-col flex-1 h-[148px] bg-gray-800 p-[11px] rounded-[14px] shadow-md relative justify-evenly">
+    <div className="flex flex-col flex-1 h-[148px] bg-gray-800 p-[11px] rounded-[14px] relative justify-evenly">
       <div className="flex flex-col mb-1">
         <div className="flex flex-row w-full h-[32px] items-center">
-          <Twitter className="flex text-gray-800 w-[32px] h-full stroke-white stroke-2 rounded-full" />
+          <Twitter className="flex text-gray-800 w-[32px] h-full stroke-2 rounded-full stroke-current stroke-opacity-40" />
           <div className="flex h-full items-center justify-start ml-2 text-white text-[16px] font-semibold">
             {user.username}
           </div>
