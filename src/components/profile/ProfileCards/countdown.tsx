@@ -36,11 +36,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
               className={`${
                 isProfilePage
                   ? 'w-8 h-8 bg-white text-violet-700'
-                  : 'w-16 h-16 bg-gray-100 text-gray-700'
+                  : 'w-[50px] h-[50px] bg-white text-gray-700'
               }  flex items-center justify-center
             ${
               isProfilePage ? 'text-xs' : 'text-2xl'
-            } font-bold rounded shadow-lg transform transition duration-700 ease-in-out`}
+            } font-bold rounded transform transition duration-700 ease-in-out`}
             >
               {unit}
             </div>
@@ -75,10 +75,9 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   return (
     <div
       className={`flex flex-col items-center justify-center ${
-        isProfilePage ? 'py-2' : 'p-4'
+        isProfilePage ? 'py-2' : 'p-2'
       }`}
     >
-      {!isProfilePage && <h1 className="text-2xl font-bold mb-4"></h1>}
       <Countdown date={endDate} renderer={renderer} />
     </div>
   )
