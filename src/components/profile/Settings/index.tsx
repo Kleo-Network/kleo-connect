@@ -10,6 +10,7 @@ import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
 import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
 import { Lit } from '../Settings/LitProtocol/index'
+import Irys from '@irys/sdk'
 
 interface User {
   user: UserData
@@ -267,6 +268,7 @@ const Settings = ({ user }: User) => {
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
   const [litInstance, setLitInstance] = useState<Lit | null>(null)
   const [encryptedData, setEncryptedData] = useState<any>(null)
+  const [isDataUploaded, setIsDataUploaded] = useState<boolean>(false)
 
   useEffect(() => {
     const initializeLit = async () => {
@@ -286,7 +288,7 @@ const Settings = ({ user }: User) => {
       parameters: [':userAddress', 'latest'],
       returnValueTest: {
         comparator: '>=',
-        value: '1000000000000' // 0.000001 ETH
+        value: '0' // 0.000001 ETH
       }
     }
   ]
@@ -329,6 +331,33 @@ const Settings = ({ user }: User) => {
       } catch (error) {
         console.error('Error encrypting data:', error)
       }
+    }
+  }
+  const getIrys = async (): Promise<Irys> => {
+    const key = JSON.parse(fs.readFileSync('arweaveWallet.json').toString())
+
+    const irys = new Irys({
+      network: 'mainnet',
+      token: 'arweave',
+      key: key
+    })
+
+    console.log(irys)
+    return irys
+  }
+
+  async function uploadToIrys(data: string): Promise<string> {
+    const webIrys = await getIrys()
+
+    try {
+      const receipt = await webIrys.upload(data, {
+        tags: [{ name: 'Content-Type', value: 'text/plain' }]
+      })
+      setIsDataUploaded(true)
+      return `https://gateway.irys.xyz/${receipt.id}`
+    } catch (e) {
+      console.log('Error uploading data ', e)
+      return ''
     }
   }
 
