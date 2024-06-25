@@ -1,6 +1,5 @@
 import React from 'react'
-import { ReactComponent as CopyIcon } from '../../assets/images/copy.svg'
-import { ReactComponent as TickIcon } from '../../assets/images/check.svg'
+import { ReactComponent as Mint } from '../../assets/images/Mint.svg'
 import { UserData } from '../constants/SignupData'
 
 interface User {
@@ -27,15 +26,27 @@ function formatDate(epochTimestamp: number) {
 
 export default function ProfileBio({ user }: User) {
   return (
-    <div className="flex flex-col h-full w-full self-stretch items-center justify-start rounded-[14px] bg-white">
-      <div className="flex flex-col h-full w-full items-center px-24 pt-6 pb-1">
+    <div className="flex flex-col h-full w-full self-stretch items-start justify-start rounded-[14px] p-[20px] bg-white">
+      <div className="flex flex-row h-full w-full items-start justify-start">
         <img
           src={user.pfp}
-          className="min-w-16 min-h-16 md:min-h-24 md:min-w-24 rounded-full border-4 border-white"
+          className="w-16 h-16 rounded-full border-4 border-white"
         />
-        <h3 className="text-2xl font-medium text-gray-900">{user.slug}</h3>
+        <div className="flex flex-col ml-4">
+          <h3 className="text-sm md:text-[18px] font-medium text-gray-900 mt-2">
+            {user.slug}
+          </h3>
+          {user.profile_metadata.kleo_token && (
+            <div className="flex flex-row bg-gray-100 py-[3px] pl-[3px] pr-[10px] rounded-2xl mt-2">
+              <Mint className="h-4 w-4 rounded-full" />
+              <div className="font-inter text-[10px] font-medium text-violet-700 text-center justify-center ml-[6px] h-full ">
+                Minted {user.profile_metadata.kleo_token} times
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="max-w-sm text-center text-gray-400 mb-5 mt-auto">
+      <div className="max-w-sm text-center text-gray-400 mt-auto">
         last minted on {formatDate(user.last_attested)}
       </div>
     </div>

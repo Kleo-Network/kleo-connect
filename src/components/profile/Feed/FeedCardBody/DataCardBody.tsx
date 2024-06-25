@@ -20,17 +20,19 @@ export default function DataCardBody({
       } flex flex-col justify-end gap-2 self-stretch mt-4 font-medium flex-1 mb-2`}
     >
       <div className="flex flex-row items-center justify-start w-full">
-        <span className="text-6xl font-bold text-white">{data}</span>
+        <span className="text-[100px] font-semibold font-inter text-white">
+          {data}
+        </span>
         <Arrow
-          className={`w-14 h-14 ml-4 ${
+          className={`w-[68px] h-[68px] ml-[11px] ${
             direction == 'increased' ? '' : 'rotate-180'
           }`}
         />
       </div>
       <span
         className={`${
-          pendingCard && 'w-[400px] flex items-start'
-        } text-sm text-white`}
+          pendingCard && 'flex items-start'
+        } text-2xl font-normal font-inter text-[#FCFCFD] -mt-5`}
       >
         {description}
       </span>
