@@ -11,7 +11,12 @@ import { EventProvider } from './components/common/contexts/EventContext'
 import Privacy from './components/profile/Settings/Privacy'
 import useFetch, { FetchStatus } from './components/common/hooks/useFetch'
 import Settings from './components/profile/Settings'
-
+import {
+  ThirdwebProvider,
+  metamaskWallet,
+  coinbaseWallet,
+  walletConnect
+} from '@thirdweb-dev/react'
 function App(): ReactElement {
   const emptyStringArray: string[] = []
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -63,61 +68,74 @@ function App(): ReactElement {
   }
 
   return (
-    <EventProvider>
-      <div className="h-full w-full bg-gray-50">
-        <div className="flex flex-col font-inter self-stretch h-full">
-          <header className="flex flex-row self-stretch items-center">
-            <Navbar
-              handleLogout={handleLogout}
-              avatar={{ src: user.pfp, alt: 'Profile' }}
-              slug={user.slug}
-            />
-          </header>
-
-          <Routes>
-            <Route
-              path="/"
-              element={
-                user.token ? (
-                  <Navigate to={`/profileV2/${user.slug}`} />
-                ) : (
-                  <Navigate to={`/signup/0`} />
-                )
-              }
-            />
-            <Route
-              path="/signup/:step"
-              element={
-                <SignUp
-                  user={user}
-                  setUser={setUser}
-                  setIsLoggedIn={setIsLoggedIn}
+    <ThirdwebProvider
+      supportedWallets={[
+        metamaskWallet({
+          recommended: true
+        }),
+        coinbaseWallet(),
+        walletConnect()
+      ]}
+      clientId="<your_client_id>"
+    >
+      <EventProvider>
+        <div className="h-full w-full">
+          <div className="flex flex-col font-inter self-stretch h-full">
+            {isLoggedIn && (
+              <header className="flex flex-row self-stretch items-center">
+                <Navbar
+                  handleLogout={handleLogout}
+                  avatar={{ src: user.pfp, alt: 'Profile' }}
+                  slug={user.slug}
                 />
-              }
-            />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route
-              path="/profilev2/:slug"
-              element={<ProfileV2 user={user} setUser={setUser} />}
-            />
-            <Route path="/badges" element={<BadgesList />} />
-            <Route
-              path="/cards"
-              element={<ProfileCards user={user} setUser={setUser} />}
-            />
-            <Route path="/setting" element={<Settings user={user} />} />
-            {isLoggedIn ? (
+              </header>
+            )}
+
+            <Routes>
               <Route
-                path="*"
+                path="/"
+                element={
+                  user.token ? (
+                    <Navigate to={`/profileV2/${user.slug}`} />
+                  ) : (
+                    <Navigate to={`/signup/0`} />
+                  )
+                }
+              />
+              <Route
+                path="/signup/:step"
+                element={
+                  <SignUp
+                    user={user}
+                    setUser={setUser}
+                    setIsLoggedIn={setIsLoggedIn}
+                  />
+                }
+              />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route
+                path="/profilev2/:slug"
+                element={<ProfileV2 user={user} setUser={setUser} />}
+              />
+              <Route path="/badges" element={<BadgesList />} />
+              <Route
+                path="/cards"
                 element={<ProfileCards user={user} setUser={setUser} />}
               />
-            ) : (
-              <Route path="*" element={<Navigate to="/" />} />
-            )}
-          </Routes>
+              <Route path="/setting" element={<Settings user={user} />} />
+              {isLoggedIn ? (
+                <Route
+                  path="*"
+                  element={<ProfileCards user={user} setUser={setUser} />}
+                />
+              ) : (
+                <Route path="*" element={<Navigate to="/" />} />
+              )}
+            </Routes>
+          </div>
         </div>
-      </div>
-    </EventProvider>
+      </EventProvider>
+    </ThirdwebProvider>
   )
 }
 
