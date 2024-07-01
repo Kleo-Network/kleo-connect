@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import config from '../../../common/config'
 import {
@@ -22,6 +22,18 @@ const InstagramConnect: React.FC<InstagramProps> = ({
   const [isInstagramConnected, setIsInstagramConnected] = useState(false)
   const slug = localStorage.getItem('slug') || ''
 
+  useEffect(() => {
+    const getCardinCards = (cardType: string) => {
+      if (cards?.find((card) => card.cardType == cardType)) {
+        const card = cards?.find((card) => card.cardType == cardType)
+        if (card) setUsername((card.metadata as InstagramCard).username)
+        return true
+      }
+      return false
+    }
+    getCardinCards('InstaCard')
+  }, [])
+
   const handleConnectInstagram = () => {
     //Step 1: Get the authorization code
     const appId = config.instagram.applicationId
@@ -39,37 +51,39 @@ const InstagramConnect: React.FC<InstagramProps> = ({
     return CREATE_INSTAGRAM_CARD.replace('{slug}', slug)
   }
 
-  const handleInstagramCallback = async (code: string) => {
-    try {
-      // Exchange the authorization code for an access token
-      UpdateUserData(makeInstaCardUrl(), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          code: code
-        }),
-        onSuccessfulFetch: () => {
-          setIsInstaConnected(true)
-          setUsername(slug)
-          setIsInstagramConnected(true)
-        }
-      })
-    } catch (error) {
-      console.error('Error fetching Instagram photo:', error)
+  useEffect(() => {
+    const handleInstagramCallback = async (code: string) => {
+      try {
+        // Exchange the authorization code for an access token
+        UpdateUserData(makeInstaCardUrl(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            code: code
+          }),
+          onSuccessfulFetch: () => {
+            setIsInstaConnected(true)
+            setUsername(slug)
+            setIsInstagramConnected(true)
+          }
+        })
+      } catch (error) {
+        console.error('Error fetching Instagram photo:', error)
+      }
     }
-  }
 
-  // Check if there is an authorization code in the URL
-  const urlParams = new URLSearchParams(window.location.search)
-  const authorizationCode = urlParams.get('code')
+    // Check if there is an authorization code in the URL
+    const urlParams = new URLSearchParams(window.location.search)
+    const authorizationCode = urlParams.get('code')
 
-  // If there is an authorization code, handle the Instagram callback
-  if (authorizationCode && username === '') {
-    console.log(authorizationCode)
-    handleInstagramCallback(authorizationCode)
-  }
+    // If there is an authorization code, handle the Instagram callback
+    if (authorizationCode && username === '') {
+      console.log(authorizationCode)
+      handleInstagramCallback(authorizationCode)
+    }
+  }, [])
 
   return (
     <div className="flex">

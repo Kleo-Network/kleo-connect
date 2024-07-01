@@ -1,62 +1,342 @@
-import React from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import React, { useEffect, useRef } from 'react'
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { MapCard as MapCardType } from '../../common/interface'
-import markerIconUrl from '../../../assets/images/marker-icon.png'
 import { ReactComponent as Pin } from '../../../assets/images/locationPin.svg'
-import { icon } from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
+import config from '../../common/config'
 
-// Define the custom marker icon
-const customIcon = icon({
-  iconUrl: markerIconUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28]
-})
-
-interface MapCardProps {
-  map: MapCardType
+const containerStyle = {
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+  zIndex: 10,
+  borderRadius: '14px'
 }
-const MapCard: React.FC<MapCardProps> = ({ map }) => {
-  const mapLocation =
-    map.location.length > 20 ? map.location.slice(0, 20) + '...' : map.location
 
+const mapStyles = [
+  {
+    featureType: 'all',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'all',
+    elementType: 'geometry.stroke',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'all',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'simplified'
+      }
+    ]
+  },
+  {
+    featureType: 'all',
+    elementType: 'labels.text.stroke',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'all',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'simplified'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.attraction',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.attraction',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.attraction',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.government',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.government',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.government',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.medical',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.medical',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.medical',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.place_of_worship',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.place_of_worship',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.place_of_worship',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.school',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'poi.sports_complex',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off'
+      }
+    ]
+  },
+  {
+    featureType: 'road.highway.controlled_access',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'road.highway.controlled_access',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'road.arterial',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'road.arterial',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'road.arterial',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'road.local',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  },
+  {
+    featureType: 'road.local',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'on'
+      }
+    ]
+  }
+]
+
+const blueCircleIcon = {
+  path: 'M 0, 0 m -8, 0 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0',
+  fillColor: '#2970FF',
+  fillOpacity: 1,
+  strokeColor: 'rgba(41, 112, 255, 0.30)',
+  strokeWeight: 4,
+  scale: 1
+}
+
+const MapCard: React.FC<MapCardProps> = ({ map }) => {
   return (
-    <div className="flex-1 h-full bg-gray-100 rounded-[5px] shadow-md">
-      <div className="relative h-full w-full">
-        <MapContainer
-          className="absolute z-10 h-full w-full rounded-[5px]"
-          center={[map.cordinates.lat, map.cordinates.lng]}
-          zoom={9}
-          scrollWheelZoom={false}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <Marker
-            position={[map.cordinates.lat, map.cordinates.lng]}
-            icon={customIcon}
-          >
-            <Popup>{map.location}</Popup>
-          </Marker>
-        </MapContainer>
-        <div className="absolute flex rounded-full w-auto max-w-[70%] mb-2 ml-2 pr-2 left-0 bottom-0 bg-white h-7 z-30">
-          <div className="flex flex-row items-center h-full w-full">
-            <Pin className="flex ml-1 w-4 h-4" />
-            <div
-              className="flex ml-1 w-full text-xs font-semibold text-black text-wrap overflow-hidden overflow-ellipsis line-clamp-1"
-              title={map.location}
+    <>
+      <div className="flex-1 h-full bg-gray-100 rounded-[14px]">
+        <div className="relative h-full">
+          <LoadScript googleMapsApiKey={config.googlemap.key}>
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={{
+                lat: map.cordinates.lat,
+                lng: map.cordinates.lng
+              }}
+              zoom={11}
+              options={{
+                styles: mapStyles,
+                mapTypeControl: false, // Disable map type control
+                streetViewControl: false, // Disable street view control
+                fullscreenControl: false,
+                zoomControl: false
+              }}
             >
-              {mapLocation}
+              <Marker
+                position={{
+                  lat: map.cordinates.lat,
+                  lng: map.cordinates.lng
+                }}
+                icon={blueCircleIcon}
+                zIndex={40}
+              />
+            </GoogleMap>
+          </LoadScript>
+          <div className="absolute flex rounded-full w-auto max-w-[70%] mb-2 ml-2 py-2 pr-2 pl-[12px] left-0 bottom-0 bg-white h-7 z-30">
+            <div className="flex flex-row items-center h-full w-full">
+              <Pin className="flex ml-1 w-4 h-4" />
+              <div
+                className="flex ml-1 w-full text-[14px] font-semibold text-black text-wrap overflow-hidden overflow-ellipsis line-clamp-1"
+                title={map.location}
+              >
+                {map.location}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
+}
+
+interface MapCardProps {
+  map: MapCardType
 }
 
 export default MapCard

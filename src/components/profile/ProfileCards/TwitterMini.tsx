@@ -24,18 +24,27 @@ const MiniTwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
   }
 
   return (
-    <div className="flex flex-col flex-1 h-full bg-gray-800 p-4 rounded-lg shadow-md relative justify-evenly">
+    <div className="flex flex-col flex-1 h-[148px] bg-gray-800 p-[11px] rounded-[14px] relative justify-evenly">
       <div className="flex flex-col mb-1">
-        <div className="flex flex-row w-full h-[16px] items-center">
-          <Twitter className="flex text-gray-800 w-[16px] h-full border border-white rounded-full" />
-          <div className="flex h-full items-center ml-2 text-white text-sm font-semibold">
+        <div className="flex flex-row w-full h-[32px] items-center">
+          <Twitter className="flex text-gray-800 w-[32px] h-full stroke-2 rounded-full stroke-current stroke-opacity-40" />
+          <div className="flex h-full items-center justify-start ml-2 text-white text-[16px] font-semibold">
             {user.username}
           </div>
+          {user.followers_count >= 0 && (
+            <div className="text-center ml-auto">
+              <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white">
+                <p className="text-xs">
+                  {formatNumberToKM(user.followers_count)} Followers
+                </p>
+              </span>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col w-full items-left mt-2 mb-2">
         <div className="flex flex-row items-center mb-1">
-          <Pin className="font-bold w-2 h-2" />
+          <Pin className="font-bold w-[13px] h-[13px]" />
           <div className="ml-2 font-semibold text-xs text-white"> Pinned</div>
         </div>
         <p
@@ -45,26 +54,7 @@ const MiniTwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
           {user.pinned_tweet}
         </p>
       </div>
-      <div className="w-full flex flex-row mb-1 justify-evenly">
-        {user.followers_count >= 0 && (
-          <div className="text-center">
-            <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white">
-              <p className="text-xs">
-                {formatNumberToKM(user.followers_count)} Followers
-              </p>
-            </span>
-          </div>
-        )}
-        {user.following_count >= 0 && (
-          <div className="text-center">
-            <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white ">
-              <p className="text-xs">
-                {formatNumberToKM(user.following_count)} Following
-              </p>
-            </span>
-          </div>
-        )}
-      </div>
+      <div className="w-full flex flex-row mb-1 justify-evenly"></div>
     </div>
   )
 }

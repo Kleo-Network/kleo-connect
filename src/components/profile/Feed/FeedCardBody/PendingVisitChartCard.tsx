@@ -3,11 +3,11 @@ import chroma from 'chroma-js'
 import { VisitCountMap } from '../../../common/interface'
 
 interface VisitMetadata {
-  data: VisitCountMap[]
+  data: VisitCountMap[] | string[]
   date: string
 }
 
-const VisitChartCard: React.FC<VisitMetadata> = ({ data, date }) => {
+const PendingVisitChartCard: React.FC<VisitMetadata> = ({ data, date }) => {
   const [hoveredSegment, setHoveredSegment] = useState<{
     category: string
     count: number
@@ -53,20 +53,28 @@ const VisitChartCard: React.FC<VisitMetadata> = ({ data, date }) => {
   }
 
   return (
-    <div className="flex flex-col justify-between items-center bg-gray-700 p-5 rounded-[14px] md:rounded-[24px] row-span-2">
-      <div className="flex flex-col mb-5">
-        <div className="flex font-semibold font-inter text-2xl text-white">
-          Tag Used
+    <div className="flex flex-row justify-between items-center bg-gray-700 p-2 px-8 rounded-lg w-[500px] mx-8">
+      <div className="flex flex-col gap-x-8">
+        <div className="text-white font-semibold text-base mb-[15px]">
+          Tags Used{' '}
         </div>
-        <div className="flex text-[14px] font-inter text-white">
-          The tags that are used the most throughout the cards are shown below
-        </div>
+        {sortedData.map((item, index) => (
+          <div key={item.category} className="flex items-center mb-2">
+            <div
+              className="min-w-2 min-h-2 mr-2 rounded-full"
+              style={{ backgroundColor: colorScale[index] }}
+            ></div>
+            <p className="text-gray-200 font-inter text-[10px] font-normal">
+              {item.category}
+            </p>
+          </div>
+        ))}
       </div>
-      <div className="relative flex flex-col justify-center items-center">
+      <div className="relative flex flex-col justify-center items-center ml-[40px]">
         <svg
           ref={svgRef}
-          width={240}
-          height={240}
+          width={169}
+          height={169}
           viewBox="-1 -1 2 2"
           className="flex rounded-full"
         >
@@ -105,47 +113,19 @@ const VisitChartCard: React.FC<VisitMetadata> = ({ data, date }) => {
           <circle cx="0" cy="0" r="0.75" fill="#344054" />
         </svg>
         <div className="absolute text-center">
-          <p className="text-[10px] font-inter text-gray-300">
+          <p className="text-[8px] font-inter text-gray-300 font-normal">
             Website visited
           </p>
-          <p className="text-[40px] font-semibold font-inter text-white">
+          <p className="text-[30px] font-semibold font-inter text-white">
             {total}
           </p>
-          <p className="inline-block bg-gray-600 text-xs text-gray-300 px-2 py-1 rounded-full">
+          <p className="inline-block bg-gray-600 text-[8px] text-gray-300 px-2 py-1 rounded-full font-medium">
             {date}
           </p>
         </div>
-        {hoveredSegment && (
-          <div
-            className="absolute flex flex-row items-center bg-white bg-opacity-70 rounded-full p-1 text-xs"
-            style={{
-              left: `${hoveredSegment.x}px`,
-              top: `${hoveredSegment.y}px`,
-              transform: 'translate(-60%, -60%)'
-            }}
-          >
-            <div className="flex h-full items-center bg-white rounded-full px-1 text-[9px] font-inter text-gray-600">
-              {Math.floor((hoveredSegment.count / total) * 100)}%
-            </div>
-            <p className="flex h-full items-center text-[10px] font-inter font-bold text-gray-600 px-1">
-              {hoveredSegment.category}
-            </p>
-          </div>
-        )}
-      </div>
-      <div className="grid grid-cols-2 gap-x-8 mt-7">
-        {sortedData.map((item, index) => (
-          <div key={item.category} className="flex items-center mb-2">
-            <div
-              className="min-w-3 min-h-3 mr-2 rounded-full"
-              style={{ backgroundColor: colorScale[index] }}
-            ></div>
-            <p className="text-white font-inter text-[14px]">{item.category}</p>
-          </div>
-        ))}
       </div>
     </div>
   )
 }
 
-export default VisitChartCard
+export default PendingVisitChartCard

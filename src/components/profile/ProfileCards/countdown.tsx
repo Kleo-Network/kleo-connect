@@ -1,5 +1,6 @@
 import React from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
+import { ReactComponent as Colon } from '../../../assets/images/Colon.svg'
 
 interface CountdownTimerProps {
   endDate: string // ISO string format e.g., "2024-12-24T00:00:00Z"
@@ -25,27 +26,38 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     } else {
       // Container for countdown units
       const timeUnit = (unit: number | string, label: string) => (
-        <div
-          className={`flex flex-col items-center justify-center ${
-            isProfilePage ? 'mx-2' : 'm-2'
-          }`}
-        >
+        <>
           <div
-            className={`${
-              isProfilePage
-                ? 'w-8 h-8 bg-white text-violet-700'
-                : 'w-24 h-24 bg-violet-700 text-white'
-            }  flex items-center justify-center
+            className={`flex flex-col items-center justify-center ${
+              isProfilePage ? 'mx-2' : 'm-2'
+            }`}
+          >
+            <div
+              className={`${
+                isProfilePage
+                  ? 'w-8 h-8 bg-white text-violet-700'
+                  : 'w-16 h-16 bg-gray-100 text-gray-700'
+              }  flex items-center justify-center
             ${
               isProfilePage ? 'text-xs' : 'text-2xl'
             } font-bold rounded shadow-lg transform transition duration-700 ease-in-out`}
-          >
-            {unit}
+            >
+              {unit}
+            </div>
+            {!isProfilePage && (
+              <div className="text-sm text-gray-700 mt-2">{label}</div>
+            )}
           </div>
-          {!isProfilePage && (
-            <div className="text-sm text-gray-700 mt-2">{label}</div>
+          {label !== 'Seconds' && (
+            <Colon
+              className={`${
+                !isProfilePage
+                  ? `w-2 h-6 stroke-slate-800`
+                  : `w-1 h-3 stroke-white`
+              }`}
+            />
           )}
-        </div>
+        </>
       )
 
       // Render a countdown with turning pages effect simulation

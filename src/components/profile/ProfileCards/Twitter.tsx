@@ -24,16 +24,16 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
   }
 
   return (
-    <div className="flex flex-col flex-1 h-full bg-gray-800 p-6 rounded-lg shadow-md relative justify-evenly">
-      <div className="flex flex-col">
+    <div className="flex flex-col flex-1 h-full bg-gray-800 p-6 rounded-[14px] relative">
+      <div className="flex flex-col mb-4">
         <div className="flex flex-row w-full h-[32px]">
-          <Twitter className="text-gray-800 w-[32px] h-[32px] border border-white rounded-full" />
+          <Twitter className="text-gray-800 w-[32px] h-[32px] border border-white rounded-full stroke-current stroke-opacity-40" />
           <div className="flex items-center ml-2 text-white font-semibold">
             {user.username}
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full items-left mt-4 mb-4">
+      <div className="flex flex-col w-full items-left mt-4 mb-auto">
         <div className="flex flex-row">
           <Pin className="font-bold w-4 h-4" />
           <div className="ml-2 font-semibold text-sm text-white"> Pinned</div>
@@ -47,10 +47,10 @@ const TwitterCard: React.FC<TwitterCardProps> = ({ user, pinnedTweet }) => {
           {user.pinned_tweet}
         </p>
       </div>
-      <div className="w-full flex flex-row mb-1 justify-evenly">
+      <div className="w-full flex flex-row mb-1 justify-start">
         {user.followers_count >= 0 && (
-          <div className="text-center">
-            <span className="inline-block bg-gray-600 rounded-full px-2 py-1 text-sm font-semibold text-white">
+          <div className="text-center mr-2">
+            <span className="inline-block bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-white">
               <p className="text-xs">
                 {formatNumberToKM(user.followers_count)} Followers
               </p>
