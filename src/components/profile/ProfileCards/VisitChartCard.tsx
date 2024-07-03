@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import chroma from 'chroma-js'
-import { VisitCountMap } from '../common/interface'
+import { VisitCountMap } from '../../common/interface'
 
 interface VisitMetadata {
   data: VisitCountMap[] | string[]
