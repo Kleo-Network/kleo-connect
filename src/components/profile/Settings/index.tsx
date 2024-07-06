@@ -21,7 +21,7 @@ enum TABS {
 }
 
 const MediaLeft = () => {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(2)
   const titles = [
     'Connect with your tribe!',
     'Be eligible for an airdrop season',
@@ -34,8 +34,8 @@ const MediaLeft = () => {
     'Unlock more personalised dating applications, shopping experience with <br /> your privacy protected!'
   ]
   useEffect(() => {
-    const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
-    return () => clearInterval(interval)
+   // const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
+   // return () => clearInterval(interval)
   }, [activeIndex])
 
   const nextSlide = () => {
@@ -47,14 +47,8 @@ const MediaLeft = () => {
   }
 
   return (
-    <div>
-      <div
-        style={{
-          position: 'absolute',
-          zIndex: 900,
-          top: '732px',
-          left: '180px'
-        }}
+    <div className='relative'>
+      <div className='absolute bottom-[10%] left-[4%] z-50'
       >
         <h1 className="text-white text-3xl">{titles[activeIndex]}</h1>
 
@@ -64,37 +58,28 @@ const MediaLeft = () => {
         ></p>
       </div>
       <div
-        style={{
-          position: 'absolute',
-          zIndex: 900,
-          top: '832px',
-          left: '300px'
-        }}
+         className='absolute bottom-[3%] left-[33%] z-50'
       >
         <div
           key={`1`}
-          className={`${
-            0 === activeIndex ? 'w-14' : 'w-3'
-          } h-2 bg-white rounded-full mx-2 cursor-pointer ${
-            0 === activeIndex ? 'active bg-white w-14' : 'bg-opacity-50 w-3'
-          }`}
+          className={`h-2 bg-white rounded-full mx-2 cursor-pointer active bg-white relative ${activeIndex == 0 ? 'w-14' : 'w-3 bg-opacity-50'}`}
           onClick={() => goToSlide(0)}
         ></div>
         <div
           key={`2`}
-          className={` bottom-[8px] relative h-2 bg-white rounded-full mx-2 cursor-pointer ${
+          className={`bottom-[8px] relative h-2 bg-white rounded-full ${activeIndex == 0  ? 'left-[63px]' :  'left-[18px]'} mx-2 cursor-pointer ${
             1 === activeIndex
-              ? 'active bg-white w-14 left-[45px]'
-              : 'bg-opacity-50 w-3 left-[70px]'
+              ? 'active bg-white w-14'
+              : 'bg-opacity-50 w-3'
           }`}
           onClick={() => goToSlide(1)}
         ></div>
         <div
           key={`2`}
-          className={` bottom-[16px] relative h-2 bg-white rounded-full mx-2 cursor-pointer ${
+          className={` bottom-[16px] relative h-2 ${activeIndex == 2 ? 'left-[35px]' : 'left-[80px]'} bg-white rounded-full mx-2 cursor-pointer ${
             2 === activeIndex
-              ? 'active bg-white w-14 left-[76px]'
-              : 'bg-opacity-50 w-3 left-[90px]'
+              ? 'active bg-white w-14'
+              : 'bg-opacity-50 w-3'
           }`}
           onClick={() => goToSlide(2)}
         ></div>
@@ -363,12 +348,12 @@ const Settings = ({ user }: User) => {
 
   return (
     <div className="bg-gray-50">
-      <div className="w-full flex p-10 container mx-auto">
-        <div className="w-1/2">
-          <button onClick={() => encryptData()}>Encryption Check</button>
+      <div className="w-full grid grid-cols-2 p-10 container mx-auto">
+        <div className="place-self-end">
+          {/* <button onClick={() => encryptData()}>Encryption Check</button> */}
           <MediaLeft />
         </div>
-        <div className="w-1/2 pl-5">
+        <div className="pl-5">
           <ConnectRight />
         </div>
       </div>
