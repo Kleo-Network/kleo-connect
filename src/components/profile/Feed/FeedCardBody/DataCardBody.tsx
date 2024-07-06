@@ -21,7 +21,7 @@ export default function DataCardBody({
     >
       <div className="flex flex-row items-center justify-start w-full">
         <span className="text-[100px] font-semibold font-inter text-white">
-          {data}
+          {data}%
         </span>
         <Arrow
           className={`w-[68px] h-[68px] ml-[11px] ${

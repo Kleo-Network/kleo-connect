@@ -301,6 +301,9 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
                               {parseUrl(activeCard.urls[0].url)}
                             </div>
                           </div>
+                          <div className="flex flex-row items-center justify-center mr-1 ml-auto py-[2px] text-white font-inter text-sm font-normal">
+                            {activeCard.tags[2]}
+                          </div>
                           <BackFrame className="absolute right-0 top-0 w-[317px] h-[295px] translate-x-16 -translate-y-10 z-10" />
                         </header>
 
@@ -318,7 +321,7 @@ export default function PinnedWebsites({ user, setUser }: UserDataProps) {
                       <VisitChartCard
                         data={activeCard.metadata.activity}
                         date={`${getDateAndMonth(
-                          activeCard.metadata.dateFrom
+                          activeCard?.metadata?.dateFrom
                         )} - ${getDateAndMonth(activeCard?.metadata?.dateTo)}`}
                       />
                     )}
