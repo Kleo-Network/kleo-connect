@@ -298,6 +298,9 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                 {parseUrl(card.urls[0].url)}
               </div>
             </div>
+            <div className="flex flex-row items-center justify-center mr-1 ml-auto py-[2px] text-white font-inter text-sm font-normal">
+              {card.tags[2]}
+            </div>
             {!isPublic && (
               <div className="relative z-20">
                 <button
