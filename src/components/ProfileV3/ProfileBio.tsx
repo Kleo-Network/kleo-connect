@@ -86,7 +86,7 @@ export default function ProfileBio({ user }: User) {
             <div className="flex flex-row bg-gray-100 py-[3px] pl-[3px] pr-[10px] rounded-2xl mt-2">
               <Mint className="h-4 w-4 rounded-full" />
               <div className="font-inter text-[10px] font-medium text-violet-700 text-center justify-center ml-[6px] h-full ">
-                Minted {user.profile_metadata.kleo_token} times
+                Minted {user.profile_metadata.mint_count} times
               </div>
             </div>
           )}
