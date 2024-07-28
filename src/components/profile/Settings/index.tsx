@@ -1,9 +1,8 @@
 import { useMemo, useState, useEffect } from 'react'
 import { UserData } from '../../constants/SignupData'
-import Mint from './iExec'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
 import { ConnectWallet } from '@thirdweb-dev/react'
-import { createThirdwebClient, getContract, resolveMethod } from 'thirdweb'
+import { createThirdwebClient, getContract, prepareContractCall, sendTransaction } from 'thirdweb'
 import { defineChain } from 'thirdweb/chains'
 import { ThirdwebProvider } from 'thirdweb/react'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
@@ -11,6 +10,9 @@ import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
 import { Lit } from '../Settings/LitProtocol/index'
 import Irys from '@irys/sdk'
+import useFetch from '../../common/hooks/useFetch'
+import { fullUserData } from '../../common/interface'
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 interface User {
   user: UserData
@@ -92,7 +94,163 @@ const MediaLeft = () => {
 }
 
 const ConnectRight = () => {
-  const [activeStep, setActiveStep] = useState(3)
+  const [activeStep, setActiveStep] = useState(1)
+  const [settings, setSettings] = useState([false,false,false,false])
+  const [keepAnonymous, setKeepAnonymous] = useState(false)
+
+  const selectAll =  () => {
+  if(!keepAnonymous){
+    setKeepAnonymous(true);
+    setSettings([true,true,true,true])
+  }
+  else {
+    setKeepAnonymous(false);
+    setSettings([false,false,false,false])
+  }
+  }
+  
+  const onChangeChecked = (index: number) => {
+    const tempSettings = [...settings];
+    console.log(tempSettings)
+    tempSettings[index] = !settings[index];
+    if (!tempSettings[index]) {
+        setKeepAnonymous(false)
+      }
+      else{ 
+        const allSelected = tempSettings.every(setting => setting)
+        if (allSelected) {
+          setKeepAnonymous(true)
+        }
+      }
+    setSettings(tempSettings);
+  }
+
+  const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
+  const [litInstance, setLitInstance] = useState<Lit | null>(null)
+  const [encryptedData, setEncryptedData] = useState<any>(null)
+  const [isDataUploaded, setIsDataUploaded] = useState<boolean>(false)
+
+  useEffect(() => {
+    const initializeLit = async () => {
+      const lit = new Lit('polygon')
+      await lit.connect()
+      setLitInstance(lit)
+      console.log(lit);
+    }
+    initializeLit()
+  }, [])
+
+  const accessControlConditions = [
+    {
+      contractAddress: '0x72248635cE1e534a89947Cf60Ef87763Bfafa25F',
+      standardContractType: '',
+      chain: 'polygon',
+      method: 'getOrganizationDetails',
+      parameters: [':_organizationAddress'],
+      returnValueTest: {
+        comparator: '>',
+        value: '0'
+    }
+    }
+  ]
+
+  const clientId =
+    process.env.VITE_KLEO_THIRDWEB_CLIENT_KEY ||
+    '9af290ad929c4b6241475020bc16ab09'
+  const contractAddress = process.env.VITE_CONTRACT_ADDR || ''
+  const client = createThirdwebClient({
+    clientId
+  })
+
+  
+  
+  const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
+  
+  const GET_USER_DATA = 'user/{slug}/published-cards/info'
+  
+  function makeSlugApiUrl(): string {
+    return GET_USER_DATA.replace('{slug}', localStorage.getItem('slug') || '')
+  }
+  const sdk = new ThirdwebSDK("polygon");
+  
+  const handleMint = async () => {
+    try {
+      await fetchFullUserData(makeSlugApiUrl(), {
+        async onSuccessfulFetch(data) {
+          if (data) {
+            console.log('data', data);
+            const encryptedUserData = await encryptData(data)
+            console.log('data type:', typeof encryptedUserData)
+            console.log('data:', encryptedUserData)
+            const irysLink = await uploadEncryptedData(encryptedUserData)
+            console.log(irysLink)
+            //const contractAddress = "0x4de63b546F11CC9A3148E3e7AEe5352e08e4A831"
+            const contract = getContract({
+              client,
+              chain: defineChain(137),
+              address: '0x4de63b546F11CC9A3148E3e7AEe5352e08e4A831'
+            })
+
+            const tx = prepareContractCall({
+                contract,
+                method: "function safeMint(string uri)",
+                params: [irysLink],
+            });
+            const transactionResult = await sendTransaction({
+              tx,
+              account,
+            });
+      // Replace "mintFunction" with the actual function name from your contract
+      // and pass any necessary arguments
+         
+          console.log("Transaction result:", transactionResult)
+          }
+        }
+      })
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+  async function uploadEncryptedData(encryptedData: any) {
+  try {
+    const response = await fetch('http://localhost:3000/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data: encryptedData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const result = await response.json();
+    return result.url;
+  } catch (error) {
+    console.error('Error uploading encrypted data:', error);
+    throw error;
+  }
+}
+  const encryptData = async (data: fullUserData) => {
+    if (litInstance) {
+          console.log('data from encyrpted data', data);
+
+      //try {
+        const encryptedResult = await litInstance.enryptString(
+          JSON.stringify(data),
+          'polygon',
+          accessControlConditions
+        )
+        console.log('encryptedResult', encryptedResult)
+        setEncryptedData(encryptedResult)
+        return encryptedResult;
+      //} catch (error) {
+      //  console.error('Error encrypting data:', error)
+      //}
+    }
+  }
+
   return (
     <div className="bg-white p-10 w-full h-full rounded-2xl font-inter tracking-[-0.02em] text-left">
       <h1 className="text-4xl leading-10 pb-3">
@@ -144,9 +302,11 @@ const ConnectRight = () => {
             <div className="ml-4 text-left">
               <div className="flex items-center mb-2 pt-2">
                 <input
+                 onChange={selectAll}
                   id="default-checkbox"
                   type="checkbox"
                   value=""
+                  checked={keepAnonymous}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 "
                 />
                 <label
@@ -164,6 +324,8 @@ const ConnectRight = () => {
                         id="profile-picture-checkbox"
                         type="checkbox"
                         value=""
+                        checked={settings[0]}
+                        onChange={() => onChangeChecked(0)}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
@@ -180,6 +342,8 @@ const ConnectRight = () => {
                         id="username-checkbox"
                         type="checkbox"
                         value=""
+                        onChange={() => onChangeChecked(1)}
+                        checked={settings[1]}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
@@ -196,6 +360,8 @@ const ConnectRight = () => {
                         id="static-cards-checkbox"
                         type="checkbox"
                         value=""
+                        onChange={() => onChangeChecked(2)}
+                        checked={settings[2]}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
@@ -212,6 +378,8 @@ const ConnectRight = () => {
                         id="dynamic-cards-checkbox"
                         type="checkbox"
                         value=""
+                        onChange={() => onChangeChecked(3)}
+                        checked={settings[3]}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
@@ -238,7 +406,7 @@ const ConnectRight = () => {
               <p className="text-sm">
                 This ensures your data is safe, decentralised and owned by you!
               </p>
-              <button className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
+              <button onClick={handleMint} className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
                 Mint my data identity
               </button>
             </div>
@@ -250,101 +418,7 @@ const ConnectRight = () => {
 }
 
 const Settings = ({ user }: User) => {
-  const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
-  const [litInstance, setLitInstance] = useState<Lit | null>(null)
-  const [encryptedData, setEncryptedData] = useState<any>(null)
-  const [isDataUploaded, setIsDataUploaded] = useState<boolean>(false)
-
-  useEffect(() => {
-    const initializeLit = async () => {
-      const lit = new Lit('ethereum')
-      await lit.connect()
-      setLitInstance(lit)
-    }
-
-    initializeLit()
-  }, [])
-  const accessControlConditions = [
-    {
-      contractAddress: '',
-      standardContractType: '',
-      chain: 'ethereum',
-      method: 'eth_getBalance',
-      parameters: [':userAddress', 'latest'],
-      returnValueTest: {
-        comparator: '>=',
-        value: '0' // 0.000001 ETH
-      }
-    }
-  ]
-
-  const clientId =
-    process.env.VITE_KLEO_THIRDWEB_CLIENT_KEY ||
-    '9af290ad929c4b6241475020bc16ab09'
-  const contractAddress = process.env.VITE_CONTRACT_ADDR || ''
-  const client = createThirdwebClient({
-    clientId
-  })
-
-  const contract = getContract({
-    client,
-    chain: defineChain(10),
-    address: contractAddress
-  })
-
-  const renderTabContent = () => {
-    switch (selectedTab) {
-      case TABS.MINT:
-        return <Mint />
-      default:
-        return null
-    }
-  }
-  const encryptData = async () => {
-    if (litInstance) {
-      const data = 'Hello, Lit!'
-      const chain = 'ethereum'
-
-      try {
-        const encryptedResult = await litInstance.enryptString(
-          data,
-          chain,
-          accessControlConditions
-        )
-        console.log('encryptedResult', encryptedResult)
-        setEncryptedData(encryptedResult)
-      } catch (error) {
-        console.error('Error encrypting data:', error)
-      }
-    }
-  }
-  const getIrys = async (): Promise<Irys> => {
-    const key = JSON.parse(fs.readFileSync('arweaveWallet.json').toString())
-
-    const irys = new Irys({
-      network: 'mainnet',
-      token: 'arweave',
-      key: key
-    })
-
-    console.log(irys)
-    return irys
-  }
-
-  async function uploadToIrys(data: string): Promise<string> {
-    const webIrys = await getIrys()
-
-    try {
-      const receipt = await webIrys.upload(data, {
-        tags: [{ name: 'Content-Type', value: 'text/plain' }]
-      })
-      setIsDataUploaded(true)
-      return `https://gateway.irys.xyz/${receipt.id}`
-    } catch (e) {
-      console.log('Error uploading data ', e)
-      return ''
-    }
-  }
+  
 
   return (
     <div className="bg-gray-50">
