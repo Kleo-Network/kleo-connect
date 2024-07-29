@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ReactComponent as Mint } from '../../assets/images/Mint.svg'
-import { ReactComponent as Pen } from '../../assets/images/Pen.svg'
+import { ReactComponent as Pen } from '../../assets/images/pen.svg'
 import { ReactComponent as Save } from '../../assets/images/save.svg'
 import { UserData } from '../constants/SignupData'
 import useFetch from '../common/hooks/useFetch'
