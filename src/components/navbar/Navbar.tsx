@@ -5,7 +5,7 @@ import { ReactComponent as Settings } from '../../assets/images/settings.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
 import { ReactComponent as Logout } from '../../assets/images/logout.svg'
 import { ReactComponent as Card } from '../../assets/images/Cards.svg'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
 import { EventContext } from '../common/contexts/EventContext'
 import { NavbarEvents } from '../constants/Events'
@@ -28,7 +28,7 @@ enum Tab {
 }
 
 const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
-  const [selectedTab, setSelectedTab] = React.useState('null')
+  const [selectedTab, setSelectedTab] = useState<Tab | 'null'>('null')
   const [showProfileOptions, setShowProfileOptions] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
@@ -39,18 +39,31 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   }, [])
 
   useEffect(() => {
-    if (pathname === `/profileV2/${getSlug()}`) {
-      setSelectedTab(Tab.PROFILE)
-    } else if (pathname === '/cards') {
-      setSelectedTab(Tab.PUBLISH_CARDS)
-    } else if (pathname === '/quests') {
-      // setSelectedTab(Tab.QUESTS)
-    } else if (pathname === '/privacy') {
-      setSelectedTab(Tab.PRIVACY)
-    } else if (pathname === '/setting') {
-      setSelectedTab(Tab.CLAIM_POINTS)
-    } else setSelectedTab('null')
+    updateSelectedTab()
   }, [pathname])
+
+  const updateSelectedTab = () => {
+    switch (pathname) {
+      case `/profileV2/${getSlug()}`:
+        setSelectedTab(Tab.PROFILE)
+        break
+      case '/cards':
+        setSelectedTab(Tab.PUBLISH_CARDS)
+        break
+      // case '/quests':
+      //   setSelectedTab(Tab.QUESTS)
+      //   break
+      case '/privacy':
+        setSelectedTab(Tab.PRIVACY)
+        break
+      case '/setting':
+        setSelectedTab(Tab.CLAIM_POINTS)
+        break
+      default:
+        setSelectedTab('null')
+        break
+    }
+  }
 
   const handleLogoutClick = () => {
     localStorage.clear()
@@ -71,26 +84,23 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
     navigate('/privacy')
   }
 
-  function getSlug(): string {
-    const slug = localStorage.getItem('slug')
-    if (slug) {
-      return slug
-    } else {
-      return ''
-    }
+  const getSlug = (): string => {
+    return localStorage.getItem('slug') || ''
   }
 
-  function getHomeLink() {
+  const getHomeLink = (): string => {
     return `/profileV2/${getSlug()}`
   }
 
-  function handleLogin(step: number) {
+  const handleLogin = (step: number) => {
     navigate(`/signup/${step}`)
   }
 
-  function handleSignUp(step: number) {
+  const handleSignUp = (step: number) => {
     navigate(`/signup/${step}`)
   }
+
+  const token = localStorage.getItem('token')
 
   return (
     <nav
@@ -118,7 +128,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
         </button>
 
         {/* <!-- Collapsible navigation container --> */}
-        {localStorage.getItem('token') ? (
+        {token ? (
           <div
             className="!visible mt-2 ml-4 hidden flex-grow basis-[100%] items-center lg:mt-0 lg:!flex lg:basis-auto"
             id="navbarSupportedContent"
@@ -128,21 +138,21 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
               className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
               data-te-navbar-nav-ref
             >
-              {Object.values(Tab).map((tab, i) => {
-                return (
+              {Object.values(Tab).map(
+                (tab, i) =>
                   tab !== Tab.PRIVACY && (
                     <li
                       key={i}
                       className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
                       data-te-nav-item-ref
                     >
-                      <a
+                      <Link
                         className={`px-3 py-2 rounded-md font-inter font-medium text-base ${
                           selectedTab === tab
                             ? 'text-purple-700 bg-purple-50'
                             : 'text-gray-700 bg-white'
                         }`}
-                        href={`/${
+                        to={`/${
                           tab === Tab.PROFILE
                             ? `profileV2/${getSlug()}`
                             : tab === Tab.PUBLISH_CARDS
@@ -154,11 +164,10 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                         data-te-nav-link-ref
                       >
                         {tab}
-                      </a>
+                      </Link>
                     </li>
                   )
-                )
-              })}
+              )}
             </ul>
 
             {/* <!-- Right elements --> */}
@@ -178,7 +187,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                     <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                       <button
                         className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                        onClick={() => handleSettingsClick()}
+                        onClick={handleSettingsClick}
                       >
                         <Card className="w-4 h-4 mr-3 stroke-current text-gray-700" />
                         <div className="text-sm font-inter text-gray-700">
@@ -189,7 +198,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                     <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                       <button
                         className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                        onClick={() => handlePrivacyClick()}
+                        onClick={handlePrivacyClick}
                       >
                         <Privacy className="w-4 h-4 mr-3 stroke-current text-gray-700" />
                         <div className="text-sm font-inter text-gray-700">
@@ -200,7 +209,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                     <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                       <button
                         className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                        onClick={() => handleLogoutClick()}
+                        onClick={handleLogoutClick}
                       >
                         <Logout className="w-4 h-4 mr-3 stroke-current text-gray-700" />
                         <div className="text-sm font-inter text-gray-700">
