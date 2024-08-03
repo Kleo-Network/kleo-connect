@@ -9,7 +9,6 @@ import {
 } from '../common/interface'
 import { useState, useEffect, useContext } from 'react'
 import CountdownTimer from '../profile/ProfileCards/countdown'
-import { convertEpochToISO } from '../profile/ProfileCards'
 import Modal from '../common/Modal'
 import { NavbarEvents } from '../constants/Events'
 import { EventContext } from '../common/contexts/EventContext'
@@ -18,6 +17,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ReactComponent as CloseIcon } from '../../assets/images/cross.svg'
 import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
 import { ReactComponent as Plus } from '../../assets/images/plus.svg'
+import { convertEpochToISO } from '../common/utils'
 
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
