@@ -80,9 +80,9 @@ function App(): ReactElement {
     >
       <EventProvider>
         <div className="h-full w-full">
-          <div className="flex flex-col font-inter self-stretch h-full">
+          <div className="flex flex-col font-inter h-full">
             {isLoggedIn && (
-              <header className="flex flex-row self-stretch items-center">
+              <header className="flex flex-row items-center justify-center w-full border-b border-gray-200">
                 <Navbar
                   handleLogout={handleLogout}
                   avatar={{ src: user.pfp, alt: 'Profile' }}

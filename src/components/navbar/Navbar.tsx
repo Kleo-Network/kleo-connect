@@ -104,7 +104,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
 
   return (
     <nav
-      className="relative flex w-full flex-wrap items-center justify-between border-b border-gray-200 bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 h-[72px] px-20"
+      className="relative flex w-full flex-wrap items-center self-center bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 h-[72px] max-w-7xl"
       data-te-navbar-ref
     >
       <div className="flex w-full flex-wrap items-center justify-between px-8">
