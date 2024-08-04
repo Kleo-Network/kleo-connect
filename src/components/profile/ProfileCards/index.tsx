@@ -52,7 +52,7 @@ const ProfilePicNameComponent = ({
   name
 }: ProfilePicNameComponentProps) => {
   return (
-    <div className="h-16 flex justify-start gap-4 items-center">
+    <div className="h-fit flex justify-start gap-4 items-center">
       <img
         className="img-container w-[60px] h-[60px] rounded-full"
         src={avatar}

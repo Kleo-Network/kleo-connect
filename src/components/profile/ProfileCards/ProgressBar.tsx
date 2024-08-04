@@ -6,11 +6,11 @@ type ProgressBarProps = {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
   return (
-    <div className="flex w-full rounded-full mb-[8px]">
-      <div className="flex flex-row w-[658px] h-[19px] items-center">
-        <div className="flex w-[90%] bg-gray-200">
+    <div className="w-full px-2">
+      <div className="flex justify-between mb-1 items-center gap-2">
+        <div className="flex-grow bg-gray-200 rounded-full h-2.5">
           <div
-            className="bg-gray-600 h-[8px] rounded-full"
+            className="bg-gray-600 h-2.5 rounded-full"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
