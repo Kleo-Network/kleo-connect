@@ -219,7 +219,6 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
     <div className="w-full h-full rounded-2xl p-6">
       <>
         {activeCardList.length > 0 ? (
-          // TODO : Make it fit inside the card when available.
           <div className="flex flex-col justify-between h-full">
             <div className="flex w-full h-[400px] bg-gray-100 rounded-2xl p-4 h-max-[400px]">
               <div className="flex flex-col justify-between items-center min-w-[450px] w-full h-full">
@@ -295,6 +294,52 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                         </>
                       </div>
                     </div>
+                  )}
+
+                  {/* TODO : Make it fit inside the card when available. */}
+                  {/* CardType == DOMAIN VISIT CARD */}
+                  {activeCard.cardType == 'DomainVisitCard' && (
+                    <div className=" rounded-[14px] p-3 px-5 bg-[#42307D]  flex flex-col justify-between min-h-[320px] border border-white overflow-hidden bg-gradient-to-r from-violet-950 to-violet-900 mt-[20px]">
+                      {/* Header for card*/}
+                      <header className="relative flex flex-row items-center mt-3 justify-between">
+                        <div className="flex flex-row items-center bg-opacity-50 backdrop-blur-md bg-white py-[6px] pl-[6px] pr-[16px] rounded-3xl">
+                          {activeCard.urls.map((urls, index) => (
+                            <img
+                              className={` w-6 h-6 flex-none rounded-full fill-black`}
+                              style={{ left: `${index * 1.3}rem` }}
+                              src={`https://www.google.com/s2/favicons?domain=${urls.url}`}
+                            />
+                          ))}
+                          <div className="font-inter font-medium text-sm text-white ml-2">
+                            {parseUrl(activeCard.urls[0].url)}
+                          </div>
+                        </div>
+                        <div className="flex flex-row items-center justify-center mr-1 ml-auto py-[2px] text-white font-inter text-sm font-normal">
+                          {activeCard.tags[2]}
+                        </div>
+                        <BackFrame className="absolute right-0 top-0 w-[317px] h-[295px] translate-x-16 -translate-y-10 z-10" />
+                      </header>
+
+                      {/* Body for feed card */}
+                      {activeCard.cardType == 'DomainVisitCard' && (
+                        <DataCardBody
+                          data={activeCard.metadata.activity[0]}
+                          description={activeCard.content}
+                          direction={activeCard.metadata.activity[1]}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {/* TODO : Make it fit inside the card when available. */}
+                  {/* CardType == VISIT CHART CARD */}
+                  {activeCard.cardType == 'VisitChartCard' && (
+                    <VisitChartCard
+                      data={activeCard.metadata.activity}
+                      date={`${getDateAndMonth(
+                        activeCard?.metadata?.dateFrom
+                      )} - ${getDateAndMonth(activeCard?.metadata?.dateTo)}`}
+                    />
                   )}
                 </div>
 
