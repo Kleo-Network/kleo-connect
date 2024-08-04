@@ -19,7 +19,7 @@ export default function PublishCardsPageComponent({
     <div className="h-full w-full bg-gray-50 flex justify-center">
       <div className="w-full px-8 pt-12 max-w-7xl">
         <div className=" h-[540px] w-full flex justify-between gap-6">
-          <div className="bg-white rounded-2xl w-1/3 h-full p-5 flex flex-col justify-start gap-4">
+          <div className="bg-white rounded-2xl w-1/3 h-full p-5 flex flex-col justify-start gap-4 border border-gray-200">
             <ProfilePicNameComponent
               avatar={user.pfp}
               name={user.name}
@@ -37,7 +37,7 @@ export default function PublishCardsPageComponent({
               <LeaderBoardCardComponent />
             </div>
           </div>
-          <div className="bg-orange-400 w-2/3 h-full rounded-2xl">
+          <div className="bg-white border border-gray-200 w-2/3 h-full rounded-2xl">
             <PublishCardsComponent user={user} setUser={setUser} />
           </div>
         </div>
