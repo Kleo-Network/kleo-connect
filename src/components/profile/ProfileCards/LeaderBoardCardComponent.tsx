@@ -88,7 +88,7 @@ export const LeaderBoardCardComponent = ({
             <LeaderBoardRowComponent
               isUserRow={true}
               rank={rank}
-              userName={name}
+              userName={capitalizeWords(name)}
               points={points}
               ppUrl={ppUrl}
             />
