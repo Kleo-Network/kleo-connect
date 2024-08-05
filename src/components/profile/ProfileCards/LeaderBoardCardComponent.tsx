@@ -100,7 +100,7 @@ export const LeaderBoardCardComponent = ({
                 rank={(index + 1).toString()} // Since the first row is the current user, start from 2
                 userName={capitalizeWords(userData.name)}
                 points={userData.kleo_points.toString()}
-                ppUrl={kleoPointsImg}
+                ppUrl={userData.pfp || kleoPointsImg}
               />
             ))}
           </>

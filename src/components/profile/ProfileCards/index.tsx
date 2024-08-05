@@ -1,6 +1,5 @@
 import { UserDataProps } from '../../common/interface'
 import kleoPointsImg from '../../../assets/images/statsImages/kleoPoints.svg'
-import fire from '../../../assets/images/statsImages/fire.svg'
 import winnerCup from '../../../assets/images/statsImages/winnerCup.svg'
 import { PublishCardsComponent } from './PublishCardsComponent'
 import { capitalizeWords } from '../../common/utils'

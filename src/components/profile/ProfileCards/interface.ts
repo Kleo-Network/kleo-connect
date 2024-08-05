@@ -36,6 +36,7 @@ interface IGetLeaderBoardRowResponse {
   name: string
   rank: number
   slug: string
+  pfp?: string
 }
 
 interface ILeaderBoardCardProps {
