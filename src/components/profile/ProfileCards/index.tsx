@@ -5,15 +5,38 @@ import winnerCup from '../../../assets/images/statsImages/winnerCup.svg'
 import { PublishCardsComponent } from './PublishCardsComponent'
 import { capitalizeWords } from '../../common/utils'
 import { LeaderBoardCardComponent } from './LeaderBoardCardComponent'
+import useFetch from '../../common/hooks/useFetch'
+import { useEffect, useState } from 'react'
+
+const GET_USER_RANK = 'user/rank/{slug}'
 
 export default function PublishCardsPageComponent({
   user,
   setUser
 }: UserDataProps) {
+  const { fetchData: fetchUserRank } = useFetch()
+
+  const [rank, setRank] = useState('0')
   // TODO : Update once we have API.
-  const lastMintedDate = 'April 26, 2024'
-  const rank = '251'
-  const streak = '21'
+  const [lastMintedDate, setLastMintedDate] = useState('April 26, 2024')
+  const [streak, setStreak] = useState('-1')
+
+  useEffect(() => {
+    if (!user || !user.slug) {
+      return
+    }
+
+    const updatedGetUserRankUrl = GET_USER_RANK.replace(
+      '{slug}',
+      user.slug || ''
+    )
+    fetchUserRank(updatedGetUserRankUrl, {
+      onSuccessfulFetch(data) {
+        const typedData = data as IGetUserRankResponse
+        setRank(typedData['rank'].toString())
+      }
+    })
+  }, [user, user.slug])
 
   return (
     <div className="h-full w-full bg-gray-50 flex justify-center">

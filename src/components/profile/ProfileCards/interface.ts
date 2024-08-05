@@ -23,3 +23,10 @@ interface LeaderBoardRowProps {
   points: string
   ppUrl: string
 }
+
+interface IGetUserRankResponse {
+  kleo_points: number
+  rank: number
+  slug: string
+  total_users: number
+}
