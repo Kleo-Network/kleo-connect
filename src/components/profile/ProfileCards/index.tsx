@@ -57,7 +57,12 @@ export default function PublishCardsPageComponent({
               Leaderboard
             </div>
             <div className="overflow-y-auto flex-grow scrollbar-thin scrollbar-webkit rounded-lg">
-              <LeaderBoardCardComponent />
+              <LeaderBoardCardComponent
+                name={user.name}
+                points={user.profile_metadata['kleo_points']}
+                ppUrl={user.pfp}
+                rank={rank}
+              />
             </div>
           </div>
           <div className="bg-white border border-gray-200 w-2/3 h-full rounded-2xl">

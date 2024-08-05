@@ -30,3 +30,17 @@ interface IGetUserRankResponse {
   slug: string
   total_users: number
 }
+
+interface IGetLeaderBoardRowResponse {
+  kleo_points: number
+  name: string
+  rank: number
+  slug: string
+}
+
+interface ILeaderBoardCardProps {
+  ppUrl: string
+  name: string
+  rank: string
+  points: string
+}
