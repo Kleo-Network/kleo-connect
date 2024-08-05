@@ -97,7 +97,7 @@ const ProfilePicNameComponent = ({
 
 const StatsCardComponent = ({ kleoPoints, rank, streak }: StatesCardProps) => {
   return (
-    <div className="flex justify-between items-center h-[52px] w-full font-inter">
+    <div className="flex justify-evenly items-center h-[52px] w-full font-inter">
       <StatComponent
         legend="KLEO Points"
         count={kleoPoints}
@@ -105,8 +105,9 @@ const StatsCardComponent = ({ kleoPoints, rank, streak }: StatesCardProps) => {
       />
       <div className="w-[1px] h-9 bg-gray-background "></div>
       <StatComponent legend="Rank" count={rank} imgSrc={winnerCup} />
-      <div className="w-[1px] h-9 bg-gray-background "></div>
-      <StatComponent legend="Streak" count={streak} imgSrc={fire} />
+      {/* TODO: Uncomment this when we start getting streak in API. */}
+      {/* <div className="w-[1px] h-9 bg-gray-background "></div>
+      <StatComponent legend="Streak" count={streak} imgSrc={fire} /> */}
     </div>
   )
 }
