@@ -33,6 +33,13 @@ const config = {
   },
   connection: {
     redirectionUrl: import.meta.env.VITE_REDIRECTED_URL
+  },
+  thirdweb: {
+    client: import.meta.env.VITE_KLEO_THIRDWEB_CLIENT_KEY,
+    secret: import.meta.env.VITE_KLEO_THIRDWEB_SECRET
+  },
+  decentralised_upload: {
+    host: import.meta.env.VITE_UPLOAD_API_DOMAIN
   }
 }
 

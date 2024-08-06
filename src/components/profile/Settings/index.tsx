@@ -2,9 +2,6 @@ import { useMemo, useState, useEffect } from 'react'
 import { UserData } from '../../constants/SignupData'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
 import { ConnectWallet } from '@thirdweb-dev/react'
-import { createThirdwebClient, getContract, prepareContractCall, sendTransaction } from 'thirdweb'
-import { defineChain } from 'thirdweb/chains'
-import { ThirdwebProvider } from 'thirdweb/react'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
 import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
@@ -12,7 +9,10 @@ import { Lit } from '../Settings/LitProtocol/index'
 import Irys from '@irys/sdk'
 import useFetch from '../../common/hooks/useFetch'
 import { fullUserData } from '../../common/interface'
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { address, contractABI } from "../../contracts/mint";
+import { Web3Button } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
+import config from '../../common/config'
 
 interface User {
   user: UserData
@@ -129,38 +129,12 @@ const ConnectRight = () => {
   const [litInstance, setLitInstance] = useState<Lit | null>(null)
   const [encryptedData, setEncryptedData] = useState<any>(null)
   const [isDataUploaded, setIsDataUploaded] = useState<boolean>(false)
+  const [userAddress, setAddress] = useState<string | null>(null)
 
-  useEffect(() => {
-    const initializeLit = async () => {
-      const lit = new Lit('polygon')
-      await lit.connect()
-      setLitInstance(lit)
-      console.log(lit);
-    }
-    initializeLit()
-  }, [])
+  
 
-  const accessControlConditions = [
-    {
-      contractAddress: '0x72248635cE1e534a89947Cf60Ef87763Bfafa25F',
-      standardContractType: '',
-      chain: 'polygon',
-      method: 'getOrganizationDetails',
-      parameters: [':_organizationAddress'],
-      returnValueTest: {
-        comparator: '>',
-        value: '0'
-    }
-    }
-  ]
-
-  const clientId =
-    process.env.VITE_KLEO_THIRDWEB_CLIENT_KEY ||
-    '9af290ad929c4b6241475020bc16ab09'
-  const contractAddress = process.env.VITE_CONTRACT_ADDR || ''
-  const client = createThirdwebClient({
-    clientId
-  })
+  
+  
 
   
   
@@ -171,39 +145,21 @@ const ConnectRight = () => {
   function makeSlugApiUrl(): string {
     return GET_USER_DATA.replace('{slug}', localStorage.getItem('slug') || '')
   }
-  const sdk = new ThirdwebSDK("polygon");
   
+  useEffect(() => {
+    const address = useAddress();
+    if(address) setAddress(address)
+  },[])
+    
   const handleMint = async () => {
+    
     try {
+      
       await fetchFullUserData(makeSlugApiUrl(), {
         async onSuccessfulFetch(data) {
           if (data) {
-            console.log('data', data);
-            const encryptedUserData = await encryptData(data)
-            console.log('data type:', typeof encryptedUserData)
-            console.log('data:', encryptedUserData)
-            const irysLink = await uploadEncryptedData(encryptedUserData)
-            console.log(irysLink)
-            //const contractAddress = "0x4de63b546F11CC9A3148E3e7AEe5352e08e4A831"
-            const contract = getContract({
-              client,
-              chain: defineChain(137),
-              address: '0x4de63b546F11CC9A3148E3e7AEe5352e08e4A831'
-            })
-
-            const tx = prepareContractCall({
-                contract,
-                method: "function safeMint(string uri)",
-                params: [irysLink],
-            });
-            const transactionResult = await sendTransaction({
-              tx,
-              account,
-            });
-      // Replace "mintFunction" with the actual function name from your contract
-      // and pass any necessary arguments
-         
-          console.log("Transaction result:", transactionResult)
+            const url = await uploadEncryptedData(data, settings)
+            return url;
           }
         }
       })
@@ -211,14 +167,14 @@ const ConnectRight = () => {
       console.error('Error fetching data:', error)
     }
   }
-  async function uploadEncryptedData(encryptedData: any) {
+  async function uploadEncryptedData(encryptedData: any, selectedFields: any) {
   try {
-    const response = await fetch('http://localhost:3000/upload', {
+    const response = await fetch(config.decentralised_upload.host, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ data: encryptedData }),
+      body: JSON.stringify({ data: encryptedData, selected: selectedFields }),
     });
 
     if (!response.ok) {
@@ -232,24 +188,7 @@ const ConnectRight = () => {
     throw error;
   }
 }
-  const encryptData = async (data: fullUserData) => {
-    if (litInstance) {
-          console.log('data from encyrpted data', data);
-
-      //try {
-        const encryptedResult = await litInstance.enryptString(
-          JSON.stringify(data),
-          'polygon',
-          accessControlConditions
-        )
-        console.log('encryptedResult', encryptedResult)
-        setEncryptedData(encryptedResult)
-        return encryptedResult;
-      //} catch (error) {
-      //  console.error('Error encrypting data:', error)
-      //}
-    }
-  }
+  
 
   return (
     <div className="bg-white p-10 w-full h-full rounded-2xl font-inter tracking-[-0.02em] text-left">
@@ -310,7 +249,7 @@ const ConnectRight = () => {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 "
                 />
                 <label
-                  for="default-checkbox"
+                  htmlFor="default-checkbox"
                   className="ms-2 text-sm font-medium text-gray-500 "
                 >
                   Keep me Entirely Anonymous
@@ -329,7 +268,7 @@ const ConnectRight = () => {
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
-                        for="profile-picture-checkbox"
+                        htmlFor="profile-picture-checkbox"
                         className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                       >
                         Profile Picture
@@ -347,7 +286,7 @@ const ConnectRight = () => {
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
-                        for="username-checkbox"
+                        htmlFor="username-checkbox"
                         className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                       >
                         Username
@@ -365,7 +304,7 @@ const ConnectRight = () => {
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
-                        for="static-cards-checkbox"
+                        htmlFor="static-cards-checkbox"
                         className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                       >
                         Static Cards
@@ -383,7 +322,7 @@ const ConnectRight = () => {
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
-                        for="dynamic-cards-checkbox"
+                        htmlFor="dynamic-cards-checkbox"
                         className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                       >
                         Dynamic Cards
@@ -406,8 +345,24 @@ const ConnectRight = () => {
               <p className="text-sm">
                 This ensures your data is safe, decentralised and owned by you!
               </p>
+              <Web3Button
+      contractAddress={address}
+      theme={"light"}
+      style={{"background": "rgb(168 85 247 / var(--tw-bg-opacity)) !important"}}
+      className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600"
+      contractAbi={contractABI} // Your smart contract address
+      action={async (contract) => {
+        if(userAddress){
+          const url = await handleMint()
+          const abc = await contract.call("safeMint", [userAddress, url])
+          console.log("contract call result", abc);
+        }
+      }}
+    >
+      Mint my data identity
+    </Web3Button>
               <button onClick={handleMint} className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
-                Mint my data identity
+                
               </button>
             </div>
           </li>

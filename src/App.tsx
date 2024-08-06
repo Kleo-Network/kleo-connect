@@ -11,6 +11,8 @@ import { EventProvider } from './components/common/contexts/EventContext'
 import Privacy from './components/profile/Settings/Privacy'
 import useFetch, { FetchStatus } from './components/common/hooks/useFetch'
 import Settings from './components/profile/Settings'
+import config from './components/common/config'
+
 import {
   ThirdwebProvider,
   metamaskWallet,
@@ -69,6 +71,7 @@ function App(): ReactElement {
 
   return (
     <ThirdwebProvider
+      activeChain="polygon"
       supportedWallets={[
         metamaskWallet({
           recommended: true
@@ -76,7 +79,7 @@ function App(): ReactElement {
         coinbaseWallet(),
         walletConnect()
       ]}
-      clientId="<your_client_id>"
+      clientId={config.thirdweb.client}
     >
       <EventProvider>
         <div className="h-full w-full">
