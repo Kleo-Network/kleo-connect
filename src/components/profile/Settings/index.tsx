@@ -5,13 +5,10 @@ import { ConnectWallet } from '@thirdweb-dev/react'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
 import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
-import { Lit } from '../Settings/LitProtocol/index'
-import Irys from '@irys/sdk'
 import useFetch from '../../common/hooks/useFetch'
 import { fullUserData } from '../../common/interface'
-import { address, contractABI } from "../../contracts/mint";
-import { Web3Button } from "@thirdweb-dev/react";
-import { useAddress } from "@thirdweb-dev/react";
+import { contract_address, contractABI } from "../../contracts/mint";
+import { Web3Button, useAddress } from "@thirdweb-dev/react";
 import config from '../../common/config'
 
 interface User {
@@ -36,8 +33,8 @@ const MediaLeft = () => {
     'Unlock more personalised dating applications, shopping experience with <br /> your privacy protected!'
   ]
   useEffect(() => {
-   // const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
-   // return () => clearInterval(interval)
+    // const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
+    // return () => clearInterval(interval)
   }, [activeIndex])
 
   const nextSlide = () => {
@@ -60,7 +57,7 @@ const MediaLeft = () => {
         ></p>
       </div>
       <div
-         className='absolute bottom-[3%] left-[33%] z-50'
+        className='absolute bottom-[3%] left-[33%] z-50'
       >
         <div
           key={`1`}
@@ -69,20 +66,18 @@ const MediaLeft = () => {
         ></div>
         <div
           key={`2`}
-          className={`bottom-[8px] relative h-2 bg-white rounded-full ${activeIndex == 0  ? 'left-[63px]' :  'left-[18px]'} mx-2 cursor-pointer ${
-            1 === activeIndex
-              ? 'active bg-white w-14'
-              : 'bg-opacity-50 w-3'
-          }`}
+          className={`bottom-[8px] relative h-2 bg-white rounded-full ${activeIndex == 0 ? 'left-[63px]' : 'left-[18px]'} mx-2 cursor-pointer ${1 === activeIndex
+            ? 'active bg-white w-14'
+            : 'bg-opacity-50 w-3'
+            }`}
           onClick={() => goToSlide(1)}
         ></div>
         <div
           key={`2`}
-          className={` bottom-[16px] relative h-2 ${activeIndex == 2 ? 'left-[35px]' : 'left-[80px]'} bg-white rounded-full mx-2 cursor-pointer ${
-            2 === activeIndex
-              ? 'active bg-white w-14'
-              : 'bg-opacity-50 w-3'
-          }`}
+          className={` bottom-[16px] relative h-2 ${activeIndex == 2 ? 'left-[35px]' : 'left-[80px]'} bg-white rounded-full mx-2 cursor-pointer ${2 === activeIndex
+            ? 'active bg-white w-14'
+            : 'bg-opacity-50 w-3'
+            }`}
           onClick={() => goToSlide(2)}
         ></div>
       </div>
@@ -94,101 +89,111 @@ const MediaLeft = () => {
 }
 
 const ConnectRight = () => {
-  const [activeStep, setActiveStep] = useState(1)
-  const [settings, setSettings] = useState([false,false,false,false])
+  const [activeStep, setActiveStep] = useState(3)
+  const [settings, setSettings] = useState([false, false, false, false])
   const [keepAnonymous, setKeepAnonymous] = useState(false)
 
-  const selectAll =  () => {
-  if(!keepAnonymous){
-    setKeepAnonymous(true);
-    setSettings([true,true,true,true])
+  const selectAll = () => {
+    if (!keepAnonymous) {
+      setKeepAnonymous(true);
+      setSettings([true, true, true, true])
+    }
+    else {
+      setKeepAnonymous(false);
+      setSettings([false, false, false, false])
+    }
   }
-  else {
-    setKeepAnonymous(false);
-    setSettings([false,false,false,false])
-  }
-  }
-  
+
   const onChangeChecked = (index: number) => {
     const tempSettings = [...settings];
     console.log(tempSettings)
     tempSettings[index] = !settings[index];
     if (!tempSettings[index]) {
-        setKeepAnonymous(false)
+      setKeepAnonymous(false)
+    }
+    else {
+      const allSelected = tempSettings.every(setting => setting)
+      if (allSelected) {
+        setKeepAnonymous(true)
       }
-      else{ 
-        const allSelected = tempSettings.every(setting => setting)
-        if (allSelected) {
-          setKeepAnonymous(true)
-        }
-      }
+    }
     setSettings(tempSettings);
   }
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.MINT)
-  const [litInstance, setLitInstance] = useState<Lit | null>(null)
   const [encryptedData, setEncryptedData] = useState<any>(null)
   const [isDataUploaded, setIsDataUploaded] = useState<boolean>(false)
-  const [userAddress, setAddress] = useState<string | null>(null)
 
-  
 
-  
-  
+  const [userAddress, setUserAddress] = useState<string | undefined>(undefined);
+  const address = useAddress();
 
-  
-  
+  useEffect(() => {
+    setUserAddress(address);
+  }, [address]);
+
+
+
   const { fetchData: fetchFullUserData } = useFetch<fullUserData>()
-  
+
   const GET_USER_DATA = 'user/{slug}/published-cards/info'
-  
+
   function makeSlugApiUrl(): string {
     return GET_USER_DATA.replace('{slug}', localStorage.getItem('slug') || '')
   }
-  
-  useEffect(() => {
-    const address = useAddress();
-    if(address) setAddress(address)
-  },[])
-    
+
   const handleMint = async () => {
-    
     try {
-      
-      await fetchFullUserData(makeSlugApiUrl(), {
-        async onSuccessfulFetch(data) {
-          if (data) {
-            const url = await uploadEncryptedData(data, settings)
-            return url;
+      console.log("Starting handleMint");
+      return new Promise<string>((resolve, reject) => {
+        fetchFullUserData(makeSlugApiUrl(), {
+          onSuccessfulFetch: async (data) => {
+            if (data) {
+              console.log("Fetched data:", data);
+              try {
+                const url = await uploadEncryptedData(data, settings);
+                console.log("URL from uploadEncryptedData:", url);
+                resolve(url);
+              } catch (error) {
+                console.error("Error in uploadEncryptedData:", error);
+                reject(error);
+              }
+            } else {
+              reject(new Error("No data fetched"));
+            }
           }
-        }
-      })
+        });
+      });
     } catch (error) {
-      console.error('Error fetching data:', error)
+      console.error('Error in handleMint:', error);
+      throw error;
     }
-  }
+  };
+
   async function uploadEncryptedData(encryptedData: any, selectedFields: any) {
-  try {
-    const response = await fetch(config.decentralised_upload.host, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data: encryptedData, selected: selectedFields }),
-    });
+    try {
+      console.log("hit api", config.decentralised_upload.host);
+      const response = await fetch(config.decentralised_upload.host, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: encryptedData, selected: selectedFields }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log(response);
+      return result.url;
+    } catch (error) {
+      console.error('Error uploading encrypted data:', error);
+      throw error;
     }
-
-    const result = await response.json();
-    return result.url;
-  } catch (error) {
-    console.error('Error uploading encrypted data:', error);
-    throw error;
   }
-}
-  
+
 
   return (
     <div className="bg-white p-10 w-full h-full rounded-2xl font-inter tracking-[-0.02em] text-left">
@@ -203,7 +208,7 @@ const ConnectRight = () => {
         <ol className="relative text-gray-500">
           <div className="absolute h-1/2 w-0.5 bg-gray-200"></div>
           <li className="mb-10 ml-12">
-            <span className="absolute flex items-center justify-center w-7 h-7 rounded-full -left-3 ring-4 ring-white bg-purple-500">
+            <span className={`absolute flex items-center justify-center w-7 h-7 rounded-full -left-3 ${userAddress === null ? 'border-dashed' : 'border-solid'} ring-4 ring-white bg-purple-500`}>
               <span className="text-white">1</span>
             </span>
             <h3 className="font-medium leading-tight text-gray-900">
@@ -224,14 +229,12 @@ const ConnectRight = () => {
           </li>
           <li className="mb-10 ml-12">
             <div
-              className={`absolute left-0 h-1/2 border-l-2 ${
-                activeStep >= 3 ? 'border-dashed' : 'border-solid'
-              } border-gray-200`}
+              className={`absolute left-0 h-3/4 border-l-2 border-solid border-gray-200`}
             ></div>
             <span className="absolute mt-3 -left-0 inline-flex items-center justify-center">
               <span className="absolute flex items-center justify-center w-8 h-8 rounded-full ring-4 ring-purple-100 bg-purple-100">
                 <span className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-500">
-                  <span className="text-white">2</span>
+                  <span className="text-white">1</span>
                 </span>
               </span>
             </span>
@@ -241,7 +244,7 @@ const ConnectRight = () => {
             <div className="ml-4 text-left">
               <div className="flex items-center mb-2 pt-2">
                 <input
-                 onChange={selectAll}
+                  onChange={selectAll}
                   id="default-checkbox"
                   type="checkbox"
                   value=""
@@ -336,7 +339,7 @@ const ConnectRight = () => {
 
           <li className="ml-12">
             <span className="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white bg-purple-100 text-purple-500">
-              3
+              2
             </span>
             <h3 className="font-medium text-black leading-tight">
               Mint your data identity
@@ -345,25 +348,52 @@ const ConnectRight = () => {
               <p className="text-sm">
                 This ensures your data is safe, decentralised and owned by you!
               </p>
-              <Web3Button
-      contractAddress={address}
-      theme={"light"}
-      style={{"background": "rgb(168 85 247 / var(--tw-bg-opacity)) !important"}}
-      className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600"
-      contractAbi={contractABI} // Your smart contract address
-      action={async (contract) => {
-        if(userAddress){
-          const url = await handleMint()
-          const abc = await contract.call("safeMint", [userAddress, url])
-          console.log("contract call result", abc);
-        }
-      }}
-    >
-      Mint my data identity
-    </Web3Button>
-              <button onClick={handleMint} className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600">
-                
-              </button>
+              {contract_address && userAddress && <Web3Button
+                connectWallet={{
+                  btnTitle: "Connect your wallet!",
+                }}
+                contractAddress={contract_address || ''}
+                theme={"light"}
+                style={{ "background": "rgb(168 85 247 / var(--tw-bg-opacity)) !important" }}
+                className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600"
+                contractAbi={contractABI} // Your smart contract address
+                action={async (contract) => {
+                  if (userAddress) {
+                    try {
+                      console.log("Starting minting process for user:", userAddress);
+                      const url = await handleMint();
+                      console.log("URL from handleMint:", url);
+                      if (url) {
+                        // Get the current gas price
+                        // const gasPrice = await contract.getProvider().getGasPrice();
+
+                        // // Increase the gas price by 20% (you can adjust this percentage)
+                        // const increasedGasPrice = gasPrice.mul(120).div(100);
+
+                        // // Estimate gas limit
+                        // const gasLimit = await contract.estimateGas.safeMint(userAddress, url);
+
+                        // // Increase gas limit by 20% to be safe
+                        // const increasedGasLimit = gasLimit.mul(120).div(100);
+
+                        const mintResult = await contract.call(
+                          "safeMint",
+                          [userAddress, url]
+                        );
+                        console.log("Minting result:", mintResult);
+                      } else {
+                        console.error("Failed to get URL from handleMint");
+                      }
+                    } catch (error) {
+                      console.error("Error in minting process:", error);
+                    }
+                  }
+                }}
+              >
+                Mint my data identity
+              </Web3Button>}
+
+
             </div>
           </li>
         </ol>
@@ -373,7 +403,7 @@ const ConnectRight = () => {
 }
 
 const Settings = ({ user }: User) => {
-  
+
 
   return (
     <div className="bg-gray-50">
