@@ -133,12 +133,12 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
         <div className=" rounded-[14px] md:rounded-[24px] p-5 bg-white flex flex-col justify-between min-h-[desiredMinHeight] backdrop-blur-md border border-white">
           {/* Header for card*/}
           <header className="flex items-center mt-3">
-            {card.urls.map((urls, index) => (
-              <div className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white">
+            {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
+              <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white">
                 <img
                   className={`absolute w-10 h-10 flex-none rounded-full border-white border-[3.5px] ml-4 fill-white stroke-current stroke-opacity-40`}
                   style={{ left: `${index * 1.3}rem` }}
-                  src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=40`}
+                  src={iconUrl}
                 />
               </div>
             ))}
@@ -190,7 +190,7 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
           )}
           <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-5">
             <>
-              {card.urls.map((urls) => (
+              {card.urls.slice(0, 4).map((urls) => (
                 <button
                   className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1 bg-gray-100"
                   onClick={() => handleOnClick(urls.url)}
@@ -207,6 +207,9 @@ export default function FeedCard({ card, user, handleCardDelete }: Card) {
                   </h3>
                 </button>
               ))}
+              {card.urls.length > 4 && (
+                <span className="text-sm text-gray-500">+{card.urls.length - 4} more</span>
+              )}
             </>
           </div>
           {/* Footer for feed card */}
