@@ -1,4 +1,3 @@
-import Feeds from '../profile/Feed/Feed'
 import ProfileV3 from '../ProfileV3/index'
 import useFetch from '../common/hooks/useFetch'
 import {
@@ -16,6 +15,7 @@ import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
 import { ReactComponent as Plus } from '../../assets/images/plus.svg'
 import { replaceSlugInURL } from '../utils/utils'
 import { BannerComponent } from './BannerComponent'
+import { Feeds } from '../profile/Feed/Feed'
 
 // Fetching User Full Data. [Static Cards, Published Cards, User]
 const GET_FULL_DATA = 'user/{slug}/published-cards/info'
@@ -106,12 +106,14 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
       {/* Published Cards Section */}
       <div className="flex w-full items-center mx-auto justify-center mt-5 bg-gray-50">
         <div className="w-[75%] grid">
+          {/* if user has published Cards then show Feeds */}
           {userFullData?.published_cards && userFullData?.published_cards?.length > 0 ? (
             <Feeds
               data={userFullData.published_cards}
               user={userFullData.user}
             />
           ) : (
+            // If user don't have any published cards then show CTA for publish Card.
             userFullData?.user && (
               <div className="relative h-full bg-gray-50 flex flex-col items-center">
                 <span className="w-full text-[32px] font-semibold text-gray-700">
