@@ -13,3 +13,8 @@ export function getVisitTime(visitTime: string): string {
     day: 'numeric'
   })
 }
+
+export function replaceSlugInURL(url: string, slug: string | undefined) {
+  const final_slug = slug || localStorage.getItem('slug') || ''
+  return url.replace('{slug}', final_slug)
+}
