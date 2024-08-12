@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import { convertEpochToISO } from '../../common/utils'
 import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL, updateCardTypeToRenderInAllCards } from '../../utils/utils'
 import { YTCardBody } from '../Feed/FeedCardBody/YTCardBody'
+import { YTCardForPublishCards } from './YTCardForPublishCards'
 
 const GET_USER_DETAIL = 'user/get-user/{slug}'
 const CREATE_PUBLISHED_CARDS = 'cards/published/{slug}'
@@ -297,21 +298,21 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 <div className="pt-5 px-0 w-full">
                   {/* CardType == DATA CARD */}
                   {activeCard.cardType == 'DataCard' && (
-                    <div className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between max-h-[264px] ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
+                    <div className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between gap-3 max-h-[264px] ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
                       {/* Body for YT card */}
                       {activeCard.cardTypeToRender == CardTypeToRender.YT && (
-                        <YTCardBody card={activeCard} />
+                        <YTCardForPublishCards card={activeCard} />
                       )}
 
                       {/* Header with favicons and date. */}
                       <header className="relative flex items-center">
                         {/* Map over all urls and show the favicon */}
-                        {activeCard.urls.map((urls, index) => (
-                          <div className="w-10 h-10 flex-none rounded-full border border-white border-spacing-4 fill-white">
+                        {[...new Set(activeCard.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
+                          <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border-spacing-4">
                             <img
-                              className="absolute w-10 h-10 flex-none rounded-full border-white border-2 fill-white"
+                              className={`absolute w-10 h-10 flex-none rounded-full border-white border-[3.5px] fill-white stroke-current stroke-opacity-40`}
                               style={{ left: `${index * 1.3}rem` }}
-                              src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=40`}
+                              src={iconUrl}
                             />
                           </div>
                         ))}

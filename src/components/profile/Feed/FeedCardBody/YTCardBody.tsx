@@ -1,8 +1,8 @@
-import { PendingCard, PublishedCard } from "../../../common/interface";
+import { PendingCard } from "../../../common/interface";
 import { extractThumbNailURL } from "../../../utils/utils";
 
 interface YTCardProps {
-    card: PublishedCard | PendingCard
+    card: PendingCard
 }
 
 interface ThumbnailProps {
