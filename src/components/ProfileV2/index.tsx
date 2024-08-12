@@ -3,7 +3,9 @@ import useFetch from '../common/hooks/useFetch'
 import {
   UserDataProps,
   fullUserData,
-  PendingCard
+  PendingCard,
+  PublishedCard,
+  CardTypeToRender
 } from '../common/interface'
 import { useState, useEffect, useContext } from 'react'
 import Modal from '../common/Modal'
@@ -16,6 +18,184 @@ import { ReactComponent as Plus } from '../../assets/images/plus.svg'
 import { replaceSlugInURL } from '../utils/utils'
 import { BannerComponent } from './BannerComponent'
 import { Feeds } from '../profile/Feed/Feed'
+
+// TODO: Remove this Dummy Cards when we get actual cards.
+const DummyYTCards: PublishedCard[] = [
+  // 4 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": "07 Aug 2024",
+    "id": "66b6c16e60f6a6a41aaf74b5",
+    "metadata": {
+      "activity": "researched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber",
+        "How Does This Keep Happening",
+        "This Delivery Guy is Built Different",
+        "Criminal Pulls Off a Big Brain Move"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9af",
+        "title": "How Does This Keep Happening",
+        "url": "https://youtu.be/UpVNh7zrFUs?si=fYkQLxJlQKlT3j9_"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9ag",
+        "title": "This Delivery Guy is Built Different",
+        "url": "https://youtu.be/rzLOP2ZIuyY?si=OoidzGtyHo1vh-JH"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9ah",
+        "title": "Criminal Pulls Off a Big Brain Move",
+        "url": "https://youtu.be/A01s-xbF3ZE?si=VINWv0twevSq8FAQ"
+      },
+    ]
+  },
+  // 3 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": "06 Aug 2024",
+    "id": "66b6c16e60f6a6a41aaf74b6",
+    "metadata": {
+      "activity": "watched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber",
+        "How Does This Keep Happening",
+        "This Delivery Guy is Built Different"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9af",
+        "title": "How Does This Keep Happening",
+        "url": "https://youtu.be/UpVNh7zrFUs?si=fYkQLxJlQKlT3j9_"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9ag",
+        "title": "This Delivery Guy is Built Different",
+        "url": "https://youtu.be/rzLOP2ZIuyY?si=OoidzGtyHo1vh-JH"
+      },
+    ]
+  },
+  // 2 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": "05 Aug 2024",
+    "id": "66b6c16e60f6a6a41aaf74b7",
+    "metadata": {
+      "activity": "watched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber",
+        "How Does This Keep Happening"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9af",
+        "title": "How Does This Keep Happening",
+        "url": "https://youtu.be/UpVNh7zrFUs?si=fYkQLxJlQKlT3j9_"
+      }
+    ]
+  },
+  // 1 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": "02 Aug 2024",
+    "id": "66b6c16e60f6a6a41aaf74b8",
+    "metadata": {
+      "activity": "watched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+      },
+    ]
+  }
+]
+
+const updateCardTypeToRenderInAllCards = (data: PublishedCard[]) => {
+  const updatedCards = data.map(cardItem => {
+    // Check if the card has URLs and if any URL includes 'youtu.be'
+    const isYouTube = cardItem.urls && cardItem.urls.some(url => url.url.includes('youtu.be'));
+
+    // Assign cardTypeToRender based on the check
+    return {
+      ...cardItem, // Spread the existing card properties
+      cardTypeToRender: isYouTube ? CardTypeToRender.YT : CardTypeToRender.DATA, // Assign type
+    };
+  });
+  return updatedCards;
+}
 
 // Fetching User Full Data. [Static Cards, Published Cards, User]
 const GET_FULL_DATA = 'user/{slug}/published-cards/info'
@@ -66,6 +246,9 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
           if (data) {
             console.log('User full Data : ', data, '\n-------------');
             setUserFullData(data);
+            // TODO: Remove this DummyCards Once we get actual ones.
+            data.published_cards.push(...DummyYTCards);
+            data.published_cards = updateCardTypeToRenderInAllCards(data.published_cards);
             // If isNotPublic then set the user's Data.
             if (!isPublic) {
               setUser(data.user)

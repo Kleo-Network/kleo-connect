@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import FeedCard from './FeedCard'
 import { UserData } from '../../constants/SignupData'
-import { PublishedCard } from '../../common/interface'
+import { CardTypeToRender, PublishedCard } from '../../common/interface'
 
 interface FeedProps {
   data: PublishedCard[]
@@ -29,9 +29,6 @@ export function Feeds({ data, user }: FeedProps) {
   const handleCardDelete = (id: string) => {
     setCards((cards) => cards.filter((card) => card.id !== id))
   }
-
-  console.log('uniqueCategories : ', uniqueCategories);
-  console.log('selected Category : ', selectedCategory);
 
   return (
     <div className="px-2 mb-4 flex flex-col items-center self-stretch">
@@ -76,6 +73,7 @@ export function Feeds({ data, user }: FeedProps) {
             handleCardDelete={handleCardDelete}
             card={cardData}
             user={user}
+            cardTypeToRender={cardData.cardTypeToRender || CardTypeToRender.DATA}
           />
         ))}
       </div>

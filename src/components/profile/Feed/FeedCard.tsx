@@ -3,13 +3,12 @@ import TextCardBody from './FeedCardBody/TextCardBody'
 import ImagecardBody from './FeedCardBody/ImageCardBody'
 import DataCardBody from './FeedCardBody/DataCardBody'
 import { UserData } from '../../constants/SignupData'
-import { PublishedCard } from '../../common/interface'
+import { CardTypeToRender, PublishedCard } from '../../common/interface'
 import useFetch, { FetchStatus } from '../../common/hooks/useFetch'
 import { useEffect, useState } from 'react'
 import Modal from '../../common/Modal'
 import Alert from '../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../assets/images/alert.svg'
-import { ReactComponent as Arrow } from '../../../assets/images/postArrow.svg'
 import { ReactComponent as Frame } from '../../../assets/images/backFrameDataCard.svg'
 import { ReactComponent as Hamburger } from '../../../assets/images/hamburgerDot.svg'
 import { ReactComponent as Pin } from '../../../assets/images/pin.svg'
@@ -19,9 +18,10 @@ interface Card {
   handleCardDelete: (id: string) => void
   card: PublishedCard
   user: UserData
+  cardTypeToRender: CardTypeToRender
 }
 
-export default function FeedCard({ card, user, handleCardDelete }: Card) {
+export default function FeedCard({ card, user, handleCardDelete, cardTypeToRender }: Card) {
   const {
     data: deleted,
     fetchData: deletePublishedCard,
