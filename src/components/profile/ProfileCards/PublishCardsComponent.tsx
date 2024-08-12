@@ -15,13 +15,180 @@ import ProgressBar from './ProgressBar'
 import VisitChartCard from './VisitChartCard'
 import { useNavigate } from 'react-router-dom'
 import { convertEpochToISO } from '../../common/utils'
-import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL } from '../../utils/utils'
+import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL, updateCardTypeToRenderInAllCards } from '../../utils/utils'
 import { YTCardBody } from '../Feed/FeedCardBody/YTCardBody'
 
 const GET_USER_DETAIL = 'user/get-user/{slug}'
 const CREATE_PUBLISHED_CARDS = 'cards/published/{slug}'
 const GET_PENDING_CARDS = 'cards/pending/{slug}'
 const PROFILE_PAGE_ROUTE = '/profileV2/{slug}';
+
+
+export const DummyYTCards: PendingCard[] = [
+  // 4 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": 1723398081,
+    "id": "66b6c16e60f6a6a41aaf74b5",
+    "metadata": {
+      "activity": "researched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber",
+        "How Does This Keep Happening",
+        "This Delivery Guy is Built Different",
+        "Criminal Pulls Off a Big Brain Move"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://www.youtube.com/watch?v=uDcb12CqoR4"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9af",
+        "title": "How Does This Keep Happening",
+        "url": "https://www.youtube.com/watch?v=W3xkS9lgYcw"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9ag",
+        "title": "This Delivery Guy is Built Different",
+        "url": "https://www.youtube.com/watch?v=GDRyigWvUFg"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9ah",
+        "title": "Criminal Pulls Off a Big Brain Move",
+        "url": "https://www.youtube.com/watch?v=99GVtAcV70c"
+      },
+    ]
+  },
+  // 3 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": 1723398081,
+    "id": "66b6c16e60f6a6a41aaf74b6",
+    "metadata": {
+      "activity": "watched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber",
+        "How Does This Keep Happening",
+        "This Delivery Guy is Built Different"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://www.youtube.com/watch?v=W3xkS9lgYcw"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9af",
+        "title": "How Does This Keep Happening",
+        "url": "https://www.youtube.com/watch?v=uDcb12CqoR4"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9ag",
+        "title": "This Delivery Guy is Built Different",
+        "url": "https://www.youtube.com/watch?v=GDRyigWvUFg"
+      },
+    ]
+  },
+  // 2 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": 1723398081,
+    "id": "66b6c16e60f6a6a41aaf74b7",
+    "metadata": {
+      "activity": "watched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber",
+        "How Does This Keep Happening"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://www.youtube.com/watch?v=GDRyigWvUFg"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9af",
+        "title": "How Does This Keep Happening",
+        "url": "https://www.youtube.com/watch?v=W3xkS9lgYcw"
+      }
+    ]
+  },
+  // 1 Links
+  {
+    "cardType": "DataCard",
+    "category": "Media & Communication",
+    "content": "Watched Daily Dose of Internet videos.",
+    "date": 1723398081,
+    "id": "66b6c16e60f6a6a41aaf74b8",
+    "metadata": {
+      "activity": "watched",
+      "description": "Watched Daily Dose of Internet videos.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "Never Prank Your Barber"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fe",
+        "title": "Never Prank Your Barber",
+        "url": "https://www.youtube.com/watch?v=99GVtAcV70c"
+      },
+    ]
+  }
+]
+
+// NOTE: Updating CustomCardTypeToRender. For YT based on url.
+
 
 export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
   const navigate = useNavigate()
@@ -54,6 +221,8 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
         fetchPendingCards(replaceSlugInURL(GET_PENDING_CARDS), {
           onSuccessfulFetch(data) {
             if (data) {
+              data.push(...DummyYTCards);
+              data = updateCardTypeToRenderInAllCards(data) as PendingCard[];
               console.log('Prince na Pending Cards : ', data);
               setPendingCards(data)
               setActiveCardsList(data)
@@ -128,7 +297,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 <div className="pt-5 px-0 w-full">
                   {/* CardType == DATA CARD */}
                   {activeCard.cardType == 'DataCard' && (
-                    <div className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
+                    <div className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between max-h-[264px] ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
                       {/* Body for YT card */}
                       {activeCard.cardTypeToRender == CardTypeToRender.YT && (
                         <YTCardBody card={activeCard} />
@@ -160,9 +329,8 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                         </blockquote>
                       </div>
 
-                      {/* TODO: Add Conditional rendering here for DataCards only. */}
                       {/* URL pills in bottom */}
-                      <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-4">
+                      {(activeCard.cardTypeToRender == CardTypeToRender.DATA) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-4">
                         <>
                           {activeCard.urls.map((urls) => (
                             <button
@@ -183,7 +351,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                             </button>
                           ))}
                         </>
-                      </div>
+                      </div>}
                     </div>
                   )}
 

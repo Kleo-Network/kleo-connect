@@ -1,3 +1,5 @@
+import { CardTypeToRender, PendingCard, PublishedCard } from "../common/interface"
+
 export function getKeyByValue<T extends string>(
   enumObj: Record<string, T>,
   value: T
@@ -95,4 +97,18 @@ export function formatDate (epoch: number): string {
   return `${day} ${new Date(epoch * 1000).toLocaleDateString('en-US', {
     month: 'long'
   })} ${year}`
+}
+
+export function updateCardTypeToRenderInAllCards (data: PendingCard[] | PublishedCard[]) {
+  const updatedCards = data.map(cardItem => {
+    // Check if the card has URLs and if any URL includes 'youtu.be' or 'youtube.com'
+    const isYouTube = cardItem.urls && cardItem.urls.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'));
+
+    // Assign cardTypeToRender based on the check
+    return {
+      ...cardItem, // Spread the existing card properties
+      cardTypeToRender: isYouTube ? CardTypeToRender.YT : CardTypeToRender.DATA, // Assign type
+    };
+  });
+  return updatedCards;
 }

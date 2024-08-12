@@ -15,7 +15,7 @@ import Settings from '../profile/Settings'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
 import { ReactComponent as Plus } from '../../assets/images/plus.svg'
-import { replaceSlugInURL } from '../utils/utils'
+import { replaceSlugInURL, updateCardTypeToRenderInAllCards } from '../utils/utils'
 import { BannerComponent } from './BannerComponent'
 import { Feeds } from '../profile/Feed/Feed'
 
@@ -183,21 +183,6 @@ const DummyYTCards: PublishedCard[] = [
   }
 ]
 
-// NOTE: Updating CustomCardTypeToRender. For YT based on url.
-const updateCardTypeToRenderInAllCards = (data: PublishedCard[]) => {
-  const updatedCards = data.map(cardItem => {
-    // Check if the card has URLs and if any URL includes 'youtu.be' or 'youtube.com'
-    const isYouTube = cardItem.urls && cardItem.urls.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'));
-
-    // Assign cardTypeToRender based on the check
-    return {
-      ...cardItem, // Spread the existing card properties
-      cardTypeToRender: isYouTube ? CardTypeToRender.YT : CardTypeToRender.DATA, // Assign type
-    };
-  });
-  return updatedCards;
-}
-
 // Fetching User Full Data. [Static Cards, Published Cards, User]
 const GET_FULL_DATA = 'user/{slug}/published-cards/info'
 // Fetching Pending Cards.
@@ -249,7 +234,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
             setUserFullData(data);
             // TODO: Remove this DummyCards Once we get actual ones.
             data.published_cards.push(...DummyYTCards);
-            data.published_cards = updateCardTypeToRenderInAllCards(data.published_cards);
+            data.published_cards = updateCardTypeToRenderInAllCards(data.published_cards) as PublishedCard[];
             // If isNotPublic then set the user's Data.
             if (!isPublic) {
               setUser(data.user)
