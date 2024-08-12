@@ -51,22 +51,22 @@ const DummyYTCards: PublishedCard[] = [
       {
         "id": "66b3e42df7ec5d4fd769f6fe",
         "title": "Never Prank Your Barber",
-        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+        "url": "https://www.youtube.com/watch?v=uDcb12CqoR4"
       },
       {
         "id": "66b3e47ef7ec5d4fd769f9af",
         "title": "How Does This Keep Happening",
-        "url": "https://youtu.be/UpVNh7zrFUs?si=fYkQLxJlQKlT3j9_"
+        "url": "https://www.youtube.com/watch?v=W3xkS9lgYcw"
       },
       {
         "id": "66b3e47ef7ec5d4fd769f9ag",
         "title": "This Delivery Guy is Built Different",
-        "url": "https://youtu.be/rzLOP2ZIuyY?si=OoidzGtyHo1vh-JH"
+        "url": "https://www.youtube.com/watch?v=GDRyigWvUFg"
       },
       {
         "id": "66b3e47ef7ec5d4fd769f9ah",
         "title": "Criminal Pulls Off a Big Brain Move",
-        "url": "https://youtu.be/A01s-xbF3ZE?si=VINWv0twevSq8FAQ"
+        "url": "https://www.youtube.com/watch?v=99GVtAcV70c"
       },
     ]
   },
@@ -99,17 +99,17 @@ const DummyYTCards: PublishedCard[] = [
       {
         "id": "66b3e42df7ec5d4fd769f6fe",
         "title": "Never Prank Your Barber",
-        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+        "url": "https://www.youtube.com/watch?v=W3xkS9lgYcw"
       },
       {
         "id": "66b3e47ef7ec5d4fd769f9af",
         "title": "How Does This Keep Happening",
-        "url": "https://youtu.be/UpVNh7zrFUs?si=fYkQLxJlQKlT3j9_"
+        "url": "https://www.youtube.com/watch?v=uDcb12CqoR4"
       },
       {
         "id": "66b3e47ef7ec5d4fd769f9ag",
         "title": "This Delivery Guy is Built Different",
-        "url": "https://youtu.be/rzLOP2ZIuyY?si=OoidzGtyHo1vh-JH"
+        "url": "https://www.youtube.com/watch?v=GDRyigWvUFg"
       },
     ]
   },
@@ -141,12 +141,12 @@ const DummyYTCards: PublishedCard[] = [
       {
         "id": "66b3e42df7ec5d4fd769f6fe",
         "title": "Never Prank Your Barber",
-        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+        "url": "https://www.youtube.com/watch?v=GDRyigWvUFg"
       },
       {
         "id": "66b3e47ef7ec5d4fd769f9af",
         "title": "How Does This Keep Happening",
-        "url": "https://youtu.be/UpVNh7zrFUs?si=fYkQLxJlQKlT3j9_"
+        "url": "https://www.youtube.com/watch?v=W3xkS9lgYcw"
       }
     ]
   },
@@ -177,16 +177,17 @@ const DummyYTCards: PublishedCard[] = [
       {
         "id": "66b3e42df7ec5d4fd769f6fe",
         "title": "Never Prank Your Barber",
-        "url": "https://youtu.be/w_IwHcaT1h4?si=G9CqvTE2s1UjbZEP"
+        "url": "https://www.youtube.com/watch?v=99GVtAcV70c"
       },
     ]
   }
 ]
 
+// NOTE: Updating CustomCardTypeToRender. For YT based on url.
 const updateCardTypeToRenderInAllCards = (data: PublishedCard[]) => {
   const updatedCards = data.map(cardItem => {
-    // Check if the card has URLs and if any URL includes 'youtu.be'
-    const isYouTube = cardItem.urls && cardItem.urls.some(url => url.url.includes('youtu.be'));
+    // Check if the card has URLs and if any URL includes 'youtu.be' or 'youtube.com'
+    const isYouTube = cardItem.urls && cardItem.urls.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'));
 
     // Assign cardTypeToRender based on the check
     return {

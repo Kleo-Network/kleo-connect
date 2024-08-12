@@ -13,45 +13,34 @@ import { ReactComponent as Frame } from '../../../assets/images/backFrameDataCar
 import { ReactComponent as Hamburger } from '../../../assets/images/hamburgerDot.svg'
 import { ReactComponent as Pin } from '../../../assets/images/pin.svg'
 import VisitChartCard from './FeedCardBody/VisitChartCard'
+import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL } from '../../utils/utils'
+import { YTCardBody } from './FeedCardBody/YTCardBody'
 
 interface Card {
   handleCardDelete: (id: string) => void
   card: PublishedCard
   user: UserData
   cardTypeToRender: CardTypeToRender
-}
+};
+
+const DELETE_PUBLISHED_CARD = 'cards/published/{slug}';
 
 export default function FeedCard({ card, user, handleCardDelete, cardTypeToRender }: Card) {
-  const {
-    data: deleted,
-    fetchData: deletePublishedCard,
-    status: deleteStatus
-  } = useFetch<any>()
+
   const [isPublic, setIsPublic] = useState<boolean>(true)
-  const DELETE_PUBLISHED_CARD = 'cards/published/{slug}'
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
-  const [tumble, setTumble] = useState(false)
 
+  // Check if the user.slug matches the one in localStorage, and set the isPublic flag accordingly.
   useEffect(() => {
-    setTumble(true)
-  }, [])
+    const storedSlug = localStorage.getItem('slug');
+    setIsPublic(storedSlug !== user.slug);
+  }, []);
 
-  function getDeleteCardUrl() {
-    return DELETE_PUBLISHED_CARD.replace('{slug}', user.slug)
-  }
-
-  useEffect(() => {
-    const slug_from_local_storage = localStorage.getItem('slug')
-    if (user.slug == slug_from_local_storage) {
-      setIsPublic(false)
-    } else {
-      setIsPublic(true)
-    }
-  }, [])
-
+  // DELETE api Call for deleting the card.
+  const { fetchData: deletePublishedCard, status: deleteStatus } = useFetch<any>()
   const handleDeleteCard = (id: string) => {
-    deletePublishedCard(getDeleteCardUrl(), {
+    deletePublishedCard(replaceSlugInURL(DELETE_PUBLISHED_CARD, user.slug), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -60,6 +49,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
         id: id
       }),
       onSuccessfulFetch: () => {
+        // Tells the parent component that card with `id` has been successfully deleted.
         handleCardDelete(id)
         setIsModalOpen(false)
         setShowOptions(false)
@@ -67,72 +57,28 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
     })
   }
 
-  const handleOnClick = (url: string) => {
-    window.open(url, '_blank')
-  }
+  // Open The URL passed in new window.
+  const handleOnClick = (url: string) => window.open(url, '_blank');
 
+  // Disable flags for showOptions and ModelOpen when close model.
   const handleModelClose = () => {
     setIsModalOpen(false)
     setShowOptions(false)
   }
 
-  const getDaysAgo = (date: string) => {
-    const givenDate = new Date(date)
-    const currentDate = new Date()
-    const differenceInTime = currentDate - givenDate
-    const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24))
-
-    if (differenceInDays === 0) {
-      return 'Today'
-    } else if (differenceInDays === 1) {
-      return '1 day ago'
-    } else if (differenceInDays <= 30) {
-      return `${differenceInDays} days ago`
-    } else {
-      return `${givenDate.toLocaleString('default', {
-        month: 'long'
-      })} ${givenDate.getDate()}, ${givenDate.getFullYear()}`
-    }
-  }
-
-  function parseUrl(url: string): string {
-    // Ensure the URL starts with http:// or https://
-    if (!/^https?:\/\//.test(url)) {
-      url = 'http://' + url
-    }
-
-    // Parse the URL
-    const parsedUrl = new URL(url)
-    const hostParts = parsedUrl.hostname.split('.')
-    const n = hostParts.length
-    let domain = ''
-
-    // Determine the domain and domainX
-    if (n >= 2) {
-      if (n === 4 || (n === 3 && hostParts[n - 2].length <= 3)) {
-        domain =
-          hostParts[n - 3] + '.' + hostParts[n - 2] + '.' + hostParts[n - 1]
-      } else {
-        domain = hostParts[n - 2] + '.' + hostParts[n - 1]
-      }
-    }
-
-    return domain
-  }
-
-  const getDateAndMonth = (date: number) => {
-    const givenDate = new Date(date * 1000)
-    return `${givenDate.getDate()} ${givenDate.toLocaleString('default', {
-      month: 'long'
-    })}`
-  }
-
   return (
     <>
+      {/* CardType = DataCard */}
       {card.cardType == 'DataCard' && (
-        <div className=" rounded-[14px] md:rounded-[24px] p-5 bg-white flex flex-col justify-between min-h-[desiredMinHeight] backdrop-blur-md border border-white">
-          {/* Header for card*/}
+        <div className={`rounded-[14px] md:rounded-[24px] p-5 flex flex-col justify-between min-h-[desiredMinHeight] backdrop-blur-md border border-white ${card.cardTypeToRender === CardTypeToRender.YT ? 'bg-[#293056]' : 'bg-white'}`}>
+          {/* Body for YT card */}
+          {card.cardTypeToRender == CardTypeToRender.YT && (
+            <YTCardBody card={card} />
+          )}
+
+          {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
           <header className="flex items-center mt-3">
+            {/* Looping over all urls, taking favicon and showing in top-left part. */}
             {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
               <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white">
                 <img
@@ -142,12 +88,15 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
                 />
               </div>
             ))}
+
+            {/* Displaying DaysAgo string on right side */}
             <div className="flex flex-row ml-auto items-center">
-              {/* <Arrow className="w-6 h-4 mr-1" /> */}
               <div className="flex font-inter text-gray-400 font-normal">
                 {getDaysAgo(card.date)}
               </div>
             </div>
+
+            {/* If not public then show options for DeleteCard and PinCard */}
             {!isPublic && (
               <div className="relative">
                 <button
@@ -184,11 +133,12 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
               </div>
             )}
           </header>
-          {/* Body for feed card */}
+
+          {/* Body for Text card */}
           {card.cardType == 'DataCard' && (
-            <TextCardBody textData={card.content} />
+            <TextCardBody textData={card.content} isYTCard={card.cardTypeToRender === CardTypeToRender.YT} />
           )}
-          <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-5">
+          {(card.cardTypeToRender == CardTypeToRender.DATA) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-5">
             <>
               {card.urls.slice(0, 4).map((urls) => (
                 <button
@@ -211,9 +161,10 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
                 <span className="text-sm text-gray-500">+{card.urls.length - 4} more</span>
               )}
             </>
-          </div>
+          </div>}
+
           {/* Footer for feed card */}
-          <footer>
+          {card.cardTypeToRender == CardTypeToRender.DATA && <footer>
             <Modal
               isOpen={isModalOpen}
               hideCloseButton={deleteStatus === FetchStatus.LOADING}
@@ -272,10 +223,11 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
                 </div>
               </div>
             </Modal>
-          </footer>
+          </footer>}
         </div>
       )}
 
+      {/* CardType = VisitChartCard TODO: Need to be updated.*/}
       {card.cardType == 'VisitChartCard' && (
         <VisitChartCard
           data={card.metadata.activity}
@@ -285,6 +237,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
         />
       )}
 
+      {/* CardType = DomainVisitCard TODO: Need to be updated. */}
       {card.cardType == 'DomainVisitCard' && (
         <div className=" rounded-[14px] md:rounded-[24px] p-3 px-5 bg-[#42307D]  flex flex-col justify-between min-h-[desiredMinHeight] border border-white border-opacity-25 overflow-hidden bg-gradient-to-r from-violet-950 to-violet-900">
           {/* Header for card*/}
