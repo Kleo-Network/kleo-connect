@@ -133,4 +133,5 @@ export interface PendingCard {
   minted: boolean
   tags: string[]
   urls: PublishedCardUrls[]
+  cardTypeToRender?: CardTypeToRender
 }

@@ -34,6 +34,10 @@ module.exports = {
   },
   theme: {
     extend: {
+      flexGrow: {
+        2: '2',
+        3: '3'
+      },
       fontFamily: {
         inter: ['inter', 'sans-serif'],
         shoreline: ['shoreline', 'sans-serif']
@@ -60,6 +64,7 @@ module.exports = {
         'gray-subheader': '#98A2B3',
         'gray-background': '#F2F4F7',
         'gray-row-dark': '#333F53',
+        'yt-card': '#293056',
         'primary-btn': {
           100: '#D8B4FE',
           200: '#C084F5',

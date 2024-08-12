@@ -14,7 +14,7 @@ export function getVisitTime(visitTime: string): string {
   })
 }
 
-export function replaceSlugInURL(url: string, slug: string | undefined) {
+export function replaceSlugInURL(url: string, slug?: string) {
   const final_slug = slug || localStorage.getItem('slug') || ''
   return url.replace('{slug}', final_slug)
 }
@@ -22,7 +22,7 @@ export function replaceSlugInURL(url: string, slug: string | undefined) {
 // Constant for milliseconds in a day
 const MILLISECONDS_IN_A_DAY = 1000 * 3600 * 24;
 
-export function getDaysAgo(date: string, currentTimestamp: number = Date.now()): string {
+export function getDaysAgo(date: string | number, currentTimestamp: number = Date.now()): string {
   const givenDate = new Date(date);
   const differenceInTime = currentTimestamp - givenDate.getTime(); // date is already a timestamp
   const differenceInDays = Math.floor(differenceInTime / MILLISECONDS_IN_A_DAY);
@@ -84,4 +84,15 @@ export function parseUrl(url: string): string {
     console.error('Invalid URL:', url, error);
     return ''; // Return an empty string or handle as needed
   }
+}
+
+export function formatDate (epoch: number): string {
+  const date = new Date(epoch * 1000) // Convert epoch to milliseconds
+
+  const day = String(date.getDate()).padStart(2, '0') // Ensure two digits for day
+  const year = date.getFullYear()
+
+  return `${day} ${new Date(epoch * 1000).toLocaleDateString('en-US', {
+    month: 'long'
+  })} ${year}`
 }

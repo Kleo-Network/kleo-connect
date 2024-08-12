@@ -7,7 +7,7 @@ import { ReactComponent as BackFrame } from '../../../assets/images/backFrameDat
 import { ReactComponent as Token } from '../../../assets/images/KleoToken.svg'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
 import CountdownTimer from './countdown'
-import { PendingCard, UserData, UserDataProps } from '../../common/interface'
+import { CardTypeToRender, PendingCard, UserData, UserDataProps } from '../../common/interface'
 import useFetch from '../../common/hooks/useFetch'
 import DataCardBody from '../Feed/FeedCardBody/DataCardBody'
 import PendingVisitChartCard from '../Feed/FeedCardBody/PendingVisitChartCard'
@@ -15,33 +15,26 @@ import ProgressBar from './ProgressBar'
 import VisitChartCard from './VisitChartCard'
 import { useNavigate } from 'react-router-dom'
 import { convertEpochToISO } from '../../common/utils'
+import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL } from '../../utils/utils'
+import { YTCardBody } from '../Feed/FeedCardBody/YTCardBody'
+
+const GET_USER_DETAIL = 'user/get-user/{slug}'
+const CREATE_PUBLISHED_CARDS = 'cards/published/{slug}'
+const GET_PENDING_CARDS = 'cards/pending/{slug}'
+const PROFILE_PAGE_ROUTE = '/profileV2/{slug}';
 
 export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
-  const context = useAuthContext()
-  const [totalCardCount, setTotalCardCount] = useState(0)
   const navigate = useNavigate()
+  const [pendingCards, setPendingCards] = useState<PendingCard[]>([])
+  const [activeCardsList, setActiveCardsList] = useState<PendingCard[]>([])
+  const [activeCard, setActiveCard] = useState<PendingCard>(activeCardsList[0])
+  const [totalCardCount, setTotalCardCount] = useState(0)
 
-  function getSlug(): string {
-    const slug = localStorage.getItem('slug')
-    if (slug) {
-      return slug
-    } else {
-      return ''
-    }
-  }
-
-  // to fetch user data
-  const GET_USER_DETAIL = 'user/get-user/{slug}'
+  // Fetch User Data.
   const { fetchData: fetchUserData } = useFetch<UserData>()
-
-  function getUserDetails() {
-    const slug = getSlug()
-    return GET_USER_DETAIL.replace('{slug}', slug)
-  }
-
   useEffect(() => {
     try {
-      fetchUserData(getUserDetails(), {
+      fetchUserData(replaceSlugInURL(GET_USER_DETAIL), {
         onSuccessfulFetch(data) {
           if (data) {
             setUser(data)
@@ -51,52 +44,22 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
     } catch (error) {
       console.error('Error fetching data:', error)
     }
-  }, [])
+  }, []);
 
-  const formatDate = (epoch: number): string => {
-    const date = new Date(epoch * 1000) // Convert epoch to milliseconds
-
-    const day = String(date.getDate()).padStart(2, '0') // Ensure two digits for day
-    const year = date.getFullYear()
-
-    return `${day} ${new Date(epoch * 1000).toLocaleDateString('en-US', {
-      month: 'long'
-    })} ${year}`
-  }
-
-  // to fetch pending cards
-  const [cards, setCards] = useState<PendingCard[]>([])
-  const [activeCardList, setActiveCardList] = useState<PendingCard[]>([])
-  const [activeCard, setActiveCard] = useState<PendingCard>(activeCardList[0])
-  const [selectedDate, setSelectedDate] = useState<string>(
-    null as unknown as string
-  )
-  const GET_CARD_DETAIL = 'cards/pending/{slug}'
-  const { fetchData: fetchPendingCardData } = useFetch<PendingCard[]>()
-  const { fetchData: managePendingCardCreation } = useFetch<any>()
-  const CREATE_PUBLISHED_CARDS = 'cards/published/{slug}'
-
-  function createPendingCard() {
-    const slug = getSlug()
-    return CREATE_PUBLISHED_CARDS.replace('{slug}', slug)
-  }
-
-  function getPendingCardDetails() {
-    const slug = getSlug()
-    return GET_CARD_DETAIL.replace('{slug}', slug)
-  }
-
+  // Fetch Pending Cards.
+  const { fetchData: fetchPendingCards } = useFetch<PendingCard[]>()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetchPendingCardData(getPendingCardDetails(), {
+        fetchPendingCards(replaceSlugInURL(GET_PENDING_CARDS), {
           onSuccessfulFetch(data) {
             if (data) {
-              setCards(data)
-              setActiveCardList(data)
+              console.log('Prince na Pending Cards : ', data);
+              setPendingCards(data)
+              setActiveCardsList(data)
               setActiveCard(data[0])
-              setTotalCardCount(data.length)
-              ;(window as any).updateCounter((data as PendingCard[]).length)
+              setTotalCardCount(data.length);
+              (window as any).updateCounter((data as PendingCard[]).length)
             }
           }
         })
@@ -105,94 +68,16 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
       }
     }
     fetchData()
-  }, [])
+  }, []);
 
-  const getDateAndMonth = (date: number) => {
-    const givenDate = new Date(date * 1000)
-    return `${givenDate.getDate()} ${givenDate.toLocaleString('default', {
-      month: 'long'
-    })}`
-  }
-
-  const filterCards = (selectedDate: string) => {
-    const filteredCards = cards.filter((card) => {
-      if (!selectedDate) {
-        return true // Show all cards if no date is selected
-      }
-      return formatDate(card.date) == selectedDate
-    })
-    setActiveCardList(filteredCards)
-    setActiveCard(filteredCards[0])
-  }
-
-  function goToProfile() {
-    navigate(`/profileV2/${user.slug}`)
-  }
-
-  const getLastFourDates = (cards: PendingCard[]) => {
-    const uniqueDates = new Set(cards.map((card) => formatDate(card.date)))
-    const datesArray = Array.from(uniqueDates)
-    return datesArray.slice(0, 4) // Get the first 4 elements
-  }
-
-  const getDaysAgo = (date: number) => {
-    const givenDate = new Date(date * 1000)
-    const givenDateNum: number = new Date(date).getTime()
-    const currentDate: number = new Date().getTime()
-    const differenceInTime = currentDate - givenDateNum
-    const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24))
-
-    if (differenceInDays === 0) {
-      return 'Today'
-    } else if (differenceInDays === 1) {
-      return '1 day ago'
-    } else if (differenceInDays <= 30) {
-      return `${differenceInDays} days ago`
-    } else {
-      return `${givenDate.toLocaleString('default', {
-        month: 'long'
-      })} ${givenDate.getDate()}, ${givenDate.getFullYear()}`
-    }
-  }
-
-  function parseUrl(url: string): string {
-    // Ensure the URL starts with http:// or https://
-    if (!/^https?:\/\//.test(url)) {
-      url = 'http://' + url
-    }
-
-    // Parse the URL
-    const parsedUrl = new URL(url)
-    const hostParts = parsedUrl.hostname.split('.')
-    const n = hostParts.length
-    let domain = ''
-
-    // Determine the domain and domainX
-    if (n >= 2) {
-      if (n === 4 || (n === 3 && hostParts[n - 2].length <= 3)) {
-        domain =
-          hostParts[n - 3] + '.' + hostParts[n - 2] + '.' + hostParts[n - 1]
-      } else {
-        domain = hostParts[n - 2] + '.' + hostParts[n - 1]
-      }
-    }
-
-    return domain
-  }
-
-  const availableDates = getLastFourDates(cards)
-
-  const handleOnClick = (url: string) => {
-    window.open(url, '_blank')
-  }
-
+  // Remove Cards.
+  const { fetchData: managePendingCardCreation } = useFetch<any>()
   const removeCard = (id: string, hasToPublished: boolean) => {
-    console.log(id)
     if (hasToPublished) {
       user.profile_metadata.kleo_points++
     }
 
-    managePendingCardCreation(createPendingCard(), {
+    managePendingCardCreation(replaceSlugInURL(CREATE_PUBLISHED_CARDS), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -203,22 +88,22 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
       })
     })
 
-    setCards((cards) => cards.filter((card) => card.id !== id))
-    setActiveCardList((activeCardList) =>
-      activeCardList.filter((card) => card.id !== id)
-    )
-    const active = activeCardList.filter((card) => card.id !== id)[0]
-    setActiveCard(active)
-    ;(window as any).updateCounter(cards.length - 1)
+    // Remove selected Card from PendingCards and ActiveCards.
+    setPendingCards((pendingCards) => pendingCards.filter((card) => card.id !== id))
+    setActiveCardsList((activeCardsList) => activeCardsList.filter((card) => card.id !== id))
+    // Set Active Card to first card from remaining ActiveCards.
+    const activeCard = activeCardsList.filter((card) => card.id !== id)[0]
+    setActiveCard(activeCard);
+    (window as any).updateCounter(pendingCards.length - 1);
   }
 
-  const user1 =
-    'https://cdn.midjourney.com/bb411caf-06cd-4343-93e1-dfa1e1945a30/0_3.webp'
+  // Open The URL passed in new window.
+  const handleOnClick = (url: string) => window.open(url, '_blank');
 
   return (
     <div className="w-full h-full rounded-2xl p-6">
       <>
-        {activeCardList.length > 0 ? (
+        {activeCardsList.length > 0 ? (
           <div className="flex flex-col justify-between h-full">
             <div className="flex w-full h-[400px] bg-gray-100 rounded-2xl p-4 h-max-[400px]">
               <div className="flex flex-col justify-between items-center min-w-[450px] w-full h-full">
@@ -243,7 +128,12 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 <div className="pt-5 px-0 w-full">
                   {/* CardType == DATA CARD */}
                   {activeCard.cardType == 'DataCard' && (
-                    <div className="bg-white rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between">
+                    <div className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
+                      {/* Body for YT card */}
+                      {activeCard.cardTypeToRender == CardTypeToRender.YT && (
+                        <YTCardBody card={activeCard} />
+                      )}
+
                       {/* Header with favicons and date. */}
                       <header className="relative flex items-center">
                         {/* Map over all urls and show the favicon */}
@@ -265,11 +155,12 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
 
                       {/* Card Content */}
                       <div className="flex flex-col justify-center mt-1">
-                        <blockquote className="text-gray-600 text-base font-normal">
+                        <blockquote className={`text-base font-normal ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'text-white' : 'text-gray-600'}`}>
                           {activeCard.content}
                         </blockquote>
                       </div>
 
+                      {/* TODO: Add Conditional rendering here for DataCards only. */}
                       {/* URL pills in bottom */}
                       <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-4">
                         <>
@@ -285,7 +176,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
 
                               <h3 className="inline-block text-xs font-medium text-gray-700 overflow-hidden overflow-ellipsis line-clamp-1">
                                 {activeCard.urls.length > 2 &&
-                                urls.title.length > 10
+                                  urls.title.length > 10
                                   ? urls.title.trim().slice(0, 10) + '...'
                                   : urls.title.trim().slice(0, 25) + '...'}
                               </h3>
@@ -347,7 +238,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 <div className="mt-auto w-full">
                   <ProgressBar
                     progress={Math.floor(
-                      ((totalCardCount - cards.length) / totalCardCount) * 100
+                      ((totalCardCount - pendingCards.length) / totalCardCount) * 100
                     )}
                   />
                 </div>
@@ -414,7 +305,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
             </div>
             <div className="flex h-[92px] w-full p-4 justify-center">
               <button
-                onClick={() => goToProfile()}
+                onClick={() => navigate(replaceSlugInURL(PROFILE_PAGE_ROUTE, user.slug))}
                 className="flex justify-center items-center w-[318px] h-[60px] py-4 px-7 rounded-lg bg-violet-600 text-white font-semibold text-lg transition duration-200 ease-in-out hover:bg-violet-700"
               >
                 <img
