@@ -54,6 +54,7 @@ export interface PublishedCard {
   tags: string[]
   urls: PublishedCardUrls[]
   cardTypeToRender?: CardTypeToRender
+  stockImage?: string
 }
 export enum CardType {
   GitCard = 'GitCard',
@@ -134,4 +135,5 @@ export interface PendingCard {
   tags: string[]
   urls: PublishedCardUrls[]
   cardTypeToRender?: CardTypeToRender
+  stockImage?: string
 }

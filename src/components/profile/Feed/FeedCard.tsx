@@ -1,6 +1,5 @@
 import { ReactComponent as Bin } from '../../../assets/images/bin.svg'
 import TextCardBody from './FeedCardBody/TextCardBody'
-import ImagecardBody from './FeedCardBody/ImageCardBody'
 import DataCardBody from './FeedCardBody/DataCardBody'
 import { UserData } from '../../constants/SignupData'
 import { CardTypeToRender, PublishedCard } from '../../common/interface'
@@ -15,6 +14,7 @@ import { ReactComponent as Pin } from '../../../assets/images/pin.svg'
 import VisitChartCard from './FeedCardBody/VisitChartCard'
 import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL } from '../../utils/utils'
 import { YTCardBody } from './FeedCardBody/YTCardBody'
+import ImageCard from './FeedCardBody/ImageCard'
 
 interface Card {
   handleCardDelete: (id: string) => void
@@ -66,6 +66,60 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
     setShowOptions(false)
   }
 
+  const deleteModelBody = (
+    <div className="flex flex-col items-center justify-center p-6 max-w-[400px]">
+      <div className="rounded-full bg-red-100 p-2 border-8 border-red-50">
+        <Bin className="w-6 h-6 text-red-600 stroke-current" />
+      </div>
+      <span className="text-gray-900 text-lg font-medium mt-4">
+        Delete published card?
+      </span>
+      <span className="text-gray-500 text-sm font-regular mt-1 text-center">
+        Are you sure you want to delete the published card? This
+        action cannot be undone.
+      </span>
+      {deleteStatus === FetchStatus.LOADING && (
+        <div
+          className="inline-block m-1 h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        >
+          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+            Deleting...
+          </span>
+        </div>
+      )}
+      {deleteStatus === FetchStatus.ERROR && (
+        <div className="w-full my-4">
+          <Alert
+            type="danger"
+            message="Could not delete the data, please try again later."
+            icon={
+              <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
+            }
+          />
+        </div>
+      )}
+      <div className="flex flex-row self-stretch justify-center items-center gap-3 mt-6">
+        <button
+          onClick={handleModelClose}
+          disabled={deleteStatus === FetchStatus.LOADING}
+          className="px-4 py-2 self-stretch flex-1 rounded-lg shadow border border-gray-200 text-gray-700"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={() => handleDeleteCard(card.id)}
+          disabled={deleteStatus === FetchStatus.LOADING}
+          className="px-4 py-2 self-stretch flex-1 rounded-lg shadow bg-red-600 text-white"
+        >
+          {deleteStatus === FetchStatus.LOADING
+            ? 'Deleting...'
+            : 'Delete'}
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {/* CardType = DataCard */}
@@ -77,10 +131,10 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
           )}
 
           {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
-          <header className="flex items-center mt-3">
+          <header className="flex items-center mt-3 h-[46px]">
             {/* Looping over all urls, taking favicon and showing in top-left part. */}
             {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
-              <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white">
+              <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white flex items-center">
                 <img
                   className={`absolute w-10 h-10 flex-none rounded-full border-white border-[3.5px] ml-4 fill-white stroke-current stroke-opacity-40`}
                   style={{ left: `${index * 1.3}rem` }}
@@ -172,59 +226,30 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
             onClose={handleModelClose}
             fixWidth={true}
           >
-            <div className="flex flex-col items-center justify-center p-6 max-w-[400px]">
-              <div className="rounded-full bg-red-100 p-2 border-8 border-red-50">
-                <Bin className="w-6 h-6 text-red-600 stroke-current" />
-              </div>
-              <span className="text-gray-900 text-lg font-medium mt-4">
-                Delete published card?
-              </span>
-              <span className="text-gray-500 text-sm font-regular mt-1 text-center">
-                Are you sure you want to delete the published card? This
-                action cannot be undone.
-              </span>
-              {deleteStatus === FetchStatus.LOADING && (
-                <div
-                  className="inline-block m-1 h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                >
-                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                    Deleting...
-                  </span>
-                </div>
-              )}
-              {deleteStatus === FetchStatus.ERROR && (
-                <div className="w-full my-4">
-                  <Alert
-                    type="danger"
-                    message="Could not delete the data, please try again later."
-                    icon={
-                      <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
-                    }
-                  />
-                </div>
-              )}
-              <div className="flex flex-row self-stretch justify-center items-center gap-3 mt-6">
-                <button
-                  onClick={handleModelClose}
-                  disabled={deleteStatus === FetchStatus.LOADING}
-                  className="px-4 py-2 self-stretch flex-1 rounded-lg shadow border border-gray-200 text-gray-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDeleteCard(card.id)}
-                  disabled={deleteStatus === FetchStatus.LOADING}
-                  className="px-4 py-2 self-stretch flex-1 rounded-lg shadow bg-red-600 text-white"
-                >
-                  {deleteStatus === FetchStatus.LOADING
-                    ? 'Deleting...'
-                    : 'Delete'}
-                </button>
-              </div>
-            </div>
+            {deleteModelBody}
           </Modal>
         </div>
+      )}
+
+      {/* CardType = ImageCard */}
+      {card.cardType == 'ImageCard' && (
+        <ImageCard
+          card={card}
+          isPublic={isPublic}
+          showOptions={showOptions}
+          setShowOptions={setShowOptions}
+          setIsModalOpen={setIsModalOpen}
+        >
+          {/* Delete Card Modal */}
+          <Modal
+            isOpen={isModalOpen}
+            hideCloseButton={deleteStatus === FetchStatus.LOADING}
+            onClose={handleModelClose}
+            fixWidth={true}
+          >
+            {deleteModelBody}
+          </Modal>
+        </ImageCard>
       )}
 
       {/* CardType = VisitChartCard TODO: Need to be updated.*/}

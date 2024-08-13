@@ -99,16 +99,19 @@ export function formatDate (epoch: number): string {
   })} ${year}`
 }
 
-export function updateCardTypeToRenderInAllCards (data: PendingCard[] | PublishedCard[]) {
-  const updatedCards = data.map(cardItem => {
-    // Check if the card has URLs and if any URL includes 'youtu.be' or 'youtube.com'
-    const isYouTube = cardItem.urls && cardItem.urls.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'));
+export function updateCardTypeToRenderInAllCards(data: PendingCard[] | PublishedCard[]) {
+  return data.map(cardItem => {
+    // Determine the card type to render
+    const cardTypeToRender = cardItem.urls?.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'))
+      ? CardTypeToRender.YT
+      : cardItem.cardType === 'ImageCard'
+      ? CardTypeToRender.IMAGE
+      : CardTypeToRender.DATA;
 
-    // Assign cardTypeToRender based on the check
+    // Return the updated card item with the determined card type
     return {
-      ...cardItem, // Spread the existing card properties
-      cardTypeToRender: isYouTube ? CardTypeToRender.YT : CardTypeToRender.DATA, // Assign type
+      ...cardItem,
+      cardTypeToRender,
     };
   });
-  return updatedCards;
 }

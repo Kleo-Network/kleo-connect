@@ -182,6 +182,82 @@ const DummyYTCards: PublishedCard[] = [
     ]
   }
 ]
+const DummyImageCards: PublishedCard[] = [
+  {
+    "cardType": "ImageCard",
+    "stockImage": "https://s3-alpha-sig.figma.com/img/6254/b4dc/06fd0000548177cb2e134eae14c08b46?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Rl7gXTLt8zE-fJqqQU8Y2VjT9XIQCFMjGiu2vutJiNKuJACcgOk-YVqutLDfc1rXcvIYb0DCvbiYYTKijcXNcdlJ--poaa7IsB~1fIUrS9TKabsKiAfXxz9vJrhX-He6aRcT19-PpQEBOujPPQHzojHVUi19oILtpfE2Vtns66LzWhoScYgIeEqIL1ooZCIL-pJm9L43redAHnMewkvKswH5ZK5SwYjqXbyZ-xy2Su8LmgRfyQ4pX6ub0dAtdQfdYZZxl3m-50U-J~kongZSfZwzx0rosskiqXKD9p2lJwGcWkhaXSqxdf~tmEMg9JvPoT6PZ0-70toUWtzWc9JwZw__",
+    "category": "Media & Communication",
+    "content": "PrinceTesting researched methods to bulk export iCloud Notes, likely due to a need for data backup or migration.",
+    "date": "08 Aug 2024",
+    "id": "abcdefghijklm",
+    "metadata": {
+      "activity": "researched",
+      "description": "PrinceTesting researched methods to bulk export iCloud Notes, likely due to a need for data backup or migration.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "How to Bulk Export all of your iCloud Notes from Apple : r/applehelp",
+        "Notes “App” just Randomly Deleted Everything without a trace. How??? : r/applehelp"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fd",
+        "title": "Notes “App” just Randomly Deleted Everything without a trace. How??? : r/applehelp",
+        "url": "https://www.reddit.com/r/applehelp/comments/17b1xu4/notes_app_just_randomly_deleted_everything/"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9a1",
+        "title": "How to Bulk Export all of your iCloud Notes from Apple : r/applehelp",
+        "url": "https://www.reddit.com/r/applehelp/comments/wdtw2f/how_to_bulk_export_all_of_your_icloud_notes_from/"
+      }
+    ]
+  },
+  {
+    "cardType": "ImageCard",
+    "stockImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTa0UC7N0Wewy6S024ujjHi8p_RY1VYFXhbw&s",
+    "category": "Media & Communication",
+    "content": "Watched Game Of Thrones Season 6 Episode 5-9.",
+    "date": "05 Aug 2024",
+    "id": "abcdefghijklmnop",
+    "metadata": {
+      "activity": "researched",
+      "description": "PrinceTesting researched methods to bulk export iCloud Notes, likely due to a need for data backup or migration.",
+      "tags": [
+        "technology",
+        "support"
+      ],
+      "titles": [
+        "How to Bulk Export all of your iCloud Notes from Apple : r/applehelp",
+        "Notes “App” just Randomly Deleted Everything without a trace. How??? : r/applehelp"
+      ]
+    },
+    "minted": false,
+    "tags": [
+      "technology",
+      "support"
+    ],
+    "urls": [
+      {
+        "id": "66b3e42df7ec5d4fd769f6fd",
+        "title": "Notes “App” just Randomly Deleted Everything without a trace. How??? : r/applehelp",
+        "url": "https://www.reddit.com/r/applehelp/comments/17b1xu4/notes_app_just_randomly_deleted_everything/"
+      },
+      {
+        "id": "66b3e47ef7ec5d4fd769f9a1",
+        "title": "How to Bulk Export all of your iCloud Notes from Apple : r/applehelp",
+        "url": "https://www.reddit.com/r/applehelp/comments/wdtw2f/how_to_bulk_export_all_of_your_icloud_notes_from/"
+      }
+    ]
+  }
+]
 
 // Fetching User Full Data. [Static Cards, Published Cards, User]
 const GET_FULL_DATA = 'user/{slug}/published-cards/info'
@@ -233,7 +309,8 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
             console.log('User full Data : ', data, '\n-------------');
             setUserFullData(data);
             // TODO: Remove this DummyCards Once we get actual ones.
-            data.published_cards.push(...DummyYTCards);
+            // data.published_cards.push(...DummyYTCards);
+            data.published_cards.push(...DummyImageCards);
             data.published_cards = updateCardTypeToRenderInAllCards(data.published_cards) as PublishedCard[];
             // If isNotPublic then set the user's Data.
             if (!isPublic) {
