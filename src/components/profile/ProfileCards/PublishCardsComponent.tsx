@@ -1,6 +1,4 @@
 import { useState, useEffect, useContext } from 'react'
-import { useAuthContext } from '../../common/contexts/UserContext'
-import { useTransition, animated } from 'react-spring'
 import { ReactComponent as Tick } from '../../../assets/images/check.svg'
 import { ReactComponent as Cross } from '../../../assets/images/cross.svg'
 import { ReactComponent as BackFrame } from '../../../assets/images/backFrameDataCard.svg'
@@ -16,7 +14,6 @@ import VisitChartCard from './VisitChartCard'
 import { useNavigate } from 'react-router-dom'
 import { convertEpochToISO } from '../../common/utils'
 import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL, updateCardTypeToRenderInAllCards } from '../../utils/utils'
-import { YTCardBody } from '../Feed/FeedCardBody/YTCardBody'
 import { YTCardForPublishCards } from './YTCardForPublishCards'
 
 const GET_USER_DETAIL = 'user/get-user/{slug}'
@@ -187,9 +184,6 @@ export const DummyYTCards: PendingCard[] = [
     ]
   }
 ]
-
-// NOTE: Updating CustomCardTypeToRender. For YT based on url.
-
 
 export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
   const navigate = useNavigate()
