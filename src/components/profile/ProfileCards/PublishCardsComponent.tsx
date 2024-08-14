@@ -155,7 +155,9 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                       {/* Card Content */}
                       <div className="flex flex-col justify-center mt-1">
                         <blockquote className={`text-base font-normal ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'text-white' : 'text-gray-600'}`}>
-                          {activeCard.content}
+                          {activeCard.content.length > 50 && activeCard.cardTypeToRender === CardTypeToRender.YT
+                            ? `${activeCard.content.slice(0, 50)}...`
+                            : activeCard.content}
                         </blockquote>
                       </div>
 
