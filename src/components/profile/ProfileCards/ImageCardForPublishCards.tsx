@@ -11,7 +11,7 @@ export const ImageCardForPublishCards = ({ card }: ImageCardForPublishCardsProps
       className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between gap-3 max-h-[264px] bg-cover border border-white min-h-[150px]`}
       style={{ backgroundImage: `url(${card.stockImage})` }}>
       {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
-      <header className="relative flex items-center backdrop-blur-[2px] h-[46px]">
+      <header className="relative flex items-center backdrop-blur-sm h-[46px]">
         {/* Map over all urls and show the favicon */}
         {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
           <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border-spacing-4 flex items-center">
@@ -30,7 +30,7 @@ export const ImageCardForPublishCards = ({ card }: ImageCardForPublishCardsProps
       </header>
 
       {/* Card Content */}
-      <div className="flex flex-col justify-center mt-1 backdrop-blur-[2px]">
+      <div className="flex flex-col justify-center mt-1 backdrop-blur-sm">
         <blockquote className={`text-base font-normal text-white`}>
           {card.content}
         </blockquote>

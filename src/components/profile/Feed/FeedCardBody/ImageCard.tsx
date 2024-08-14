@@ -17,7 +17,7 @@ export default function ImageCard({ card, isPublic, showOptions, setShowOptions,
     <div className={`rounded-[14px] md:rounded-[24px] p-5 flex flex-col justify-between border border-white bg-cover min-h-[260px]`}
       style={{ backgroundImage: `url(${card.stockImage})` }}>
       {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
-      <header className="flex items-center mt-3 backdrop-blur-[2px] h-[46px] rounded-lg">
+      <header className="flex items-center mt-3 backdrop-blur-sm h-[46px] rounded-lg">
         {/* Looping over all urls, taking favicon and showing in top-left part. */}
         {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=32`))].map((iconUrl, index) => (
           <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border-spacing-4 flex items-center">
@@ -75,7 +75,7 @@ export default function ImageCard({ card, isPublic, showOptions, setShowOptions,
       </header>
 
       {/* Card Content */}
-      <div className="flex flex-col justify-center mt-1 backdrop-blur-md rounded-lg p-2">
+      <div className="flex flex-col justify-center mt-1 backdrop-blur-sm rounded-lg p-2">
         <blockquote className={`text-base font-normal text-white`}>
           {card.content}
         </blockquote>
