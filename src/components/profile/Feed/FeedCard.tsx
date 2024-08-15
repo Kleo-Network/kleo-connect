@@ -198,6 +198,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
             <>
               {card.urls.slice(0, 4).map((urls) => (
                 <button
+                  key={urls.id}
                   className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1 bg-gray-100"
                   onClick={() => handleOnClick(urls.url)}
                 >
