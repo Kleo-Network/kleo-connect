@@ -1,4 +1,5 @@
 import { ReactComponent as Bin } from '../../../assets/images/bin.svg'
+import purpleCardBg from '../../../assets/images/purpleCardBg.png';
 import TextCardBody from './FeedCardBody/TextCardBody'
 import DataCardBody from './FeedCardBody/DataCardBody'
 import { UserData } from '../../constants/SignupData'
@@ -124,7 +125,15 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
     <>
       {/* CardType = DataCard */}
       {card.cardType == 'DataCard' && (
-        <div className={`rounded-[14px] md:rounded-[24px] p-5 flex flex-col justify-between min-h-[desiredMinHeight] backdrop-blur-md border border-white ${card.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
+        <div
+          className={`
+            rounded-[14px] md:rounded-[24px] p-5
+            flex flex-col justify-between min-h-[desiredMinHeight]
+            backdrop-blur-md border border-white bg-cover
+            ${card.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}
+          `}
+          style={card.cardTypeToRender === CardTypeToRender.PURPLE ? { backgroundImage: `url(${purpleCardBg})` } : {}}
+        >
           {/* Body for YT card */}
           {card.cardTypeToRender == CardTypeToRender.YT && (
             <YTCardBody card={card} />
@@ -134,9 +143,13 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
           <header className="flex items-center mt-3 h-[46px]">
             {/* Looping over all urls, taking favicon and showing in top-left part. */}
             {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
-              <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border border-white border-spacing-4 fill-white flex items-center">
+              <div key={iconUrl} className="w-8 h-8 flex-none rounded-full flex items-center">
                 <img
-                  className={`absolute w-10 h-10 flex-none rounded-full border-white border-[3.5px] ml-4 fill-white stroke-current stroke-opacity-40`}
+                  className={`
+                    absolute w-10 h-10 flex-none rounded-full border-[3.5px] ml-4
+                    stroke-current stroke-opacity-40
+                    ${card.cardTypeToRender === CardTypeToRender.PURPLE ? 'border-purple-card fill-purple-card' : 'border-white fill-white'}
+                  `}
                   style={{ left: `${index * 1.3}rem` }}
                   src={iconUrl}
                 />
@@ -145,7 +158,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
 
             {/* Displaying DaysAgo string on right side */}
             <div className="flex flex-row ml-auto items-center">
-              <div className="flex font-inter text-gray-400 font-normal">
+              <div className={`flex font-inter font-normal ${card.cardTypeToRender === CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-400'}`}>
                 {getDaysAgo(card.date)}
               </div>
             </div>
@@ -157,7 +170,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
                   className="p-2"
                   onClick={() => setShowOptions(!showOptions)}
                 >
-                  <Hamburger className="w-3 h-4 stroke-gray-400" />
+                  <Hamburger className={`w-3 h-4 ${card.cardTypeToRender === CardTypeToRender.PURPLE ? 'stroke-white' : 'stroke-gray-400'}`} />
                 </button>
                 {showOptions && (
                   <div className="absolute mt-8 p-2 bg-white shadow-md rounded-lg top-0 right-0 min-w-[160px]">
@@ -190,16 +203,23 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
 
           {/* Body for Text card */}
           {card.cardType == 'DataCard' && (
-            <TextCardBody textData={card.content} isYTCard={card.cardTypeToRender === CardTypeToRender.YT} />
+            <TextCardBody
+              textData={card.content}
+              isTextWhite={
+                card.cardTypeToRender === CardTypeToRender.YT ||
+                card.cardTypeToRender === CardTypeToRender.PURPLE
+              }
+              truncateText={card.cardTypeToRender === CardTypeToRender.YT}
+            />
           )}
 
           {/* URL Pills at bottom */}
-          {(card.cardTypeToRender == CardTypeToRender.DATA) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-5">
+          {(card.cardTypeToRender == CardTypeToRender.DATA || card.cardTypeToRender == CardTypeToRender.PURPLE) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-5">
             <>
               {card.urls.slice(0, 4).map((urls) => (
                 <button
                   key={urls.id}
-                  className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1 bg-gray-100"
+                  className={`flex items-center gap-2 rounded-3xl border px-2 py-1 ${card.cardTypeToRender == CardTypeToRender.PURPLE ? 'border-none bg-white/20' : 'border-gray-200 bg-gray-100'}`}
                   onClick={() => handleOnClick(urls.url)}
                 >
                   <img
@@ -207,7 +227,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
                     src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=16`}
                   />
 
-                  <h3 className="inline-block text-sm font-medium text-gray-700 overflow-hidden overflow-ellipsis line-clamp-1">
+                  <h3 className={`inline-block text-sm font-medium ${card.cardTypeToRender == CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-700'} overflow-hidden overflow-ellipsis line-clamp-1`}>
                     {card.urls.length > 2 && urls.title.length > 10
                       ? urls.title.trim().slice(0, 10) + '...'
                       : urls.title.trim().slice(0, 25) + '...'}

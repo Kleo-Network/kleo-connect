@@ -65,6 +65,7 @@ module.exports = {
         'gray-background': '#F2F4F7',
         'gray-row-dark': '#333F53',
         'yt-card': '#293056',
+        'purple-card': '#7F56D9',
         'primary-btn': {
           100: '#D8B4FE',
           200: '#C084F5',
