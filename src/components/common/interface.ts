@@ -40,7 +40,8 @@ interface PublishedCardUrls {
 export enum CardTypeToRender {
   YT = 'YT',
   IMAGE = 'IMAGE',
-  DATA = 'DATA'
+  DATA = 'DATA',
+  PURPLE = 'PURPLE',
 }
 
 export interface PublishedCard {

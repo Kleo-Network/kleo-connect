@@ -99,19 +99,41 @@ export function formatDate (epoch: number): string {
   })} ${year}`
 }
 
+export const PURPLE_CARD_RATIO = 0.5;
 export function updateCardTypeToRenderInAllCards(data: PendingCard[] | PublishedCard[]) {
-  return data.map(cardItem => {
-    // Determine the card type to render
-    const cardTypeToRender = cardItem.urls?.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'))
-      ? CardTypeToRender.YT
-      : cardItem.cardType === 'ImageCard'
-      ? CardTypeToRender.IMAGE
-      : CardTypeToRender.DATA;
+  const dataCardIndices: number[] = [];
 
-    // Return the updated card item with the determined card type
+  // First pass: Assign card types and collect indices of normal data cards
+  const updatedData = data.map((cardItem, index) => {
+    let cardTypeToRender: CardTypeToRender;
+
+    if (cardItem.urls?.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'))) {
+      cardTypeToRender = CardTypeToRender.YT;
+    } else if (cardItem.cardType === 'ImageCard') {
+      cardTypeToRender = CardTypeToRender.IMAGE;
+    } else if (cardItem.cardType === "DataCard") {
+      cardTypeToRender = CardTypeToRender.DATA;
+      dataCardIndices.push(index); // Store index of normal data cards
+    } else {
+      cardTypeToRender = CardTypeToRender.PURPLE;
+    }
+
     return {
       ...cardItem,
-      cardTypeToRender,
+      cardTypeToRender: cardTypeToRender,
     };
   });
+
+  // Calculate the number of PURPLE cards needed based on the ratio
+  const numberOfPurpleCards = Math.floor(PURPLE_CARD_RATIO * dataCardIndices.length);
+
+  // Randomly select indices to be marked as PURPLE
+  const shuffledIndices = dataCardIndices.sort(() => 0.5 - Math.random()).slice(0, numberOfPurpleCards);
+
+  // Second pass: Update the selected cards to be PURPLE
+  shuffledIndices.forEach(index => {
+    updatedData[index].cardTypeToRender = CardTypeToRender.PURPLE;
+  });
+
+  return updatedData;
 }
