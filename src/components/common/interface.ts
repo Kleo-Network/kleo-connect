@@ -22,16 +22,26 @@ export interface VisitCountMap {
 }
 
 interface PublishedCardMetadata {
-  activity: string[] | VisitCountMap[]
+  activity: string[] | VisitCountMap[] | string
   description: string
-  entities: string[]
+  entities?: string[]
   dateFrom?: number
   dateTo?: number
+  tags?: string[]
+  titles?: string[]
 }
 
 interface PublishedCardUrls {
+  id: string
   title: string
   url: string
+}
+
+export enum CardTypeToRender {
+  YT = 'YT',
+  IMAGE = 'IMAGE',
+  DATA = 'DATA',
+  PURPLE = 'PURPLE',
 }
 
 export interface PublishedCard {
@@ -44,6 +54,8 @@ export interface PublishedCard {
   minted: boolean
   tags: string[]
   urls: PublishedCardUrls[]
+  cardTypeToRender?: CardTypeToRender
+  stockImage?: string
 }
 export enum CardType {
   GitCard = 'GitCard',
@@ -123,4 +135,6 @@ export interface PendingCard {
   minted: boolean
   tags: string[]
   urls: PublishedCardUrls[]
+  cardTypeToRender?: CardTypeToRender
+  stockImage?: string
 }
