@@ -4,6 +4,7 @@ import { ReactComponent as Cross } from '../../../assets/images/cross.svg'
 import { ReactComponent as BackFrame } from '../../../assets/images/backFrameDataCard.svg'
 import { ReactComponent as Token } from '../../../assets/images/KleoToken.svg'
 import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
+import purpleCardBg from '../../../assets/images/purpleCardBg.png';
 import CountdownTimer from './countdown'
 import { CardTypeToRender, PendingCard, PublishedCard, UserData, UserDataProps } from '../../common/interface'
 import useFetch from '../../common/hooks/useFetch'
@@ -127,7 +128,13 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 <div className="pt-5 px-0 w-full">
                   {/* CardType == DATA CARD */}
                   {activeCard.cardType == 'DataCard' && (
-                    <div className={`rounded-lg shadow-lg p-3 px-5 flex flex-col justify-between gap-3 max-h-[264px] ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}`}>
+                    <div className={`
+                        rounded-lg shadow-lg p-3 px-5
+                        flex flex-col justify-between gap-3 max-h-[264px]
+                        ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}
+                      `}
+                      style={activeCard.cardTypeToRender === CardTypeToRender.PURPLE ? { backgroundImage: `url(${purpleCardBg})` } : {}}
+                    >
                       {/* Body for YT card */}
                       {activeCard.cardTypeToRender == CardTypeToRender.YT && (
                         <YTCardForPublishCards card={activeCard} />
@@ -139,14 +146,18 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                         {[...new Set(activeCard.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
                           <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border-spacing-4">
                             <img
-                              className={`absolute w-10 h-10 flex-none rounded-full border-white border-[3.5px] fill-white stroke-current stroke-opacity-40`}
+                              className={`
+                                absolute w-10 h-10 flex-none rounded-full border-[3.5px]
+                                stroke-current stroke-opacity-40
+                                ${activeCard.cardTypeToRender === CardTypeToRender.PURPLE ? 'border-purple-card fill-purple-card' : 'border-white fill-white'}
+                              `}
                               style={{ left: `${index * 1.3}rem` }}
                               src={iconUrl}
                             />
                           </div>
                         ))}
                         <div className="flex flex-row ml-auto items-center">
-                          <div className="flex font-inter text-sm text-gray-400 font-normal">
+                          <div className={`flex font-inter text-sm font-normal ${activeCard.cardTypeToRender === CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-400'}`}>
                             {getDaysAgo(activeCard.date)}
                           </div>
                         </div>
@@ -154,7 +165,14 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
 
                       {/* Card Content */}
                       <div className="flex flex-col justify-center mt-1">
-                        <blockquote className={`text-base font-normal ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'text-white' : 'text-gray-600'}`}>
+                        <blockquote
+                          className={`
+                            text-base font-normal
+                            ${activeCard.cardTypeToRender === CardTypeToRender.YT
+                              || activeCard.cardTypeToRender === CardTypeToRender.PURPLE
+                              ? 'text-white' : 'text-gray-600'}
+                          `}
+                        >
                           {activeCard.content.length > 50 && activeCard.cardTypeToRender === CardTypeToRender.YT
                             ? `${activeCard.content.slice(0, 50)}...`
                             : activeCard.content}
@@ -162,12 +180,12 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                       </div>
 
                       {/* URL pills in bottom */}
-                      {(activeCard.cardTypeToRender == CardTypeToRender.DATA) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-4">
+                      {(activeCard.cardTypeToRender == CardTypeToRender.DATA || activeCard.cardTypeToRender == CardTypeToRender.PURPLE) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-4">
                         <>
                           {activeCard.urls.map((urls) => (
                             <button
                               key={urls.id}
-                              className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1 bg-gray-50"
+                              className={`flex items-center gap-2 rounded-3xl border px-2 py-1 ${activeCard.cardTypeToRender == CardTypeToRender.PURPLE ? 'border-none bg-white/20' : 'border-gray-200 bg-gray-50'}`}
                               onClick={() => handleOnClick(urls.url)}
                             >
                               <img
@@ -175,7 +193,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                                 src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=16`}
                               />
 
-                              <h3 className="inline-block text-xs font-medium text-gray-700 overflow-hidden overflow-ellipsis line-clamp-1">
+                              <h3 className={`inline-block text-xs font-medium ${activeCard.cardTypeToRender == CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-700'} overflow-hidden overflow-ellipsis line-clamp-1`}>
                                 {activeCard.urls.length > 2 &&
                                   urls.title.length > 10
                                   ? urls.title.trim().slice(0, 10) + '...'
