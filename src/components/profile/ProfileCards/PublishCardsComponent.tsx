@@ -166,6 +166,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                         <>
                           {activeCard.urls.map((urls) => (
                             <button
+                              key={urls.id}
                               className="flex items-center gap-2 rounded-3xl border border-gray-200 px-2 py-1 bg-gray-50"
                               onClick={() => handleOnClick(urls.url)}
                             >
