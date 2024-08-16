@@ -15,8 +15,9 @@ import VisitChartCard from './VisitChartCard'
 import { useNavigate } from 'react-router-dom'
 import { convertEpochToISO } from '../../common/utils'
 import { getDateAndMonth, getDaysAgo, parseUrl, replaceSlugInURL, updateCardTypeToRenderInAllCards } from '../../utils/utils'
-import { YTCardForPublishCards } from './YTCardForPublishCards'
-import { ImageCardForPublishCards } from './ImageCardForPublishCards'
+import { ImageCardForPublishCards } from './CardTypeComponents/ImageCardForPublishCards'
+import { YTCardForPublishCards } from './CardTypeComponents/YTCardForPublishCards'
+import { DataCardForPublishCards } from './CardTypeComponents/DataCardForPublishCard'
 
 const GET_USER_DETAIL = 'user/get-user/{slug}'
 const CREATE_PUBLISHED_CARDS = 'cards/published/{slug}'
@@ -104,9 +105,9 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
     <div className="w-full h-full rounded-2xl p-6">
       <>
         {activeCardsList.length > 0 ? (
-          <div className="flex flex-col justify-between h-full">
-            <div className="flex w-full h-[400px] bg-gray-100 rounded-2xl p-4 h-max-[400px]">
-              <div className="flex flex-col justify-between items-center min-w-[450px] w-full h-full">
+          <div className="flex flex-col justify-between h-full gap-6">
+            <div className="flex w-full h-[624px] bg-gray-100 rounded-2xl p-6">
+              <div className="flex flex-col items-center min-w-[450px] w-full h-full">
                 {/* KLEO points in top right corner */}
                 <div className="flex flex-row bg-white h-[44px] p-2 rounded-md items-center ml-auto">
                   <div className="flex my-[5px] bg-violet-100 w-[30px] h-[30px] items-center justify-center rounded-md">
@@ -125,90 +126,23 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 </div>
 
                 {/* Actual Card with all Data */}
-                <div className="pt-5 px-0 w-full">
-                  {/* CardType == DATA CARD */}
-                  {activeCard.cardType == 'DataCard' && (
-                    <div className={`
-                        rounded-lg shadow-lg p-3 px-5
-                        flex flex-col justify-between gap-3 max-h-[264px]
-                        ${activeCard.cardTypeToRender === CardTypeToRender.YT ? 'bg-yt-card' : 'bg-white'}
-                      `}
-                      style={activeCard.cardTypeToRender === CardTypeToRender.PURPLE ? { backgroundImage: `url(${purpleCardBg})` } : {}}
-                    >
-                      {/* Body for YT card */}
-                      {activeCard.cardTypeToRender == CardTypeToRender.YT && (
-                        <YTCardForPublishCards card={activeCard} />
-                      )}
-
-                      {/* Header with favicons and date. */}
-                      <header className="relative flex items-center">
-                        {/* Map over all urls and show the favicon */}
-                        {[...new Set(activeCard.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
-                          <div key={iconUrl} className="w-8 h-8 flex-none rounded-full border-spacing-4">
-                            <img
-                              className={`
-                                absolute w-10 h-10 flex-none rounded-full border-[3.5px]
-                                stroke-current stroke-opacity-40
-                                ${activeCard.cardTypeToRender === CardTypeToRender.PURPLE ? 'border-purple-card fill-purple-card' : 'border-white fill-white'}
-                              `}
-                              style={{ left: `${index * 1.3}rem` }}
-                              src={iconUrl}
-                            />
-                          </div>
-                        ))}
-                        <div className="flex flex-row ml-auto items-center">
-                          <div className={`flex font-inter text-sm font-normal ${activeCard.cardTypeToRender === CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-400'}`}>
-                            {getDaysAgo(activeCard.date)}
-                          </div>
-                        </div>
-                      </header>
-
-                      {/* Card Content */}
-                      <div className="flex flex-col justify-center mt-1">
-                        <blockquote
-                          className={`
-                            text-base font-normal
-                            ${activeCard.cardTypeToRender === CardTypeToRender.YT
-                              || activeCard.cardTypeToRender === CardTypeToRender.PURPLE
-                              ? 'text-white' : 'text-gray-600'}
-                          `}
-                        >
-                          {activeCard.content.length > 50 && activeCard.cardTypeToRender === CardTypeToRender.YT
-                            ? `${activeCard.content.slice(0, 50)}...`
-                            : activeCard.content}
-                        </blockquote>
-                      </div>
-
-                      {/* URL pills in bottom */}
-                      {(activeCard.cardTypeToRender == CardTypeToRender.DATA || activeCard.cardTypeToRender == CardTypeToRender.PURPLE) && <div className="flex flex-row w-full flex-wrap gap-2 self-stretch items-center justify-start pt-4">
-                        <>
-                          {activeCard.urls.map((urls) => (
-                            <button
-                              key={urls.id}
-                              className={`flex items-center gap-2 rounded-3xl border px-2 py-1 ${activeCard.cardTypeToRender == CardTypeToRender.PURPLE ? 'border-none bg-white/20' : 'border-gray-200 bg-gray-50'}`}
-                              onClick={() => handleOnClick(urls.url)}
-                            >
-                              <img
-                                className="w-4 h-4 flex-none rounded-full"
-                                src={`https://www.google.com/s2/favicons?domain=${urls.url}&sz=16`}
-                              />
-
-                              <h3 className={`inline-block text-xs font-medium ${activeCard.cardTypeToRender == CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-700'} overflow-hidden overflow-ellipsis line-clamp-1`}>
-                                {activeCard.urls.length > 2 &&
-                                  urls.title.length > 10
-                                  ? urls.title.trim().slice(0, 10) + '...'
-                                  : urls.title.trim().slice(0, 25) + '...'}
-                              </h3>
-                            </button>
-                          ))}
-                        </>
-                      </div>}
-                    </div>
+                <div className="px-0 w-full flex-1 flex justify-center items-center">
+                  {/* CardType == DATA CARD or PURPLE CARD */}
+                  {(activeCard.cardTypeToRender === CardTypeToRender.DATA || activeCard.cardTypeToRender === CardTypeToRender.PURPLE) && (
+                    <DataCardForPublishCards
+                      activeCard={activeCard}
+                      handleOnClick={handleOnClick}
+                    />
                   )}
 
                   {/* CardType == IMAGE CARD */}
                   {activeCard.cardType == 'ImageCard' && (
                     <ImageCardForPublishCards card={activeCard} />
+                  )}
+
+                  {/* CardType == YT CARD */}
+                  {activeCard.cardTypeToRender === CardTypeToRender.YT && (
+                    <YTCardForPublishCards activeCard={activeCard} />
                   )}
 
                   {/* TODO : Make it fit inside the card when available. */}
@@ -259,7 +193,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                 </div>
 
                 {/* ProgressBar */}
-                <div className="mt-auto w-full">
+                <div className="w-full">
                   <ProgressBar
                     progress={Math.floor(
                       ((totalCardCount - pendingCards.length) / totalCardCount) * 100
@@ -289,7 +223,7 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
           </div>
         ) : (
           <div className="flex flex-col justify-between h-full">
-            <div className="flex w-full h-[400px] bg-gray-100 rounded-2xl p-4 h-max-[400px]">
+            <div className="flex w-full h-[624px] bg-gray-100 rounded-2xl p-4 h-max-[400px]">
               <div className="flex flex-col justify-between items-center min-w-[450px] w-full h-full">
                 <div className="flex flex-row bg-white h-[44px] p-2 rounded-md items-center ml-auto">
                   <div className="flex my-[5px] bg-violet-100 w-[30px] h-[30px] items-center justify-center rounded-md">
@@ -307,15 +241,17 @@ export const PublishCardsComponent = ({ user, setUser }: UserDataProps) => {
                   </div>
                 </div>
 
-                <Cat className="w-fit h-fit mt-auto" />
-
-                <div className="flex flex-col justify-around items-center">
+                <div className="flex flex-col items-center justify-center">
+                  <Cat className="w-fit h-fit mt-auto" />
                   <div className="text-gray-700 font-semibold text-[14px] mt-[4px]">
                     Nothing to see here!
                   </div>
                   <div className="text-gray-500 font-normal text-[14px] mt-[4px]">
                     Stay tuned. New cards are arriving in:
                   </div>
+                </div>
+
+                <div className="flex flex-col justify-around items-center">
                   <div className="bg-gray-200 rounded-lg flex flex-col justify-between mt-4 -py-4 scale-75">
                     <CountdownTimer
                       endDate={convertEpochToISO(
