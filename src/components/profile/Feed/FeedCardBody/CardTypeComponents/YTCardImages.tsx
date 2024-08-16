@@ -1,5 +1,5 @@
-import { PublishedCard } from "../../../common/interface";
-import { extractThumbNailURL } from "../../../utils/utils";
+import { PublishedCard } from "../../../../common/interface";
+import { extractThumbNailURL } from "../../../../utils/utils";
 
 interface YTCardProps {
     card: PublishedCard
@@ -11,7 +11,7 @@ interface ThumbnailProps {
     extraStyles?: string
 }
 
-export function YTCardBody({ card }: YTCardProps) {
+export function YTCardImages({ card }: YTCardProps) {
     const videoUrls: { thumbUrl: string, videoUrl: string }[] = card.urls.map(url => ({
         thumbUrl: extractThumbNailURL(url.url),
         videoUrl: url.url,

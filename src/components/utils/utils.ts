@@ -62,7 +62,7 @@ export const extractThumbNailURL = (videoURL: string) => {
         // Handle the standard youtube.com URLs
         videoId = videoURL.split("v=")[1]?.split("&")[0];
     }
-    const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/sddefault.jpg` : '';
+    const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
     return thumbUrl;
 }
 
