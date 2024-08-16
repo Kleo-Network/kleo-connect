@@ -62,9 +62,22 @@ export const extractThumbNailURL = (videoURL: string) => {
         // Handle the standard youtube.com URLs
         videoId = videoURL.split("v=")[1]?.split("&")[0];
     }
-    const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/default.jpg` : '';
+    const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
     return thumbUrl;
 }
+
+// Helper function to extract the video ID from a YouTube URL
+const extractVideoId = (url: string): string | undefined => {
+  let videoId: string | undefined;
+
+  if (url.includes("youtu.be")) {
+    videoId = url.split("youtu.be/")[1]?.split("?")[0];
+  } else if (url.includes("youtube.com/watch")) {
+    videoId = url.split("v=")[1]?.split("&")[0];
+  }
+
+  return videoId;
+};
 
 export function parseUrl(url: string): string {
   try {
@@ -107,7 +120,7 @@ export function updateCardTypeToRenderInAllCards(data: PendingCard[] | Published
   const updatedData = data.map((cardItem, index) => {
     let cardTypeToRender: CardTypeToRender;
 
-    if (cardItem.urls?.some(url => url.url.includes('youtu.be') || url.url.includes('youtube.com'))) {
+    if (cardItem.urls?.some(url => extractVideoId(url.url))) {
       cardTypeToRender = CardTypeToRender.YT;
     } else if (cardItem.cardType === 'ImageCard') {
       cardTypeToRender = CardTypeToRender.IMAGE;

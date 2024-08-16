@@ -1,5 +1,6 @@
-import { PendingCard } from "../../common/interface"
-import { getDaysAgo, parseUrl } from "../../utils/utils"
+import { PendingCard } from "../../../common/interface"
+import { getDaysAgo, parseUrl } from "../../../utils/utils"
+
 
 interface ImageCardForPublishCardsProps {
   card: PendingCard
