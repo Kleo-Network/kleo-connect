@@ -27,7 +27,7 @@ export const DataCard = ({ card, isPublic, showOptions, setShowOptions, setIsMod
       style={isPurpleCard ? { backgroundImage: `url(${purpleCardBg})` } : {}}
     >
       {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
-      <header className="flex items-center mt-3">
+      <header className="flex items-center">
         {/* Looping over all urls, taking favicon and showing in top-left part. */}
         {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
           <div key={iconUrl} className="w-8 h-8 flex-none rounded-full flex items-center">

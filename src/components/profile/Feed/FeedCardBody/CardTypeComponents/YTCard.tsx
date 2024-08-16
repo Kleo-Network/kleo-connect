@@ -18,7 +18,7 @@ export const YTCard = ({ card, isPublic, showOptions, setShowOptions, setIsModal
   return (
     <div
       className={`
-            rounded-[14px] md:rounded-[24px] p-5
+            rounded-[14px] p-2
             flex flex-col justify-between min-h-[desiredMinHeight]
             backdrop-blur-md border border-white bg-cover bg-yt-card
           `}
@@ -27,7 +27,7 @@ export const YTCard = ({ card, isPublic, showOptions, setShowOptions, setIsModal
       <YTCardImages card={card} />
 
       {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
-      <header className="flex items-center mt-3 h-[46px]">
+      <header className="flex items-center mt-[14px] mx-3 h-[46px]">
         {/* Looping over all urls, taking favicon and showing in top-left part. */}
         {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
           <div key={iconUrl} className="w-8 h-8 flex-none rounded-full flex items-center">
@@ -88,7 +88,7 @@ export const YTCard = ({ card, isPublic, showOptions, setShowOptions, setIsModal
       </header>
 
       {/* Card Content */}
-      <div className="flex flex-col justify-center mt-1 backdrop-blur-sm rounded-lg p-2">
+      <div className="flex flex-col justify-center mt-[14px] mx-3 mb-3 backdrop-blur-sm rounded-lg">
         <blockquote className={`text-base font-normal text-white`}>
           {card.content.length > 120
             ? `${card.content.slice(0, 120)}...`
