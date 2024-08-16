@@ -235,7 +235,7 @@ export default function FeedCard({ card, user, handleCardDelete, cardTypeToRende
                 </button>
               ))}
               {card.urls.length > 4 && (
-                <span className="text-sm text-gray-500">+{card.urls.length - 4} more</span>
+                <span className={`text-sm ${card.cardTypeToRender == CardTypeToRender.PURPLE ? 'text-white' : 'text-gray-500'}`}>+{card.urls.length - 4} more</span>
               )}
             </>
           </div>}
