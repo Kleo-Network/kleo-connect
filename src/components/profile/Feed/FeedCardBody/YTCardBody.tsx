@@ -6,12 +6,16 @@ interface YTCardProps {
 }
 
 interface ThumbnailProps {
-    url: string
+    videoUrl: string
+    thumbUrl: string
     extraStyles?: string
 }
 
 export function YTCardBody({ card }: YTCardProps) {
-    const videoUrls: string[] = card.urls.map(url => extractThumbNailURL(url.url));
+    const videoUrls: { thumbUrl: string, videoUrl: string }[] = card.urls.map(url => ({
+        thumbUrl: extractThumbNailURL(url.url),
+        videoUrl: url.url,
+    }));
 
     const renderThumbnails = () => {
         switch (videoUrls.length) {
@@ -19,11 +23,11 @@ export function YTCardBody({ card }: YTCardProps) {
                 return (
                     <div className="flex flex-wrap justify-between items-center content-center w-full gap-2 h-full">
                         <div className="flex items-center justify-center w-full grow">
-                            <Thumbnail url={videoUrls[0]} extraStyles="w-full" />
+                            <Thumbnail thumbUrl={videoUrls[0].thumbUrl} videoUrl={videoUrls[0].videoUrl} extraStyles="w-full" />
                         </div>
                         <div className="flex flex-row gap-2 grow">
                             {videoUrls.slice(1).map((url, index) => (
-                                <Thumbnail key={index} url={url} />
+                                <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} />
                             ))}
                         </div>
                     </div>
@@ -32,11 +36,11 @@ export function YTCardBody({ card }: YTCardProps) {
                 return (
                     <div className="flex flex-wrap justify-between items-center content-center w-full gap-2 h-full">
                         <div className="flex items-center justify-center w-full grow">
-                            <Thumbnail url={videoUrls[0]} extraStyles="w-full grow" />
+                            <Thumbnail thumbUrl={videoUrls[0].thumbUrl} videoUrl={videoUrls[0].videoUrl} extraStyles="w-full grow" />
                         </div>
                         <div className="flex flex-row gap-2 grow">
                             {videoUrls.slice(1).map((url, index) => (
-                                <Thumbnail key={index} url={url} />
+                                <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} />
                             ))}
                         </div>
                     </div>
@@ -45,14 +49,14 @@ export function YTCardBody({ card }: YTCardProps) {
                 return (
                     <div className="flex flex-wrap xl:flex-col justify-evenly items-center content-center w-full gap-2 h-full">
                         {videoUrls.map((url, index) => (
-                            <Thumbnail key={index} url={url} />
+                            <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} />
                         ))}
                     </div>
                 );
             case 1:
                 return (
                     <div className="flex flex-wrap justify-between items-center content-center w-full gap-2 h-full">
-                        <Thumbnail url={videoUrls[0]} />
+                        <Thumbnail thumbUrl={videoUrls[0].thumbUrl} videoUrl={videoUrls[0].videoUrl} />
                     </div>
                 );
             default:
@@ -67,8 +71,13 @@ export function YTCardBody({ card }: YTCardProps) {
     );
 }
 
-function Thumbnail({ url, extraStyles = '' }: ThumbnailProps) {
+function Thumbnail({ videoUrl, thumbUrl, extraStyles = '' }: ThumbnailProps) {
     return (
-        <img src={url} alt="Thumbnail" className={`bg-gray-200 rounded-lg object-cover grow min-w-[60px] aspect-[1.7] ${extraStyles}`} />
+        <img
+            src={thumbUrl}
+            alt="Thumbnail"
+            className={`bg-gray-200 rounded-lg object-cover grow min-w-[60px] aspect-[1.7] ${extraStyles} cursor-pointer`}
+            onClick={() => window.open(videoUrl, '_blank')}
+        />
     );
 }
