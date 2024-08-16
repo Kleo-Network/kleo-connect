@@ -1,8 +1,9 @@
 import { PublishedCard } from "../../../../common/interface"
-import { getDaysAgo, parseUrl } from "../../../../utils/utils";
+import { getDaysAgo } from "../../../../utils/utils";
 import { ReactComponent as Hamburger } from '../../../../../assets/images/hamburgerDot.svg'
 import { ReactComponent as Pin } from '../../../../../assets/images/pin.svg'
 import { ReactComponent as Bin } from '../../../../../assets/images/bin.svg'
+import ytLogo from '../../../../../assets/images/ytLogo.jpeg';
 import { YTCardImages } from "./YTCardImages";
 
 interface YTCardProps {
@@ -29,18 +30,15 @@ export const YTCard = ({ card, isPublic, showOptions, setShowOptions, setIsModal
       {/* Header for card [UrlFavicons, DaysAgoString, Options] */}
       <header className="flex items-center mt-[14px] mx-3 h-[46px]">
         {/* Looping over all urls, taking favicon and showing in top-left part. */}
-        {[...new Set(card.urls.map(url => `https://www.google.com/s2/favicons?domain=${parseUrl(url.url)}&sz=40`))].map((iconUrl, index) => (
-          <div key={iconUrl} className="w-8 h-8 flex-none rounded-full flex items-center">
-            <img
-              className={`
-                    absolute w-10 h-10 flex-none rounded-full border-[3.5px] ml-4
-                    stroke-current stroke-opacity-40 border-white fill-white
+        <div key={card.urls[0].id} className="w-8 h-8 flex-none rounded-full flex items-center">
+          <img
+            className={`
+                    absolute w-10 h-10 flex-none rounded-full ml-4 object-cover
                   `}
-              style={{ left: `${index * 1.3}rem` }}
-              src={iconUrl}
-            />
-          </div>
-        ))}
+            style={{ left: `${0 * 1.3}rem` }}
+            src={ytLogo}
+          />
+        </div>
 
         {/* Displaying DaysAgo string on right side */}
         <div className="flex flex-row ml-auto mr-0 items-center">
