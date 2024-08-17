@@ -9,13 +9,14 @@ interface ThumbnailProps {
   videoUrl: string
   thumbUrl: string
   extraStyles?: string
+  scale?: string
 }
 
 export const YTCardImagesForPublishCards = ({ activeCard }: YTCardForPublishCardsProps) => {
   const videoUrls: { thumbUrl: string, videoUrl: string }[] = activeCard.urls.map(url => ({
     thumbUrl: extractThumbNailURL(url.url),
     videoUrl: url.url,
-  }));
+  })).filter(item => item.thumbUrl !== '');
 
   const renderThumbnails = () => {
     switch (videoUrls.length) {
@@ -40,7 +41,7 @@ export const YTCardImagesForPublishCards = ({ activeCard }: YTCardForPublishCard
             </div>
             <div className="flex flex-col gap-2 w-1/4 h-full">
               {videoUrls.slice(1).map((url, index) => (
-                <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} extraStyles="h-[91px]" />
+                <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} extraStyles="h-[91px]" scale="scale-[1.35]" />
               ))}
             </div>
           </div>
@@ -49,7 +50,7 @@ export const YTCardImagesForPublishCards = ({ activeCard }: YTCardForPublishCard
         return (
           <div className="flex items-center w-full gap-2 h-full">
             {videoUrls.map((url, index) => (
-              <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} extraStyles="w-1/2 h-[190px]" />
+              <Thumbnail key={index} thumbUrl={url.thumbUrl} videoUrl={url.videoUrl} extraStyles="w-1/2 h-[190px]" scale="scale-[1.45]" />
             ))}
           </div>
         );
@@ -65,19 +66,21 @@ export const YTCardImagesForPublishCards = ({ activeCard }: YTCardForPublishCard
   };
 
   return (
-    <div className="w-full h-full flex content-center max-h-[190px]">
+    <div className="w-full h-full flex content-center max-h-[190px] rounded-lg overflow-hidden">
       {renderThumbnails()}
     </div>
   );
 }
 
-function Thumbnail({ thumbUrl, videoUrl, extraStyles = '' }: ThumbnailProps) {
+function Thumbnail({ thumbUrl, videoUrl, extraStyles = '', scale = '' }: ThumbnailProps) {
   return (
-    <img
-      src={thumbUrl}
-      alt="Thumbnail"
-      className={`bg-gray-200 rounded-lg grow min-w-[60px] min-h-[36px] object-cover cursor-pointer ${extraStyles}`}
-      onClick={() => window.open(videoUrl, '_blank')}
-    />
+    <div className={`rounded-lg overflow-hidden flex justify-center items-center ${extraStyles}`}>
+      <img
+        src={thumbUrl}
+        alt="Thumbnail"
+        className={`bg-gray-200 rounded-lg object-cover cursor-pointer ${scale}`}
+        onClick={() => window.open(videoUrl, '_blank')}
+      />
+    </div>
   );
 }

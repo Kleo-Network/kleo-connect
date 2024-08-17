@@ -1,5 +1,5 @@
-import { CardTypeToRender, PendingCard } from "../../../common/interface";
-import { extractThumbNailURL, getDaysAgo } from "../../../utils/utils";
+import { PendingCard } from "../../../common/interface";
+import { getDaysAgo } from "../../../utils/utils";
 import ytLogo from '../../../../assets/images/ytLogo.jpeg';
 import { YTCardImagesForPublishCards } from "./YTCardImagesForPublishCards";
 
@@ -7,14 +7,7 @@ interface YTCardForPublishCardsProps {
     activeCard: PendingCard
 }
 
-interface ThumbnailProps {
-    url: string
-    extraStyles?: string
-}
-
 export const YTCardForPublishCards = ({ activeCard }: YTCardForPublishCardsProps) => {
-    const videoUrls: string[] = activeCard.urls.map(url => extractThumbNailURL(url.url));
-
     return (
         <div className={`
                 rounded-[14px] shadow-lg p-2
