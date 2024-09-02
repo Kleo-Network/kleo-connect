@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { ReactComponent as Logo } from '../../assets/images/kleoLogo.svg'
 import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
-import { ReactComponent as Settings } from '../../assets/images/settings.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
 import { ReactComponent as Logout } from '../../assets/images/logout.svg'
 import { ReactComponent as Card } from '../../assets/images/Cards.svg'
@@ -20,11 +19,11 @@ interface NavbarProps {
 }
 
 enum Tab {
-  PROFILE = 'Profile',
-  PUBLISH_CARDS = 'Publish Cards',
+  PROFILE = 'Dashboard',
+  MY_DATA = 'My Data',
   CLAIM_POINTS = 'Claim Points',
   // QUESTS = 'quests',
-  PRIVACY = 'privacy'
+  PRIVACY = 'Privacy'
 }
 
 const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
@@ -41,10 +40,8 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
   useEffect(() => {
     if (pathname === `/profileV2/${getSlug()}`) {
       setSelectedTab(Tab.PROFILE)
-    } else if (pathname === '/cards') {
-      setSelectedTab(Tab.PUBLISH_CARDS)
-    } else if (pathname === '/quests') {
-      // setSelectedTab(Tab.QUESTS)
+    } else if (pathname === '/data') {
+      setSelectedTab(Tab.MY_DATA)
     } else if (pathname === '/privacy') {
       setSelectedTab(Tab.PRIVACY)
     } else if (pathname === '/setting') {
@@ -78,10 +75,6 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
     } else {
       return ''
     }
-  }
-
-  function getHomeLink() {
-    return `/profileV2/${getSlug()}`
   }
 
   function handleLogin(step: number) {
@@ -143,10 +136,10 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                             : 'text-gray-700 bg-white'
                         }`}
                         href={`/${
-                          tab === Tab.PROFILE
+                          tab === Tab.MY_DATA
                             ? `profileV2/${getSlug()}`
-                            : tab === Tab.PUBLISH_CARDS
-                            ? 'cards'
+                            : tab === Tab.PROFILE
+                            ? ''
                             : tab === Tab.CLAIM_POINTS
                             ? 'setting'
                             : 'badges'

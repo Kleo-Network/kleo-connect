@@ -3,14 +3,14 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import Navbar from './components/navbar/Navbar'
 import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
-import ProfileV2 from './components/ProfileV2'
 import BadgesList from './components/BadgesList'
-import ProfileCards from './components/profile/ProfileCards'
 import { UserData } from './components/constants/SignupData'
 import { EventProvider } from './components/common/contexts/EventContext'
 import Privacy from './components/profile/Settings/Privacy'
 import useFetch, { FetchStatus } from './components/common/hooks/useFetch'
 import Settings from './components/profile/Settings'
+import Profile from './components/profile'
+
 import {
   ThirdwebProvider,
   metamaskWallet,
@@ -31,18 +31,18 @@ function App(): ReactElement {
     pfp: 'https://pbs.twimg.com/profile_images/1590877918015926272/Xl2Bd-X2_400x400.jpg',
     profile_metadata: {},
     settings: {},
-    slug: '',
+    address: '',
     stage: 1,
     verified: false,
     email: '',
     token: ''
   })
-  const GET_USER_API = 'user/get-user/{slug}'
+  const GET_USER_API = 'user/get-user/{address}'
   const { fetchData: fetchUser, data: userDataFromDB } = useFetch<UserData>()
 
-  function makeUserUpdationUrl(slug_string: string): string {
-    const slug = localStorage.getItem('slug') || ''
-    return slug_string.replace('{slug}', slug)
+  function makeUserUpdationUrl(address_string: string): string {
+    const address = localStorage.getItem('address') || ''
+    return address_string.replace('{address}', address)
   }
 
   useEffect(() => {
@@ -86,7 +86,7 @@ function App(): ReactElement {
                 <Navbar
                   handleLogout={handleLogout}
                   avatar={{ src: user.pfp, alt: 'Profile' }}
-                  slug={user.slug}
+                  slug={user.address}
                 />
               </header>
             )}
@@ -96,7 +96,7 @@ function App(): ReactElement {
                 path="/"
                 element={
                   user.token ? (
-                    <Navigate to={`/profileV2/${user.slug}`} />
+                    <Navigate to={`/profile/${user.address}`} />
                   ) : (
                     <Navigate to={`/signup/0`} />
                   )
@@ -114,19 +114,16 @@ function App(): ReactElement {
               />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route
-                path="/profilev2/:slug"
-                element={<ProfileV2 user={user} setUser={setUser} />}
+                path="/profile/:address"
+                element={<Profile user={user} setUser={setUser} />}
               />
               <Route path="/badges" element={<BadgesList />} />
-              <Route
-                path="/cards"
-                element={<ProfileCards user={user} setUser={setUser} />}
-              />
+
               <Route path="/setting" element={<Settings user={user} />} />
               {isLoggedIn ? (
                 <Route
                   path="*"
-                  element={<ProfileCards user={user} setUser={setUser} />}
+                  element={<Profile user={user} setUser={setUser} />}
                 />
               ) : (
                 <Route path="*" element={<Navigate to="/" />} />

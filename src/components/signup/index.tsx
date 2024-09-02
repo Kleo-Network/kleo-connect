@@ -13,7 +13,7 @@ const SignUp: React.FC<SignupProps> = ({ user, setUser, setIsLoggedIn }) => {
 
   const handleLogin = (slug: string) => {
     setIsLoggedIn(true)
-    navigate('/profileV2/' + slug)
+    navigate('/profile/' + slug)
   }
 
   return (

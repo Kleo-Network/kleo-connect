@@ -9,7 +9,7 @@ export interface UserData {
   pfp: string
   profile_metadata: any
   settings: any
-  slug: string
+  address: string
   stage: number
   verified: boolean
   email: string

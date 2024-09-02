@@ -1,11 +1,8 @@
 import { useMemo, useState, useEffect } from 'react'
 import { UserData } from '../../constants/SignupData'
-import Mint from './iExec'
-import { ReactComponent as Cat } from '../../../assets/images/astronautCat.svg'
 import { ConnectWallet } from '@thirdweb-dev/react'
 import { createThirdwebClient, getContract, resolveMethod } from 'thirdweb'
 import { defineChain } from 'thirdweb/chains'
-import { ThirdwebProvider } from 'thirdweb/react'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
 import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
@@ -34,8 +31,8 @@ const MediaLeft = () => {
     'Unlock more personalised dating applications, shopping experience with <br /> your privacy protected!'
   ]
   useEffect(() => {
-   // const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
-   // return () => clearInterval(interval)
+    // const interval = setInterval(nextSlide, 3000) // Change slide every 3 seconds
+    // return () => clearInterval(interval)
   }, [activeIndex])
 
   const nextSlide = () => {
@@ -47,9 +44,8 @@ const MediaLeft = () => {
   }
 
   return (
-    <div className='relative'>
-      <div className='absolute bottom-[10%] left-[4%] z-50'
-      >
+    <div className="relative">
+      <div className="absolute bottom-[10%] left-[4%] z-50">
         <h1 className="text-white text-3xl">{titles[activeIndex]}</h1>
 
         <p
@@ -57,29 +53,29 @@ const MediaLeft = () => {
           dangerouslySetInnerHTML={{ __html: description[activeIndex] }}
         ></p>
       </div>
-      <div
-         className='absolute bottom-[3%] left-[33%] z-50'
-      >
+      <div className="absolute bottom-[3%] left-[33%] z-50">
         <div
           key={`1`}
-          className={`h-2 bg-white rounded-full mx-2 cursor-pointer active bg-white relative ${activeIndex == 0 ? 'w-14' : 'w-3 bg-opacity-50'}`}
+          className={`h-2 bg-white rounded-full mx-2 cursor-pointer active bg-white relative ${
+            activeIndex == 0 ? 'w-14' : 'w-3 bg-opacity-50'
+          }`}
           onClick={() => goToSlide(0)}
         ></div>
         <div
           key={`2`}
-          className={`bottom-[8px] relative h-2 bg-white rounded-full ${activeIndex == 0  ? 'left-[63px]' :  'left-[18px]'} mx-2 cursor-pointer ${
-            1 === activeIndex
-              ? 'active bg-white w-14'
-              : 'bg-opacity-50 w-3'
+          className={`bottom-[8px] relative h-2 bg-white rounded-full ${
+            activeIndex == 0 ? 'left-[63px]' : 'left-[18px]'
+          } mx-2 cursor-pointer ${
+            1 === activeIndex ? 'active bg-white w-14' : 'bg-opacity-50 w-3'
           }`}
           onClick={() => goToSlide(1)}
         ></div>
         <div
           key={`2`}
-          className={` bottom-[16px] relative h-2 ${activeIndex == 2 ? 'left-[35px]' : 'left-[80px]'} bg-white rounded-full mx-2 cursor-pointer ${
-            2 === activeIndex
-              ? 'active bg-white w-14'
-              : 'bg-opacity-50 w-3'
+          className={` bottom-[16px] relative h-2 ${
+            activeIndex == 2 ? 'left-[35px]' : 'left-[80px]'
+          } bg-white rounded-full mx-2 cursor-pointer ${
+            2 === activeIndex ? 'active bg-white w-14' : 'bg-opacity-50 w-3'
           }`}
           onClick={() => goToSlide(2)}
         ></div>
