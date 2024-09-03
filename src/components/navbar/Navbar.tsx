@@ -4,7 +4,7 @@ import { ReactComponent as Privacy } from '../../assets/images/privacy.svg'
 import { ReactComponent as Hamburger } from '../../assets/images/hamburger.svg'
 import { ReactComponent as Logout } from '../../assets/images/logout.svg'
 import { ReactComponent as Card } from '../../assets/images/Cards.svg'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Collapse, Dropdown, initTE } from 'tw-elements'
 import { EventContext } from '../common/contexts/EventContext'
 import { NavbarEvents } from '../constants/Events'
@@ -27,7 +27,7 @@ enum Tab {
 }
 
 const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
-  const [selectedTab, setSelectedTab] = React.useState('null')
+  const [selectedTab, setSelectedTab] = useState<Tab | 'null'>('null')
   const [showProfileOptions, setShowProfileOptions] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
@@ -68,26 +68,23 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
     navigate('/privacy')
   }
 
-  function getSlug(): string {
-    const slug = localStorage.getItem('slug')
-    if (slug) {
-      return slug
-    } else {
-      return ''
-    }
+  const getSlug = (): string => {
+    return localStorage.getItem('slug') || ''
   }
 
   function handleLogin(step: number) {
     navigate(`/signup/${step}`)
   }
 
-  function handleSignUp(step: number) {
+  const handleSignUp = (step: number) => {
     navigate(`/signup/${step}`)
   }
 
+  const token = localStorage.getItem('token')
+
   return (
     <nav
-      className="relative flex w-full flex-wrap items-center justify-between border-b border-gray-200 bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 h-[72px] px-20"
+      className="relative flex w-full flex-wrap items-center self-center bg-white text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 h-[72px] max-w-7xl"
       data-te-navbar-ref
     >
       <div className="flex w-full flex-wrap items-center justify-between px-8">
@@ -111,7 +108,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
         </button>
 
         {/* <!-- Collapsible navigation container --> */}
-        {localStorage.getItem('token') ? (
+        {token ? (
           <div
             className="!visible mt-2 ml-4 hidden flex-grow basis-[100%] items-center lg:mt-0 lg:!flex lg:basis-auto"
             id="navbarSupportedContent"
@@ -121,37 +118,34 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
               className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
               data-te-navbar-nav-ref
             >
-              {Object.values(Tab).map((tab, i) => {
-                return (
+              {Object.values(Tab).map(
+                (tab, i) =>
                   tab !== Tab.PRIVACY && (
                     <li
                       key={i}
                       className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
                       data-te-nav-item-ref
                     >
-                      <a
-                        className={`px-3 py-2 rounded-md font-inter font-medium text-base ${
-                          selectedTab === tab
-                            ? 'text-purple-700 bg-purple-50'
-                            : 'text-gray-700 bg-white'
-                        }`}
-                        href={`/${
-                          tab === Tab.MY_DATA
-                            ? `profileV2/${getSlug()}`
-                            : tab === Tab.PROFILE
+                      {/* <Link
+                        className={`px-3 py-2 rounded-md font-inter font-medium text-base ${selectedTab === tab
+                          ? 'text-purple-700 bg-purple-50'
+                          : 'text-gray-700 bg-white'
+                          }`}
+                        href={`/${tab === Tab.MY_DATA
+                          ? `profileV2/${getSlug()}`
+                          : tab === Tab.PROFILE
                             ? ''
                             : tab === Tab.CLAIM_POINTS
-                            ? 'setting'
-                            : 'badges'
-                        }`}
+                              ? 'setting'
+                              : 'badges'
+                          }`}
                         data-te-nav-link-ref
                       >
                         {tab}
-                      </a>
+                      </Link> */}
                     </li>
                   )
-                )
-              })}
+              )}
             </ul>
 
             {/* <!-- Right elements --> */}
@@ -171,7 +165,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                     <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                       <button
                         className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                        onClick={() => handleSettingsClick()}
+                        onClick={handleSettingsClick}
                       >
                         <Card className="w-4 h-4 mr-3 stroke-current text-gray-700" />
                         <div className="text-sm font-inter text-gray-700">
@@ -182,7 +176,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                     <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                       <button
                         className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                        onClick={() => handlePrivacyClick()}
+                        onClick={handlePrivacyClick}
                       >
                         <Privacy className="w-4 h-4 mr-3 stroke-current text-gray-700" />
                         <div className="text-sm font-inter text-gray-700">
@@ -193,7 +187,7 @@ const Navbar = ({ avatar, slug, handleLogout }: NavbarProps) => {
                     <div className="flex flex-row px-[10px] py-[2px] justify-center items-center">
                       <button
                         className="flex flex-row w-full text-left px-[10px] py-[8px] items-center"
-                        onClick={() => handleLogoutClick()}
+                        onClick={handleLogoutClick}
                       >
                         <Logout className="w-4 h-4 mr-3 stroke-current text-gray-700" />
                         <div className="text-sm font-inter text-gray-700">
