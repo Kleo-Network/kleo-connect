@@ -37,7 +37,10 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
 
       {/* Profile Section */}
       <div className="flex flex-col w-full mt-[50px] items-center mx-auto">
-        <div className="w-[75%] gap-6 h-80 flex flex-col md:flex-row justify-center"></div>
+        <div className="w-[75%] gap-6 h-80 flex flex-col justify-center">
+          <h1>Welcome user {user.address}</h1>
+          <h2>New dashboard comming in while</h2>
+        </div>
       </div>
 
       {/* Published Cards Section */}

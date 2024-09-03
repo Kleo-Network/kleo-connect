@@ -52,15 +52,17 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
       }),
       onSuccessfulFetch: (data) => {
         if ((data as any)?.message == 'Please sign up') {
+          console.log('why here')
           navigate('/signup/1')
           setCurrentStep(1)
         } else if (data?.address && data?.token) {
+          console.log('why not here')
           localStorage.setItem('address', data.address)
           localStorage.setItem('token', data.token)
           ;(window as any).signIn(data.address, data.token)
-          setUser(data)
           setLogin(true)
-          navigate('/signup/0')
+          setUser(data)
+          navigate('/profile/' + walletAddress)
         } else {
           navigate('/signup/1')
         }
