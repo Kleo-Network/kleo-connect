@@ -40,7 +40,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
     }
   }, [])
 
-  const USER_LOGIN_PATH = 'v2/core/user/create-user'
+  const USER_LOGIN_PATH = 'user/create-user'
   const handleUserLogin = () => {
     fetchCreateAndFetchUserData(USER_LOGIN_PATH, {
       method: 'POST',
@@ -57,7 +57,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
         } else if (data?.address && data?.token) {
           localStorage.setItem('address', data.address)
           localStorage.setItem('token', data.token)
-          ;(window as any).signIn(data.address, data.token)
+            ; (window as any).signIn(data.address, data.token)
           setLogin(true)
           setUser(data)
           navigate('/profile/' + walletAddress)
@@ -185,11 +185,10 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                   </div>
                   <button
                     disabled={!walletAddress}
-                    className={`w-full py-3 ${
-                      walletAddress
+                    className={`w-full py-3 ${walletAddress
                         ? 'bg-violet-600 text-white'
                         : 'bg-gray-100 text-gray-500'
-                    } rounded-lg shadow mx-auto block`}
+                      } rounded-lg shadow mx-auto block`}
                     onClick={
                       () => handleUserLogin()
                       // function which creates account by signing a transaction and posting to kleo backend api
