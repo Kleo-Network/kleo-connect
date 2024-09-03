@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { ReactComponent as Kleo } from '../../../../assets/images/kleoWithBg.svg'
+import { ReactComponent as Kleo } from '../../../../assets/images/kleoLogo.svg'
 import { ReactComponent as Arrow } from '../../../../assets/images/arrow.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
-import Accordion from '../../../common/Accordion'
 import Alert from '../../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ReactComponent as MetamaskLogo } from '../../../../assets/images/metamask.svg'
-import { ConnectWallet } from '@thirdweb-dev/react'
+import { ReactComponent as MetamaskLogo } from '../../../../assets/images/metaMaskWithoutBg.svg'
+import { ConnectWallet, useAddress } from '@thirdweb-dev/react'
+import { MediaBanner } from '../Common/MediaBanner'
+import useFetch from '../../../common/hooks/useFetch'
+import { UserData } from '../../../constants/SignupData'
 
 enum PluginState {
   CHECKING,
@@ -17,10 +19,15 @@ enum PluginState {
 
 export default function Onboarding({ handleLogin, user, setUser }: any) {
   const { step } = useParams()
-  const [infoExpanded, setInfoExpanded] = useState(false)
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
   const [currentStep, setCurrentStep] = useState(parseInt(step || '0'))
   const [login, setLogin] = useState(false)
+  const navigate = useNavigate()
+  const walletAddress = useAddress()
+
+  const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
+    useFetch<UserData>()
+
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
@@ -33,8 +40,36 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
     }
   }, [])
 
+  const USER_LOGIN_PATH = 'v2/core/user/create-user'
+  const handleUserLogin = () => {
+    fetchCreateAndFetchUserData(USER_LOGIN_PATH, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        walletAddress: walletAddress
+      }),
+      onSuccessfulFetch: (data) => {
+        if ((data as any)?.message == 'Please sign up') {
+          navigate('/signup/1')
+          setCurrentStep(1)
+        } else if (data?.address && data?.token) {
+          localStorage.setItem('address', data.address)
+          localStorage.setItem('token', data.token)
+          ;(window as any).signIn(data.address, data.token)
+          setUser(data)
+          setLogin(true)
+          navigate('/signup/0')
+        } else {
+          navigate('/signup/1')
+        }
+      }
+    })
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center mx-auto max-w-3xl">
+    <div className="flex flex-col items-center justify-center mx-auto w-full">
       {currentStep == 0 && (
         <div className="flex flex-col items-start justify-center bg-white shadow-lg rounded-lg w-full max-w-3xl">
           <div className="p-6 text-lg w-full font-medium text-gray-900 border-b  border-gray-200 flex justify-center items-center">
@@ -49,89 +84,89 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
       )}
       {currentStep == 1 && (
         <>
-          <div className="flex flex-col items-start justify-center bg-white shadow-lg rounded-lg w-full">
-            <div className="p-6 text-lg w-full font-medium text-gray-900 border-b  border-gray-200 flex justify-center items-center">
-              <div className="text-3xl md:text-3xl">create account on kleo</div>
-            </div>
-            <div className="p-6 text-lg w-full font-medium text-gray-900 border-b  border-gray-200">
-              Install Kleo and connect to get started! <br />
-              <span className="text-gray-400 text-sm font-regular">
-                KLEO is a{' '}
-                <a
-                  href="https://docs.vana.org/vana/core-concepts/network-overview/data-liquidity-layer"
-                  target="_blank"
-                >
-                  <u> VANA DLP</u>
-                </a>{' '}
-                aimed at using chrome extension to help you own a piece of AI
-                models
-              </span>
-            </div>
-            <div className="flex">
-              <div className="w-2/3">
-                <div className="flex flex-row items-start gap-4 p-6">
-                  <div className="relative">
-                    {pluginState === PluginState.INSTALLED && (
-                      <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white ">
-                        <Tick className="w-3 h-3 fill-white" />
-                      </div>
-                    )}
-
-                    <Kleo className="w-16 h-16" />
-                  </div>
-                  <div className="flex flex-col items-start justify-center">
-                    <span className="text-gray-900 text-base font-medium">
-                      Install Kleo Plugin
-                    </span>
-                    <span className="text-gray-400 text-sm font-regular">
-                      Unlock insights, personalize your Browsing and safeguard
-                      your privacy
-                    </span>
-                    {pluginState === PluginState.CHECKING && (
-                      <div
-                        className="inline-block m-1 h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
+          <div className="flex flex-row items-start justify-center px-2 py-2 bg-white shadow-lg rounded-lg w-full">
+            <div className="w-full grid grid-cols-2 p-2 container mx-auto">
+              <div className="place-self-start h-full">
+                <MediaBanner />
+              </div>
+              <div className="flex w-full h-full items-center justify-center">
+                <div className="flex flex-col w-[493px]">
+                  <div className="mb-[50px] text-lg w-full font-medium text-gray-900 border-gray-200 flex-col justify-center items-center">
+                    <h1 className="text-4xl leading-10 pb-2">
+                      Create Account To Get
+                      <br /> Started On {` `}
+                      <span className="text-primary">Kleo</span>
+                    </h1>
+                    <p className="font-inter text-left text-sm text-md leading-md text-gray-500 pb-5">
+                      Install Kleo and connect to get started! KLEO is a{' '}
+                      <a
+                        href="https://docs.vana.org/vana/core-concepts/network-overview/data-liquidity-layer"
+                        target="_blank"
                       >
-                        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                          Loading...
-                        </span>
-                      </div>
-                    )}
-                    {pluginState === PluginState.NOT_INSTALLED && (
-                      <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
-                        <button
-                          className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
-                          onClick={() => {
-                            // setPluginState(PluginState.INSTALLED)
-                            window.open(
-                              'https://chromewebstore.google.com/detail/kleo-connect/jimpblheogbjfgajkccdoehjfadmimoo?hl=en'
-                            )
-                          }}
-                        >
-                          Install Plugin
-                        </button>
-                        <button
-                          className="px-4 py-3 ml-1 rounded-lg shadow border border-gray-200 text-gray-700"
-                          onClick={() => location.reload()}
-                        >
-                          I have already installed
-                        </button>
-                      </div>
-                    )}
+                        <u> VANA DLP</u>
+                      </a>{' '}
+                      aimed <br />
+                      at using chrome extension to help you own a piece of Al
+                      models
+                    </p>
                   </div>
-                </div>
-                <div className="flex flex-row items-start gap-4 p-6 w-full">
-                  <div className="relative">
-                    {'metamask wallet connected?' && (
-                      <div className="absolute bottom-0 left-auto right-0 top-auto z-10 rounded-full bg-green-600 p-1 border-4 border-white ">
-                        <Tick className="w-3 h-3 fill-white" />
+                  <div className="flex flex-row items-start gap-4 mb-10">
+                    <div className="bg-gray-100 p-4 rounded-2xl">
+                      <Kleo className="w-11 h-11" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center">
+                      <div className="flex flex-row">
+                        <div className="flex text-gray-700 text-base font-medium">
+                          Install Kleo Plugin
+                        </div>
+                        {pluginState === PluginState.INSTALLED && (
+                          <div className="flex ml-2 rounded-full bg-green-400 p-1 border-4 border-white">
+                            <Tick className="w-3 h-3 fill-white" />
+                          </div>
+                        )}
                       </div>
-                    )}
-
-                    <MetamaskLogo className="w-16 h-16" />
+                      <div className="flex text-gray-500 text-sm font-regular">
+                        Unlock insights, personalize your Browsing and safeguard
+                        <br /> your privacy
+                      </div>
+                      {pluginState === PluginState.CHECKING && (
+                        <div
+                          className="inline-block m-1 h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                          role="status"
+                        >
+                          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                            Loading...
+                          </span>
+                        </div>
+                      )}
+                      {pluginState === PluginState.NOT_INSTALLED && (
+                        <div className="flex flex-row justify-start items-center mt-4 text-sm font-medium">
+                          <button
+                            className="px-4 py-3 bg-primary text-white rounded-lg shadow mr-1"
+                            onClick={() => {
+                              // setPluginState(PluginState.INSTALLED)
+                              window.open(
+                                'https://chromewebstore.google.com/detail/kleo-connect/jimpblheogbjfgajkccdoehjfadmimoo?hl=en'
+                              )
+                            }}
+                          >
+                            Install Plugin
+                          </button>
+                          <button
+                            className="px-4 py-3 ml-1 rounded-lg shadow border border-gray-200 text-gray-700"
+                            onClick={() => location.reload()}
+                          >
+                            I have already installed
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  {!login && (
-                    <div className="w-9/12">
+                  <div className="flex flex-row items-start gap-4 w-full mb-[50px]">
+                    <div className="bg-gray-100 p-3 rounded-2xl">
+                      <MetamaskLogo className="w-12 h-12" />
+                    </div>
+                    <div>
                       <div className="flex items-start justify-between w-full">
                         <div className="flex flex-col items-start justify-center">
                           <span className="text-gray-900 text-base font-medium">
@@ -146,7 +181,10 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                       <div className="flex flex-col items-center mt-2 text-sm font-medium">
                         {pluginState == PluginState.INSTALLED ? (
                           <ConnectWallet
-                            style={{ width: '100%', textAlign: 'center' }}
+                            style={{
+                              width: '100%',
+                              textAlign: 'center'
+                            }}
                             className="w-[200px]"
                           />
                         ) : (
@@ -154,93 +192,36 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                             Install Kleo Plugin to Create Account!
                           </p>
                         )}
-
-                        <div className="relative w-full mt-2">
-                          <div
-                            className={`absolute bottom-2 left-auto right-3 top-auto z-10 rounded-full ${
-                              login
-                                ? 'bg-green-600 border-white'
-                                : 'bg-gray-50 border-gray-50'
-                            } p-1 border-4 border-white `}
-                          >
-                            <Tick
-                              className={`w-3 h-3 ${
-                                login ? 'fill-white' : 'fill-gray-50'
-                              }`}
-                            />
-                          </div>
-                        </div>
                       </div>
-                      <div className="p-6">
-                        <button
-                          disabled={!login}
-                          className={`px-4 py-3 ${
-                            login
-                              ? 'bg-violet-800 text-white'
-                              : 'bg-violet-400 text-white'
-                          } rounded-lg shadow mx-auto block`}
-                          onClick={
-                            () => console.log('Kleo world')
-                            // function which creates account by signing a transaction and posting to kleo backend api
-                          }
-                        >
-                          Create Account
-                        </button>
-                      </div>
+                    </div>
+                  </div>
+                  <button
+                    disabled={!walletAddress}
+                    className={`w-full py-3 ${
+                      walletAddress
+                        ? 'bg-violet-600 text-white'
+                        : 'bg-gray-100 text-gray-500'
+                    } rounded-lg shadow mx-auto block`}
+                    onClick={
+                      () => handleUserLogin()
+                      // function which creates account by signing a transaction and posting to kleo backend api
+                    }
+                  >
+                    Create Account
+                  </button>
+                  {login && (
+                    <div className="m-3">
+                      <Alert
+                        type="danger"
+                        message="Could not authenticate user, please try again later."
+                        icon={
+                          <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
+                        }
+                      />
                     </div>
                   )}
                 </div>
               </div>
-              <div className="w-1/3 mt-5 pt-2 pl-5 pr-5 mb-10 border-l border-gray-300">
-                <div className="flex flex-col items-start justify-center">
-                  <div className="flex mb-20 flex-col items-start justify-center">
-                    <span className="text-gray-900 text-base font-sm">
-                      Extension Privacy
-                    </span>
-                    <span className="text-gray-400 text-sm font-regular">
-                      Our{' '}
-                      <a
-                        className=""
-                        target="_blank"
-                        href="https://github.com/Kleo-Network/"
-                      >
-                        code
-                      </a>{' '}
-                      is open source, we want you to{' '}
-                      <u className="text-gray-800">own</u> your data.
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-start justify-center">
-                    <span className="text-gray-900 text-base font-sm">
-                      Wallet Connect
-                    </span>
-                    <span className="text-gray-400 text-sm font-regular">
-                      You will be eligible for{' '}
-                      <u className="text-gray-800">10000 $VANA</u> by signing
-                      the transaction
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {login && (
-              <div className="m-3">
-                <Alert
-                  type="danger"
-                  message="Could not authenticate user, please try again later."
-                  icon={
-                    <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
-                  }
-                />
-              </div>
-            )}
-            <div className="p-6 border-t border-gray-200 w-full">
-              <Accordion
-                expanded={infoExpanded}
-                setExpanded={setInfoExpanded}
-                header={accordionHeader(infoExpanded)}
-                body={accordionBody()}
-              />
             </div>
           </div>
         </>
