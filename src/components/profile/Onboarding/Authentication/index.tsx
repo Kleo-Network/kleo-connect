@@ -52,11 +52,9 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
       }),
       onSuccessfulFetch: (data) => {
         if ((data as any)?.message == 'Please sign up') {
-          console.log('why here')
           navigate('/signup/1')
           setCurrentStep(1)
         } else if (data?.address && data?.token) {
-          console.log('why not here')
           localStorage.setItem('address', data.address)
           localStorage.setItem('token', data.token)
           ;(window as any).signIn(data.address, data.token)
@@ -72,19 +70,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
 
   return (
     <div className="flex flex-col items-center justify-center mx-auto w-full">
-      {currentStep == 0 && (
-        <div className="flex flex-col items-start justify-center bg-white shadow-lg rounded-lg w-full max-w-3xl">
-          <div className="p-6 text-lg w-full font-medium text-gray-900 border-b  border-gray-200 flex justify-center items-center">
-            <div className="text-3xl font-shoreline md:text-3xl">login</div>
-          </div>
-          <div className="flex self-stretch w-full flex-col items-center justify-center p-6 border bg-white shadow-lg border-gray-200 rounded-lg">
-            <p className="text-sm font-regular text-gray-500">
-              Login to kleo network!
-            </p>
-          </div>
-        </div>
-      )}
-      {currentStep == 1 && (
+      {(currentStep == 1 || currentStep == 0) && (
         <>
           <div className="flex flex-row items-start justify-center px-2 py-2 bg-white shadow-lg rounded-lg w-full">
             <div className="w-full grid grid-cols-2 p-2 container mx-auto">

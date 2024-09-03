@@ -13,40 +13,38 @@ import Settings from '../profile/Settings'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
 import { ReactComponent as Plus } from '../../assets/images/plus.svg'
-
-// Fetching User Full Data. [Static Cards, Published Cards, User]
+import Dashboard from '../../assets/images/dashboard.png'
+import CountdownTimer from './../utils/countdown' // Assume this is in the same directory
 
 export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { event, updateEvent } = useContext(EventContext)
   const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
   const { slug } = useParams()
   const navigate = useNavigate()
+  const endDate = new Date(
+    1725403476000 + 10 * 24 * 60 * 60 * 1000
+  ).toISOString()
 
-  // Check if the current slug matches the one in localStorage, and set the isPublic flag accordingly.
   useEffect(() => {
     const storedSlug = localStorage.getItem('slug')
   }, [])
 
-  // Fetch Pending Cards.
-
-  // Click Handlers.
-
   return (
-    <div className="flex flex-col h-full bg-gray-50">
-      {/* Banner Section */}
-
-      {/* Profile Section */}
-      <div className="flex flex-col w-full mt-[50px] items-center mx-auto">
-        <div className="w-[75%] gap-6 h-80 flex flex-col justify-center">
-          <h1>Welcome user {user.address}</h1>
-          <h2>New dashboard comming in while</h2>
+    <div className="flex flex-col h-screen bg-gray-50">
+      {/* Dashboard Image Section */}
+      <div className="relative flex-grow flex items-start overflow-hidden">
+        <img src={Dashboard} className="filter blur-[2px]" alt="Dashboard" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="bg-white p-10 rounded-md shadow-md">
+            <h2 className="text-xl font-bold mb-5 text-gray-800">
+              Dashboard launching in...
+            </h2>
+            <CountdownTimer endDate={endDate} isProfilePage={true} />
+          </div>
         </div>
       </div>
 
-      {/* Published Cards Section */}
-      <div className="flex w-full items-center mx-auto justify-center mt-5 bg-gray-50">
-        <div className="w-[75%] grid"></div>
-      </div>
+      {/* Welcome Message */}
 
       {/* Settings Modal */}
       <Modal

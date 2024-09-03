@@ -17,8 +17,10 @@ const SignUp: React.FC<SignupProps> = ({ user, setUser, setIsLoggedIn }) => {
   }
 
   return (
-    <div className="flex flex-col self-stretch flex-1 items-center justify-center py-12 px-6 md:px-60 lg:px-96 bg-gray-100 ">
-      <Onboarding handleLogin={handleLogin} user={user} setUser={setUser} />
+    <div className="flex flex-col items-center justify-start w-full bg-gray-100">
+      <div className="w-full bg-white h-[calc(100vh-5rem)] md:h-[calc(100vh-5rem)] lg:h-[calc(100vh-8rem)]">
+        <Onboarding handleLogin={handleLogin} user={user} setUser={setUser} />
+      </div>
     </div>
   )
 }

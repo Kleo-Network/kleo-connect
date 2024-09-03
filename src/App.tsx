@@ -81,7 +81,7 @@ function App(): ReactElement {
       <EventProvider>
         <div className="h-full w-full">
           <div className="flex flex-col font-inter self-stretch h-full">
-            {isLoggedIn && (
+            {/* {isLoggedIn && (
               <header className="flex flex-row self-stretch items-center">
                 <Navbar
                   handleLogout={handleLogout}
@@ -89,7 +89,7 @@ function App(): ReactElement {
                   slug={user.address}
                 />
               </header>
-            )}
+            )} */}
 
             <Routes>
               <Route

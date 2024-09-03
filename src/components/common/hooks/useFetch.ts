@@ -24,7 +24,7 @@ type FetchResponse<T> = {
   fetchData: (url: string, options?: Options<T>) => void
 }
 export const baseUrl = 
-  //'http://127.0.0.1:5001/api' ||
+  // 'http://127.0.0.1:5001/api' ||
   'https://api.kleo.network/api'
 
 export enum FetchStatus {
