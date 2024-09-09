@@ -1,0 +1,20 @@
+import React from 'react'
+
+function BigStar() {
+  return (
+    <svg
+      width="165"
+      height="165"
+      viewBox="0 0 165 165"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M81.8325 0L97.8535 66.9109L165 81.8325L98.0891 97.8534L83.1675 165L67.2251 98.089L0 83.1675L66.9111 67.1465L81.8325 0Z"
+        fill="white"
+      />
+    </svg>
+  )
+}
+
+export default BigStar

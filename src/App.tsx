@@ -100,7 +100,7 @@ function App(): ReactElement {
                   user.token ? (
                     <Navigate to={`/profile/${user.address}`} />
                   ) : (
-                    <Navigate to={`/signup/0`} />
+                    <Navigate to={`/profile/{abc`} />
                   )
                 }
               />
