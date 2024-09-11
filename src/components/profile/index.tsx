@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react'
 import Graph from '../../assets/images/graph.png'
 import twitter from '../../assets/images/X.com.png'
@@ -45,16 +47,16 @@ function First() {
       <div className="space-y-6">
         {/* Total Points Earned */}
         <div
-          className="relative rounded-lg flex flex-col justify-between text-white"
-          style={{ minHeight: '269px' }}
+          className="relative rounded-lg flex flex-col justify-between text-white p-0"
+          style={{ minHeight: '200px' }}
         >
           <img src={Grids} alt="Data Quality Graph" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
-          <div className="relative flex flex-col justify-between z-0 p-6" style={{ minHeight: '269px' }}>
+          <div className="relative flex flex-col justify-between z-0 p-6" style={{ minHeight: '200px' }}>
             <img src={Reward} alt="Reward Icon" className="w-20 h-20 mb-4" />
             <div>
-              <h3 className="text-lg font-semibold">Total Points Earned</h3>
+              <h3 className="text-lg font-medium font-inter">Total Points Earned</h3>
               <p className="text-4xl font-bold">
-                2,400 <span className="text-lg">KLEO XP</span>
+                2,400 <span className="text-lg text-lg font-medium font-inter">KLEO XP</span>
               </p>
             </div>
           </div>
@@ -62,14 +64,14 @@ function First() {
 
         {/* Total Data Quantity */}
         <div
-          className="p-6 rounded-lg flex flex-col justify-between bg-white text-black"
-          style={{ minHeight: '269px' }}
+          className="p-5 rounded-lg flex flex-col justify-between bg-white text-black"
+          style={{ minHeight: '215px' }}
         >
           <img src={Data} alt="Data Quantity Icon" className="w-20 h-20 mb-4" />
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold">Total Data Quantity</h3>
             <p className="text-4xl font-bold">
-              34 MB <span className="text-lg">till date</span>
+              34 MB <span className="text-lg font-medium font-inter">till date</span>
             </p>
           </div>
         </div>
@@ -79,21 +81,24 @@ function First() {
 
   const DataQuality = () => {
     return (
-      <div className="space-y-6 ">
+      <div className="space-y-6 "
+      >
         {/* <!-- My Data Quality --> */}
         <div
-          className="bg-white p-6 rounded-lg "
-          style={{ minHeight: '562px' }}
+          className="bg-white p-5 rounded-xl "
+          style={{ minHeight: '450px' }}
         >
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-2xl mb-2 font-semibold">My Data Quality</h3>
-              <p className="w-5/6 font-inter">
+              <p className="w-5/6 font-inter text-sm"
+
+              >
                 Data quality is defined by lorem ipusm dolor sit amit{' '}
               </p>
             </div>
             <div
-              className="text-2xl flex items-center rounded-xl justify-center font-bold text-purple-600 w-20 h-16 bg-primary-btn-300 text-white"
+              className="text-2xl flex items-center rounded-xl justify-center font-bold text-purple-600 w-20 h-16 bg-primary-btn-300 text-white p-10"
               style={{
                 backgroundColor: 'rgba(127, 86, 217, 1)'
               }}
@@ -103,13 +108,13 @@ function First() {
           </div>
           <div className="mt-4 flex items-center justify-between">
             <div
-              className="bg-gray-100 rounded-lg flex items-center justify-center"
-              style={{ height: '360px', width: '100%' }}
+              className=" bg-gray-100 rounded-lg flex items-center justify-center"
+              style={{ height: '260px', width: '100%' }}
             >
               <Radar data={data} options={options} />
             </div>
           </div>
-          <p className="mt-4 rounded-lg text-sm flex items-center pl-4 text-white bg-indigo-950 h-11">
+          <p className="mt-5 rounded-lg text-sm flex items-center pl-4 text-white bg-indigo-950 h-11">
             <span className="flex items-center text-sm font-bold text-white-600 pr-1">
               <span
                 style={{
@@ -139,25 +144,26 @@ function First() {
   const Milestones = () => {
     return (
       <div
-        className="bg-white p-6 rounded-lg  relative "
-      // style={{ width: '500px', right: '70px' }}
+        className="bg-white p-5 rounded-xl  relative"
+        // style={{ width: '500px', right: '70px' }}
+        style={{ maxHeight: '450px' }}
       >
         <h3 className="text-2xl mb-2 font-semibold">Milestones</h3>
         <p className="text-sm font-inter">
           Keep up with the team to receive rewards!
         </p>
-        <ul className="mt-4 space-y-4">
+        <ul className="mt-4 pb-8 space-y-4">
           <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100 ">
             <div className="flex items-center space-x-1">
               <img
                 src={twitter}
                 alt="Tweet your activity graph"
-                className="w-12 h-12"
+                className="w-11 h-11"
               />
-              <span>Tweet your activity graph</span>
+              <span className='text-sm font-semibold'>Tweet your activity graph</span>
             </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-9 rounded-full flex items-center justify-center">
-              +120 XP
+            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
+              +120 <span className='text-xs'>XP</span>
             </span>
           </li>
           <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100">
@@ -165,12 +171,12 @@ function First() {
               <img
                 src={eightyseven}
                 alt="Tweet your activity graph"
-                className="w-12 h-12"
+                className="w-11 h-11"
               />
-              <span>Tweet your activity graph</span>
+              <span className='text-sm font-semibold'>Tweet your activity graph</span>
             </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-9 rounded-full flex items-center justify-center">
-              +120 XP
+            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
+              +120 <span className='text-xs'>XP</span>
             </span>
           </li>
           <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100">
@@ -178,12 +184,12 @@ function First() {
               <img
                 src={ten}
                 alt="Tweet your activity graph"
-                className="w-12 h-12"
+                className="w-11 h-11"
               />
-              <span>Tweet your activity graph</span>
+              <span className='text-sm font-semibold'>Tweet your activity graph</span>
             </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-9 rounded-full flex items-center justify-center">
-              +120 XP
+            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
+              +120 <span className='text-xs'>XP</span>
             </span>
           </li>
           <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100 opacity-50">
@@ -191,12 +197,12 @@ function First() {
               <img
                 src={twitter}
                 alt="Tweet your activity graph"
-                className="w-12 h-12"
+                className="w-11 h-11"
               />
-              <span>Tweet your activity graph</span>
+              <span className='text-sm font-semibold'>Tweet your activity graph</span>
             </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-9 rounded-full flex items-center justify-center">
-              +120 XP
+            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
+              +120 <span className='text-xs'>XP</span>
             </span>
           </li>
         </ul>
@@ -206,7 +212,7 @@ function First() {
 
   const Snapshot = () => {
     return (
-      <div className="bg-white p-6 rounded-lg mx-auto">
+      <div className="bg-white p-6 rounded-xl mx-auto">
         <h3 className="text-2xl font-semibold mb-2">Snapshot</h3>
         <p className="text-gray-500 mb-6">
           Vote and be eligible to earn more KLEO XP!
@@ -214,11 +220,11 @@ function First() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* <!-- First Card - Kleo Mate --> */}
           <div
-            className="text-white p-6 rounded-lg"
+            className="text-white p-5 rounded-lg"
             style={{ backgroundColor: '#293056' }}
           >
             <div
-              className="flex items-center justify-center h-10 w-10 rounded-lg"
+              className="flex items-center justify-center h-10 w-10 rounded"
               style={{ backgroundColor: '#475467' }}
             >
               <KleoMate color={'white'} />
@@ -236,8 +242,8 @@ function First() {
               View Proposal
             </button>
           </div>
-          <div className="bg-gray-50 text-black p-6 rounded-lg">
-            <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-gray-100">
+          <div className="bg-gray-50 text-black p-5 rounded-lg">
+            <div className="flex items-center justify-center h-10 w-10 rounded bg-gray-100">
               <KleoMate color={'#363F72'} />
             </div>
             <div className="flex items-center mb-2 mt-2">
@@ -254,8 +260,8 @@ function First() {
               View Proposal
             </button>
           </div>
-          <div className="bg-gray-50 text-black p-6 rounded-lg">
-            <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-gray-100">
+          <div className="bg-gray-50 text-black p-5 rounded-xl">
+            <div className="flex items-center justify-center h-10 w-10 rounded bg-gray-100">
               <KleoMate color={'#363F72'} />
             </div>
             <div className="flex items-center mb-2 mt-2">
@@ -280,7 +286,7 @@ function First() {
 
   const Referrals = () => {
     return (
-      <div className="container flex flex-col justify-between mx-auto p-6 bg-white rounded-lg mt-6 min-h-80">
+      <div className="container flex flex-col justify-between mx-auto p-6 bg-white rounded-xl mt-6 min-h-80">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-3xl mb-2 font-semibold">My Referrals</h3>
@@ -310,7 +316,7 @@ function First() {
           </div>
         </div>
         <div className="mt-4 max-h-44 overflow-y-auto">
-          <table className="min-w-full text-left table-auto">
+          <table className="min-w-full text-left table-auto" >
             <thead className="sticky top-0 bg-white z-10">
               <tr>
                 <th className="px-4 py-2 font-normal text-sm text-gray-500"></th>
@@ -325,14 +331,17 @@ function First() {
                 </th>
               </tr>
             </thead>
+
             <tbody className="divide-y divide-gray-200 rounded-lg">
               {Referral.map((referral, index) => (
+                // <div>
                 <tr
                   key={index}
                   className={`${index % 2 === 0 ? 'bg-gray-100 rounded-lg' : 'bg-white'
                     } rounded-lg`}
                 >
-                  <td className="px-4 py-2 flex items-center gap-4 w-16 text-center">
+
+                  <td className="px-4 py-2 flex items-center gap-4 w-16 text-center ">
                     <span className="text-sm font-medium">{index + 1}</span>
                     <img
                       src={'https://picsum.photos/40'}
@@ -349,29 +358,33 @@ function First() {
                     {referral.dateJoined}
                   </td>
                   <td
-                    className={`gap-1 text-lg font-semibold w-24 h-9 rounded-full flex items-center justify-center text-center`}
+                    className="gap - 1 text-lg font-semibold w-24 h-8 rounded-full flex items-center justify-center text-center"
                     style={{
                       backgroundColor: index % 2 === 0 ? 'white' : '#F4EBFF',
                       color: '#7F56D9'
                     }}
                   >
+
+                    {/* >\ */}
                     {referral.xpEarned}
-                    <sub className="text-purple-600 text-xs font-semibold ">
+                    <sub className="text-purple-600 text-xs text-xs">
                       XP
                     </sub>
                   </td>
                 </tr>
+                // </div>
+
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </div >
     )
   }
 
   const Leaderboard = () => {
     return (
-      <div className="bg-white p-6 rounded-lg ">
+      <div className="bg-white p-6 rounded-xl">
         <h3 className="text-3xl mb-2 font-semibold">Leaderboard</h3>
         <p className="text-sm text-gray-500 mb-4 font-inter">
           Keep up with the team to receive rewards!
@@ -385,13 +398,13 @@ function First() {
           {/* <!-- Leaderboard Entry --> */}
           {LeaderBoardData.map((data, index) => (
             <li
-              className={`mr-4 flex justify-between items-center p-4 rounded-md cursor-pointer ${selectedIndex === index ? 'bg-cyan-950' : 'bg-gray-100'
+              className={`mr-2 flex justify-between items-center p-4 rounded-md cursor-pointer ${selectedIndex === index ? 'bg-cyan-950' : 'bg-gray-100'
                 }`}
               onClick={() => handleClick(index)}
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <span
-                  className={`font-normal text-xs ${selectedIndex === index ? 'text-white' : 'text-gray-700'
+                  className={`font-normal text-xs w-3 ${selectedIndex === index ? 'text-white' : 'text-gray-700'
                     }`}
                 >
                   {data.id}
@@ -411,11 +424,11 @@ function First() {
               </div>
               <span
                 className={`${selectedIndex === index ? 'text-white' : 'text-gray-700'
-                  } text-sm font-medium`}
+                  } text-base font-medium`}
               >
                 {data.reward}{' '}
                 <span
-                  className={`text-xs font-medium ${selectedIndex === index ? 'text-white' : 'text-gray-400'
+                  className={`text-xs ${selectedIndex === index ? 'text-white' : 'text-gray-400'
                     }`}
                 >
                   KLEO
@@ -426,14 +439,14 @@ function First() {
 
           {/* <!-- More entries can go here --> */}
         </ul>
-      </div>
+      </div >
     )
   }
 
   const Privacy = () => {
     return (
       <div
-        className="bg-white p-6 rounded-lg "
+        className="bg-white p-4 rounded-xl "
         style={{
           background:
             'linear-gradient(219.02deg, #293056 17.14%, #5969BC 118.66%)'
@@ -445,7 +458,10 @@ function First() {
           data, safeguarded your identity by removing.
         </p>
         <p className="text-4xl font-bold text-white mt-4 font-inter">
-          2,400 <span className="text-white text-lg">PIIS Removed</span>
+          <span className="text-white text-lg font-normal">Total PIIS Removed</span>
+        </p>
+        <p className="text-4xl font-bold text-white  font-inter">
+          2,400 <span className="text-white text-lg font-normal">PIIS </span>
         </p>
       </div>
     )
@@ -454,7 +470,7 @@ function First() {
   const Leader = () => {
     return (
       <div
-        className="bg-white p-6 rounded-lg  col-span-2 relative"
+        className="bg-white p-6 rounded-xl  col-span-2 relative"
         style={{
           background:
             'linear-gradient(90deg, rgba(254, 254, 254, 1) 0%, rgba(224, 215, 247, 1) 100%)'
@@ -487,7 +503,9 @@ function First() {
 
   return (
     <div className="bg-slate-100">
-      <div className="w-full bg-white fixed z-10">
+      <div className="w-full bg-white fixed z-10"
+        style={{ backgroundColor: 'rgba(248, 249, 252, 1)' }}
+      >
         <div className="container mx-auto p-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <img
@@ -511,18 +529,38 @@ function First() {
       </div>
 
       {/* <!-- Main Content --> */}
+
       <div
-        className="container mx-auto p-6 grid lg:grid-cols-3 gap-6 mt-14"
-        style={{ marginTop: '7%' }}
+        className="container mx-auto p-6 gap-5 flex  mt-14 pt-10"
+        style={{ marginTop: '80px' }}
+      >
+        {/*Left Column: Points and Data */}
+        <div style={{ flex: '0 0 25%', width: '25%', marginRight: '0px' }}>
+          {PointsAndData()}
+        </div>
+
+        {/* Middle Column: Data Quality */}
+        <div style={{ flex: '0 0 33%', width: '33%' }}>
+          {DataQuality()}
+        </div>
+
+        {/* Right Column: Milestones */}
+        <div style={{ flex: '0 0 38%', width: '38%', minHeight: '450px' }}>
+          {Milestones()}
+        </div>
+      </div>
+      <div
+        className="container mx-auto p-6 grid lg:grid-cols-3 gap-5 "
+        style={{ marginTop: '-10px' }}
       >
         {/* <!-- Left Column: Points and Data --> */}
-        {PointsAndData()}
+        {/* {PointsAndData()} */}
 
         {/* <!-- Middle Column: Data Quality and DataQuality --> */}
-        {DataQuality()}
+        {/* {DataQuality()} */}
 
         {/* <!-- Milestones --> */}
-        {Milestones()}
+        {/* {Milestones()} */}
 
         <div className="space-y-6 col-span-2">
           {/* <!-- Snapshot Section --> */}
@@ -539,7 +577,8 @@ function First() {
       </div>
       <div
         className="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6"
-      // style={{ paddingInline: '100px' }}
+
+        style={{ marginTop: -10 }}
       >
         {/* <!-- Privacy Card --> */}
         {Privacy()}
@@ -696,7 +735,7 @@ const data = {
 
 // function StatsCard({ icon, title, value, unit, bgColor, textColor }) {
 //   return (
-//     <div className={`${bgColor} rounded-2xl p-6 ${textColor}`}>
+//     <div className={${bgColor} rounded-2xl p-6 ${textColor}}>
 //       <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
 //         {icon}
 //       </div>
@@ -764,14 +803,14 @@ const data = {
 //       <p className="text-sm text-gray-500 mb-4">Keep up with the team to receive rewards!</p>
 //       {milestones.map((milestone, index) => (
 //         <div key={index} className="flex items-center mb-4 bg-gray-50 p-3 rounded-lg">
-//           <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${milestone.completed ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-800'}`}>
+//           <div className={w-8 h-8 rounded-full flex items-center justify-center mr-3 ${milestone.completed ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-800'}}>
 //             {milestone.icon}
 //           </div>
 //           <div className="flex-grow">
 //             <p className="text-sm">{milestone.text}</p>
 //             {milestone.progress && (
 //               <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-//                 <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${milestone.progress}%` }}></div>
+//                 <div className="bg-purple-600 h-2 rounded-full" style={{ width: ${milestone.progress}% }}></div>
 //               </div>
 //             )}
 //           </div>
@@ -799,7 +838,7 @@ const data = {
 //         {proposals.map((proposal, index) => (
 //           <div
 //             key={index}
-//             className={`bg-gray-800 text-white p-4 rounded-xl cursor-pointer transition-all duration-300 ease-in-out ${expandedProposal === index ? 'col-span-2' : ''}`}
+//             className={bg-gray-800 text-white p-4 rounded-xl cursor-pointer transition-all duration-300 ease-in-out ${expandedProposal === index ? 'col-span-2' : ''}}
 //             onClick={() => setExpandedProposal(index)}
 //           >
 //             <h3 className="font-semibold mb-2">{proposal.title}</h3>
@@ -868,7 +907,7 @@ const data = {
 //       <h2 className="text-lg font-semibold mb-2">Leaderboard</h2>
 //       <p className="text-sm text-gray-500 mb-4 font-inter">Keep up with the team to receive rewards!</p>
 //       {leaders.map((leader, index) => (
-//         <div key={index} className={`flex items-center justify-between mb-3 ${index === 0 ? 'bg-gray-800 text-white p-3 rounded-lg' : ''}`}>
+//         <div key={index} className={flex items-center justify-between mb-3 ${index === 0 ? 'bg-gray-800 text-white p-3 rounded-lg' : ''}}>
 //           <div className="flex items-center">
 //             {leader.rank && <span className="mr-2 text-sm">{leader.rank}</span>}
 //             <div className="w-8 h-8 bg-gray-200 rounded-full mr-2"></div>
@@ -890,4 +929,3 @@ const data = {
 //     </div>
 //   );
 // }
-
