@@ -1,21 +1,6 @@
-
-
 import React, { useState } from 'react'
-import Graph from '../../assets/images/graph.png'
-import twitter from '../../assets/images/X.com.png'
-import eightyseven from '../../assets/images/87percent.png'
-import ten from '../../assets/images/10percent.png'
 import KLEO from '../../assets/images/KLEO Logo.png'
-import KleoMate from '../../assets/images/KleoMate.jsx'
-import Reward from '../../assets/images/reward.png'
-import Grids from '../../assets/images/Frame 456 (1).png'
-import Data from '../../assets/images/data.png'
-import Group from '../../assets/images/group.png'
-import Copy from '../../assets/images/copy.png'
-import BigStar from '../../assets/images/BigStar.jsx'
-import MediumStar from '../../assets/images/MediumStar.jsx'
-import SmallStar from '../../assets/images/SmallStar.jsx'
-import { Radar } from 'react-chartjs-2'
+import PointsAndDataSection from './components/PointsAndData'
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -25,6 +10,13 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+import DataQuality from './components/DataQuality'
+import Milestones from './components/Milestones'
+import Snapshot from './components/Snapshot'
+import Referrals from './components/Referrals'
+import Leaderboard from './components/Leaderboard'
+import Privacy from './components/Privacy'
+import Leader from './components/Leader'
 
 ChartJS.register(
   RadialLinearScale,
@@ -36,474 +28,10 @@ ChartJS.register(
 )
 
 function First() {
-  const [selectedIndex, setSelectedIndex] = useState(0)
-
-  const handleClick = (index) => {
-    setSelectedIndex(index)
-  }
-
-  const PointsAndData = () => {
-    return (
-      <div className="space-y-6">
-        {/* Total Points Earned */}
-        <div
-          className="relative rounded-lg flex flex-col justify-between text-white p-0"
-          style={{ minHeight: '200px' }}
-        >
-          <img src={Grids} alt="Data Quality Graph" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
-          <div className="relative flex flex-col justify-between z-0 p-6" style={{ minHeight: '200px' }}>
-            <img src={Reward} alt="Reward Icon" className="w-20 h-20 mb-4" />
-            <div>
-              <h3 className="text-lg font-medium font-inter">Total Points Earned</h3>
-              <p className="text-4xl font-bold">
-                2,400 <span className="text-lg text-lg font-medium font-inter">KLEO XP</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Total Data Quantity */}
-        <div
-          className="p-5 rounded-lg flex flex-col justify-between bg-white text-black"
-          style={{ minHeight: '215px' }}
-        >
-          <img src={Data} alt="Data Quantity Icon" className="w-20 h-20 mb-4" />
-          <div className="flex flex-col">
-            <h3 className="text-lg font-semibold">Total Data Quantity</h3>
-            <p className="text-4xl font-bold">
-              34 MB <span className="text-lg font-medium font-inter">till date</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const DataQuality = () => {
-    return (
-      <div className="space-y-6 "
-      >
-        {/* <!-- My Data Quality --> */}
-        <div
-          className="bg-white p-5 rounded-xl "
-          style={{ minHeight: '450px' }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-2xl mb-2 font-semibold">My Data Quality</h3>
-              <p className="w-5/6 font-inter text-sm"
-
-              >
-                Data quality is defined by lorem ipusm dolor sit amit{' '}
-              </p>
-            </div>
-            <div
-              className="text-2xl flex items-center rounded-xl justify-center font-bold text-purple-600 w-20 h-16 bg-primary-btn-300 text-white p-10"
-              style={{
-                backgroundColor: 'rgba(127, 86, 217, 1)'
-              }}
-            >
-              87%
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between">
-            <div
-              className=" bg-gray-100 rounded-lg flex items-center justify-center"
-              style={{ height: '260px', width: '100%' }}
-            >
-              <Radar data={data} options={options} />
-            </div>
-          </div>
-          <p className="mt-5 rounded-lg text-sm flex items-center pl-4 text-white bg-indigo-950 h-11">
-            <span className="flex items-center text-sm font-bold text-white-600 pr-1">
-              <span
-                style={{
-                  height: '11px',
-                  width: '11px',
-                  backgroundColor: 'white',
-                  padding: '1px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: '4px',
-                  borderRadius: '50%'
-                }}
-              ></span>{' '}
-              64%{' '}
-            </span>
-            of your data quality is from
-            <span className="text-sm font-bold text-white-600 pl-1">
-              Designing
-            </span>
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  const Milestones = () => {
-    return (
-      <div
-        className="bg-white p-5 rounded-xl  relative"
-        // style={{ width: '500px', right: '70px' }}
-        style={{ maxHeight: '450px' }}
-      >
-        <h3 className="text-2xl mb-2 font-semibold">Milestones</h3>
-        <p className="text-sm font-inter">
-          Keep up with the team to receive rewards!
-        </p>
-        <ul className="mt-4 pb-8 space-y-4">
-          <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100 ">
-            <div className="flex items-center space-x-1">
-              <img
-                src={twitter}
-                alt="Tweet your activity graph"
-                className="w-11 h-11"
-              />
-              <span className='text-sm font-semibold'>Tweet your activity graph</span>
-            </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
-              +120 <span className='text-xs'>XP</span>
-            </span>
-          </li>
-          <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100">
-            <div className="flex items-center space-x-1">
-              <img
-                src={eightyseven}
-                alt="Tweet your activity graph"
-                className="w-11 h-11"
-              />
-              <span className='text-sm font-semibold'>Tweet your activity graph</span>
-            </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
-              +120 <span className='text-xs'>XP</span>
-            </span>
-          </li>
-          <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100">
-            <div className="flex items-center space-x-1">
-              <img
-                src={ten}
-                alt="Tweet your activity graph"
-                className="w-11 h-11"
-              />
-              <span className='text-sm font-semibold'>Tweet your activity graph</span>
-            </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
-              +120 <span className='text-xs'>XP</span>
-            </span>
-          </li>
-          <li className="flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100 opacity-50">
-            <div className="flex items-center space-x-1">
-              <img
-                src={twitter}
-                alt="Tweet your activity graph"
-                className="w-11 h-11"
-              />
-              <span className='text-sm font-semibold'>Tweet your activity graph</span>
-            </div>
-            <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center gap-1">
-              +120 <span className='text-xs'>XP</span>
-            </span>
-          </li>
-        </ul>
-      </div>
-    )
-  }
-
-  const Snapshot = () => {
-    return (
-      <div className="bg-white p-6 rounded-xl mx-auto">
-        <h3 className="text-2xl font-semibold mb-2">Snapshot</h3>
-        <p className="text-gray-500 mb-6">
-          Vote and be eligible to earn more KLEO XP!
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* <!-- First Card - Kleo Mate --> */}
-          <div
-            className="text-white p-5 rounded-lg"
-            style={{ backgroundColor: '#293056' }}
-          >
-            <div
-              className="flex items-center justify-center h-10 w-10 rounded"
-              style={{ backgroundColor: '#475467' }}
-            >
-              <KleoMate color={'white'} />
-            </div>
-            <div className="flex items-center mb-2 mt-2">
-              <h4 className="text-lg font-semibold">Kleo Mate</h4>
-            </div>
-            <p className="text-sm font-normal mb-4">
-              a social networking dating website wants to request your data..
-            </p>
-            <button
-              className="bg-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-100"
-              style={{ color: '#6941C6' }}
-            >
-              View Proposal
-            </button>
-          </div>
-          <div className="bg-gray-50 text-black p-5 rounded-lg">
-            <div className="flex items-center justify-center h-10 w-10 rounded bg-gray-100">
-              <KleoMate color={'#363F72'} />
-            </div>
-            <div className="flex items-center mb-2 mt-2">
-              <h4 className="text-lg font-semibold">Defi Creator</h4>
-            </div>
-            <p className="text-sm font-normal text-gray-600 mb-4">
-              a decentralised finance is requesting your data to share top
-              investment ...
-            </p>
-            <button
-              className=" text-white py-2 px-4 rounded-lg font-semibold "
-              style={{ backgroundColor: '#7F56D9' }}
-            >
-              View Proposal
-            </button>
-          </div>
-          <div className="bg-gray-50 text-black p-5 rounded-xl">
-            <div className="flex items-center justify-center h-10 w-10 rounded bg-gray-100">
-              <KleoMate color={'#363F72'} />
-            </div>
-            <div className="flex items-center mb-2 mt-2">
-              <h4 className="text-lg font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
-                Decentralised Youtube
-              </h4>
-            </div>
-            <p className="text-sm font-normal text-gray-600 mb-4">
-              seeking user data for personalised recommendation engine...
-            </p>
-            <button
-              className=" text-white py-2 px-4 rounded-lg font-semibold "
-              style={{ backgroundColor: '#7F56D9' }}
-            >
-              View Proposal
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const Referrals = () => {
-    return (
-      <div className="container flex flex-col justify-between mx-auto p-6 bg-white rounded-xl mt-6 min-h-80">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-3xl mb-2 font-semibold">My Referrals</h3>
-            <p className="text-sm font-normal text-gray-700 font-inter">
-              Bring people onboard on Kleo and earn points!
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1 rounded-full bg-gray-100 px-2 py-2">
-              <img
-                src={Group}
-                alt="Tweet your activity graph"
-                className="w-3.5 h-3.5"
-              />
-              <p className="text-xs font-inter">Referrals: 3</p>
-            </div>
-            <div className="flex items-center space-x-1 rounded-full bg-black px-3 py-2">
-              <img
-                src={Copy}
-                alt="Tweet your activity graph"
-                className="w-3.5 h-3.5"
-              />
-              <p className="text-xs text-white font-inter">
-                Copy Referral Link
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 max-h-44 overflow-y-auto">
-          <table className="min-w-full text-left table-auto" >
-            <thead className="sticky top-0 bg-white z-10">
-              <tr>
-                <th className="px-4 py-2 font-normal text-sm text-gray-500"></th>
-                <th className="px-4 py-2 font-normal text-sm text-gray-500 pl-8">
-                  Address
-                </th>
-                <th className="px-4 py-2 font-normal text-sm text-gray-500">
-                  Date Joined
-                </th>
-                <th className="px-4 py-2 font-normal text-sm text-gray-500">
-                  XP Earned
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-200 rounded-lg">
-              {Referral.map((referral, index) => (
-                // <div>
-                <tr
-                  key={index}
-                  className={`${index % 2 === 0 ? 'bg-gray-100 rounded-lg' : 'bg-white'
-                    } rounded-lg`}
-                >
-
-                  <td className="px-4 py-2 flex items-center gap-4 w-16 text-center ">
-                    <span className="text-sm font-medium">{index + 1}</span>
-                    <img
-                      src={'https://picsum.photos/40'}
-                      alt="User"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  </td>
-                  <td className="px-4 py-2">
-                    <span className="truncate text-base font-medium text-gray-700">
-                      {referral.address}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 text-base font-medium text-gray-700">
-                    {referral.dateJoined}
-                  </td>
-                  <td
-                    className="gap - 1 text-lg font-semibold w-24 h-8 rounded-full flex items-center justify-center text-center"
-                    style={{
-                      backgroundColor: index % 2 === 0 ? 'white' : '#F4EBFF',
-                      color: '#7F56D9'
-                    }}
-                  >
-
-                    {/* >\ */}
-                    {referral.xpEarned}
-                    <sub className="text-purple-600 text-xs text-xs">
-                      XP
-                    </sub>
-                  </td>
-                </tr>
-                // </div>
-
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div >
-    )
-  }
-
-  const Leaderboard = () => {
-    return (
-      <div className="bg-white p-6 rounded-xl">
-        <h3 className="text-3xl mb-2 font-semibold">Leaderboard</h3>
-        <p className="text-sm text-gray-500 mb-4 font-inter">
-          Keep up with the team to receive rewards!
-        </p>
-
-        {/* <!-- Scrollable Leaderboard --> */}
-        <ul
-          className="space-y-3  overflow-y-auto"
-          style={{ scrollbarWidth: 'auto', maxHeight: '600px' }}
-        >
-          {/* <!-- Leaderboard Entry --> */}
-          {LeaderBoardData.map((data, index) => (
-            <li
-              className={`mr-2 flex justify-between items-center p-4 rounded-md cursor-pointer ${selectedIndex === index ? 'bg-cyan-950' : 'bg-gray-100'
-                }`}
-              onClick={() => handleClick(index)}
-            >
-              <div className="flex items-center space-x-2">
-                <span
-                  className={`font-normal text-xs w-3 ${selectedIndex === index ? 'text-white' : 'text-gray-700'
-                    }`}
-                >
-                  {data.id}
-                </span>
-                <hr className="w-6 rotate-90 border-white p-0" />
-                <img
-                  src="https://picsum.photos/40"
-                  alt="User image"
-                  className="w-6 h-6 rounded-full"
-                />
-                <span
-                  className={`text-xs font-medium ${selectedIndex === index ? 'text-white' : 'text-gray-700'
-                    }`}
-                >
-                  {data.name}
-                </span>
-              </div>
-              <span
-                className={`${selectedIndex === index ? 'text-white' : 'text-gray-700'
-                  } text-base font-medium`}
-              >
-                {data.reward}{' '}
-                <span
-                  className={`text-xs ${selectedIndex === index ? 'text-white' : 'text-gray-400'
-                    }`}
-                >
-                  KLEO
-                </span>
-              </span>
-            </li>
-          ))}
-
-          {/* <!-- More entries can go here --> */}
-        </ul>
-      </div >
-    )
-  }
-
-  const Privacy = () => {
-    return (
-      <div
-        className="bg-white p-4 rounded-xl "
-        style={{
-          background:
-            'linear-gradient(219.02deg, #293056 17.14%, #5969BC 118.66%)'
-        }}
-      >
-        <h3 className="text-2xl mb-2 text-white font-semibold">Your Privacy</h3>
-        <p className="text-sm mt-4 text-white font-inter">
-          We value your privacy and remove all the PIIS before encrypting your
-          data, safeguarded your identity by removing.
-        </p>
-        <p className="text-4xl font-bold text-white mt-4 font-inter">
-          <span className="text-white text-lg font-normal">Total PIIS Removed</span>
-        </p>
-        <p className="text-4xl font-bold text-white  font-inter">
-          2,400 <span className="text-white text-lg font-normal">PIIS </span>
-        </p>
-      </div>
-    )
-  }
-
-  const Leader = () => {
-    return (
-      <div
-        className="bg-white p-6 rounded-xl  col-span-2 relative"
-        style={{
-          background:
-            'linear-gradient(90deg, rgba(254, 254, 254, 1) 0%, rgba(224, 215, 247, 1) 100%)'
-        }}
-      >
-        <div className="absolute right-1">
-          <BigStar />
-        </div>
-        <div className="absolute right-32 top-0">
-          <MediumStar />
-        </div>
-        <div className="absolute right-52 bottom-0">
-          <SmallStar />
-        </div>
-        <h3 className="text-3xl mb-2 font-semibold">Leaderboard</h3>
-        <p className="text-sm text-gray-600 mb-4 font-inter">
-          Keep up with the team to receive rewards!
-        </p>
-        <button
-          className="bg-purple-600 text-white py-2 px-4 rounded-full mt-10"
-          style={{
-            backgroundColor: 'rgba(127, 86, 217, 1)'
-          }}
-        >
-          Know More
-        </button>
-      </div>
-    )
-  }
-
   return (
     <div className="bg-slate-100">
-      <div className="w-full bg-white fixed z-10"
+      <div
+        className="w-full bg-white fixed z-10"
         style={{ backgroundColor: 'rgba(248, 249, 252, 1)' }}
       >
         <div className="container mx-auto p-4 flex justify-between items-center">
@@ -529,24 +57,23 @@ function First() {
       </div>
 
       {/* <!-- Main Content --> */}
-
       <div
         className="container mx-auto p-6 gap-5 flex  mt-14 pt-10"
         style={{ marginTop: '80px' }}
       >
         {/*Left Column: Points and Data */}
         <div style={{ flex: '0 0 25%', width: '25%', marginRight: '0px' }}>
-          {PointsAndData()}
+          <PointsAndDataSection />
         </div>
 
         {/* Middle Column: Data Quality */}
         <div style={{ flex: '0 0 33%', width: '33%' }}>
-          {DataQuality()}
+          <DataQuality />
         </div>
 
         {/* Right Column: Milestones */}
         <div style={{ flex: '0 0 38%', width: '38%', minHeight: '450px' }}>
-          {Milestones()}
+          <Milestones />
         </div>
       </div>
       <div
@@ -564,117 +91,33 @@ function First() {
 
         <div className="space-y-6 col-span-2">
           {/* <!-- Snapshot Section --> */}
-          {Snapshot()}
+          <Snapshot />
 
           {/* <!-- My Referrals Section --> */}
-          {Referrals()}
+          <Referrals />
         </div>
 
         {/* <!-- Leaderboard Section with Enhanced Design --> */}
-        {Leaderboard()}
+        <Leaderboard />
 
         {/* <!-- Footer Section --> */}
       </div>
       <div
         className="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6"
-
         style={{ marginTop: -10 }}
       >
         {/* <!-- Privacy Card --> */}
-        {Privacy()}
+        <Privacy />
 
         {/* <!-- Second Leaderboard --> */}
-        {Leader()}
+        <Leader />
       </div>
     </div>
   )
 }
 export default First
 
-const LeaderBoardData = [
-  { id: '288', name: 'Ruchi Tripathi', reward: '213' },
-  { id: '1', name: 'Alex Johnson', reward: '180' },
-  { id: '2', name: 'Jamie Lee', reward: '150' },
-  { id: '3', name: 'Taylor Smith', reward: '140' },
-  { id: '4', name: 'Jordan Brown', reward: '130' },
-  { id: '5', name: 'Morgan White', reward: '120' },
-  { id: '6', name: 'Casey Harris', reward: '110' },
-  { id: '7', name: 'Riley Clark', reward: '100' },
-  { id: '8', name: 'Avery Lewis', reward: '90' },
-  { id: '9', name: 'Quinn Martin', reward: '80' },
-  { id: '10', name: 'Samantha Green', reward: '75' },
-  { id: '11', name: 'Liam Mitchell', reward: '60' },
-  { id: '12', name: 'Olivia King', reward: '55' },
-  { id: '13', name: 'Noah Scott', reward: '50' },
-  { id: '14', name: 'Emily Carter', reward: '48' },
-  { id: '15', name: 'Lucas Moore', reward: '45' },
-  { id: '16', name: 'Sophia Wright', reward: '40' },
-  { id: '17', name: 'Mason Hall', reward: '35' },
-  { id: '18', name: 'Isabella Young', reward: '30' },
-  { id: '19', name: 'Ethan Thompson', reward: '25' }
-]
-
-const Referral = [
-  { address: '0x5656565433...', dateJoined: '15.07.2024', xpEarned: '+120' },
-  { address: '0x1234abcd9876...', dateJoined: '18.07.2024', xpEarned: '+200' },
-  { address: '0xabcdef123456...', dateJoined: '20.07.2024', xpEarned: '+150' },
-  { address: '0x87654321abcd...', dateJoined: '22.07.2024', xpEarned: '+175' },
-  { address: '0x112233445566...', dateJoined: '25.07.2024', xpEarned: '+90' },
-  { address: '0xaabbccddeeff...', dateJoined: '28.07.2024', xpEarned: '+220' },
-  { address: '0x998877665544...', dateJoined: '30.07.2024', xpEarned: '+300' },
-  { address: '0x776655443322...', dateJoined: '02.08.2024', xpEarned: '+110' },
-  { address: '0xabcdef098765...', dateJoined: '05.08.2024', xpEarned: '+180' }
-]
-
-const options = {
-  scales: {
-    r: {
-      angleLines: {
-        display: true
-      },
-      suggestedMin: 0,
-      suggestedMax: 5,
-      ticks: {
-        stepSize: 1,
-        backdropColor: 'rgba(255, 255, 255, 0)' // Transparent background for labels
-      }
-    }
-  },
-  plugins: {
-    legend: {
-      display: false // Hide the legend
-    }
-  }
-}
-
-const data = {
-  labels: [
-    'Trading',
-    'Coding',
-    'Medicine',
-    'Government',
-    'Planning',
-    'Music',
-    'Podcasts',
-    'Designing'
-  ],
-  datasets: [
-    {
-      label: 'Skill Levels',
-      data: [2, 4, 3, 1, 3, 4, 2, 3],
-      backgroundColor: 'rgba(99, 102, 241, 0.2)', // Purple fill
-      borderColor: 'rgba(99, 102, 241, 1)', // Purple border
-      pointBackgroundColor: 'rgba(99, 102, 241, 1)', // Purple points
-      borderWidth: 2
-    }
-  ]
-}
-
-
-
-
 // import React, { useState } from 'react';
-
 
 // export default function Dashboard() {
 //   return (
