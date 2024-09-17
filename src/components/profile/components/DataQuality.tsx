@@ -2,6 +2,8 @@ import React from "react"
 import { Radar } from "react-chartjs-2"
 
 const DataQuality = () => {
+    const percentage=87;
+    const dataQualityPercentage=64;
     const options = {
         scales: {
             r: {
@@ -51,8 +53,7 @@ const DataQuality = () => {
         >
             {/* <!-- My Data Quality --> */}
             <div
-                className="bg-white p-5 rounded-xl "
-                style={{ minHeight: '450px' }}
+                className="bg-white p-5 rounded-xl min-h-[450px]"
             >
                 <div className="flex items-center justify-between">
                     <div>
@@ -64,38 +65,23 @@ const DataQuality = () => {
                         </p>
                     </div>
                     <div
-                        className="text-2xl flex items-center rounded-xl justify-center font-bold text-purple-600 w-20 h-16 bg-primary-btn-300 text-white p-10"
-                        style={{
-                            backgroundColor: 'rgba(127, 86, 217, 1)'
-                        }}
+                        className="text-2xl flex items-center rounded-xl justify-center font-bold w-20 h-16 text-white p-10 bg-[#7f56d9]"
                     >
-                        87%
+                        {percentage}%
                     </div>
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                     <div
-                        className=" bg-gray-100 rounded-lg flex items-center justify-center"
-                        style={{ height: '252px', width: '100%' }}
+                        className=" bg-gray-100 rounded-lg flex items-center justify-center w-full h-[252px]"
                     >
                         <Radar data={data} options={options} />
                     </div>
                 </div>
                 <p className="mt-5 rounded-lg text-sm flex items-center pl-4 text-white bg-indigo-950 h-11">
                     <span className="flex items-center text-sm font-bold text-white-600 pr-1">
-                        <span
-                            style={{
-                                height: '11px',
-                                width: '11px',
-                                backgroundColor: 'white',
-                                padding: '1px',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginRight: '4px',
-                                borderRadius: '50%'
-                            }}
-                        ></span>{' '}
-                        64%{' '}
+                        <span className="h-[11px] w-[11px] bg-white p-[1px] flex justify-center items-center mr-[4px] rounded-full">
+                        </span>
+                        {dataQualityPercentage}%{' '}
                     </span>
                     of your data quality is from
                     <span className="text-sm font-bold text-white-600 pl-1">

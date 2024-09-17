@@ -1,7 +1,3 @@
-import React from 'react'
-
-function MediumStar() {
-  return (
     <svg
       width="77"
       height="69"
@@ -15,7 +11,3 @@ function MediumStar() {
         fill="#B692F6"
       />
     </svg>
-  )
-}
-
-export default MediumStar
