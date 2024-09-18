@@ -9,6 +9,10 @@ interface ListItemProps {
   opacity?: boolean
 }
 
+interface CircularProgressProps {
+  percentage: number;
+}
+
 const ListItem: React.FC<ListItemProps> = ({
   icon,
   text,
@@ -18,9 +22,8 @@ const ListItem: React.FC<ListItemProps> = ({
 }) => {
   return (
     <li
-      className={`flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100 ${
-        opacity ? 'opacity-50' : ''
-      }`}
+      className={`flex items-center rounded-lg px-2 justify-between h-16 bg-gray-100 ${opacity ? 'opacity-50' : ''
+        }`}
     >
       <div className="flex items-center space-x-1">
         {progress !== undefined ? (
@@ -37,7 +40,7 @@ const ListItem: React.FC<ListItemProps> = ({
   )
 }
 
-const CircularProgress = ({ percentage }) => {
+const CircularProgress: React.FC<CircularProgressProps> = ({ percentage }) => {
   const radius = 45
   const circumference = 2 * Math.PI * radius
   const strokeDasharray = circumference
@@ -89,39 +92,34 @@ const CircularProgress = ({ percentage }) => {
 }
 
 const Milestones = () => {
+  const milestones = [
+    { icon: <Twitter />, text: "Tweet your activity graph", xp: 120 },
+    { icon: null, text: "Tweet your activity graph", xp: 120, progress: 80 },
+    { icon: null, text: "Tweet your activity graph", xp: 120, progress: 10 },
+    { icon: <Twitter />, text: "Tweet your activity graph", xp: 120, opacity: true },
+  ];
+
   return (
-    <div className="bg-white p-5 rounded-xl  relative max-h-[450px]">
+    <div className="bg-white p-5 rounded-xl relative max-h-[450px]">
       <h3 className="text-2xl mb-2 font-semibold">Milestones</h3>
       <p className="text-sm font-inter">
         Keep up with the team to receive rewards!
       </p>
       <ul className="mt-4 pb-8 space-y-4">
-        <ListItem
-          icon={<Twitter />}
-          text="Tweet your activity graph"
-          xp={120}
-        />
-        <ListItem
-          icon={null}
-          text="Tweet your activity graph"
-          xp={120}
-          progress={80}
-        />
-        <ListItem
-          icon={null}
-          text="Tweet your activity graph"
-          xp={120}
-          progress={10}
-        />
-        <ListItem
-          icon={<Twitter />}
-          text="Tweet your activity graph"
-          xp={120}
-          opacity={true}
-        />
+        {milestones.map((item, index) => (
+          <ListItem
+            key={index}
+            icon={item.icon}
+            text={item.text}
+            xp={item.xp}
+            progress={item.progress}
+            opacity={item.opacity}
+          />
+        ))}
       </ul>
     </div>
-  )
-}
+  );
+};
+
 
 export default Milestones

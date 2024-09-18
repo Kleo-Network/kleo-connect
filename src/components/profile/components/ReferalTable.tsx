@@ -31,7 +31,7 @@ const ReferalTable = ({Referral}) => {
             <td className="px-4 py-2 flex items-center gap-4 w-16 text-center ">
               <span className="text-sm font-medium">{index + 1}</span>
               <img
-                src={'https://picsum.photos/40'}
+                src={referral.profilePic}
                 alt="User"
                 className="w-8 h-8 rounded-full object-cover"
               />

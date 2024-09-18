@@ -14,7 +14,7 @@ const LeaderboardRow = ({ data, isSelected, onClick }) => {
                 </span>
                 <hr className="w-6 rotate-90 border-white p-0" />
                 <img
-                    src="https://picsum.photos/40"
+                    src={data.profilePic}
                     alt="User image"
                     className="w-6 h-6 rounded-full"
                 />
