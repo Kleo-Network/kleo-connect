@@ -21,6 +21,8 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
   const { step } = useParams()
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
   const [currentStep, setCurrentStep] = useState(parseInt(step || '0'))
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
+
   const [login, setLogin] = useState(false)
   const navigate = useNavigate()
   const walletAddress = useAddress()
@@ -42,6 +44,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
 
   const USER_LOGIN_PATH = 'user/create-user'
   const handleUserLogin = () => {
+    setIsCreatingAccount(true)
     fetchCreateAndFetchUserData(USER_LOGIN_PATH, {
       method: 'POST',
       headers: {
@@ -184,17 +187,16 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                     </div>
                   </div>
                   <button
-                    disabled={!walletAddress}
-                    className={`w-full py-3 ${walletAddress
+                    disabled={!walletAddress || isCreatingAccount}
+                    className={`w-full py-3 ${walletAddress && !isCreatingAccount
                         ? 'bg-violet-600 text-white'
                         : 'bg-gray-100 text-gray-500'
                       } rounded-lg shadow mx-auto block`}
-                    onClick={
-                      () => handleUserLogin()
-                      // function which creates account by signing a transaction and posting to kleo backend api
-                    }
+                    onClick={handleUserLogin}
                   >
-                    Create Account
+                    {isCreatingAccount
+                      ? 'Creating Account...'
+                      : 'Create Account'}
                   </button>
                   {login && (
                     <div className="m-3">

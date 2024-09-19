@@ -22,7 +22,7 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
   const { slug } = useParams()
   const navigate = useNavigate()
   const endDate = new Date(
-    1725403476000 + 10 * 24 * 60 * 60 * 1000
+    1726690149000 + 10 * 24 * 60 * 60 * 1000
   ).toISOString()
 
   useEffect(() => {
@@ -36,8 +36,11 @@ export default function ProfileV2({ user, setUser }: UserDataProps) {
         <img src={Dashboard} className="filter blur-[2px]" alt="Dashboard" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-white p-10 rounded-md shadow-md">
-            <h2 className="text-xl font-bold mb-5 text-gray-800">
-              Dashboard launching in...
+            <h2 className="text-xl  mb-5 text-gray-800">
+              You have registered for the $VANA pre-mine! <br />Thanks for installing the Kleo Extension
+              <br />
+              <br />
+              <span className="font-bold">Dashboard Launching in...</span>
             </h2>
             <CountdownTimer endDate={endDate} isProfilePage={true} />
           </div>
