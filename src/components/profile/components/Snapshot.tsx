@@ -4,7 +4,7 @@ import KleoMate from "../../../assets/dashboard/KleoMate.jsx";
 const Card = ({ title, description, buttonColor, backgroundColor, textColor, iconColor, iconBgColor }) => {
   return (
     <div
-      className="p-5 rounded-lg"
+      className="p-5 rounded-lg flex flex-col justify-between gap-2 h-full"
       style={{ backgroundColor: backgroundColor, color: textColor }}
     >
       <div
@@ -13,12 +13,10 @@ const Card = ({ title, description, buttonColor, backgroundColor, textColor, ico
       >
         <KleoMate color={iconColor} />
       </div>
-      <div className="flex items-center mb-2 mt-2">
-        <h4 className="text-lg font-semibold">{title}</h4>
-      </div>
-      <p className="text-sm font-normal mb-4">{description}</p>
+      <p className="text-base font-semibold">{title}</p>
+      <p className="text-xs md:text-sm font-normal">{description}</p>
       <button
-        className="py-2 px-4 rounded-lg font-semibold hover:bg-opacity-90"
+        className="py-2 px-[14px] w-fit rounded-lg font-semibold hover:bg-opacity-90 text-xs"
         style={{ backgroundColor: buttonColor, color: backgroundColor === '#293056' ? '#6941C6' : 'white' }}
       >
         View Proposal
@@ -62,12 +60,12 @@ const Snapshot = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-xl mx-auto">
-      <h3 className="text-2xl font-semibold mb-2">Snapshot</h3>
-      <p className="text-gray-500 mb-6">
+    <div className="bg-white p-5 rounded-xl mx-auto h-fit flex flex-col gap-2">
+      <p className="text-2xl font-semibold">Snapshot</p>
+      <p className="text-gray-500 text-sm">
         Vote and be eligible to earn more KLEO XP!
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 mt-1">
         {cardsData.map((card, index) => (
           <Card key={index} {...card} />
         ))}

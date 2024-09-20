@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Group from '../../../assets/images/group.png'
 import { ReactComponent as Copy } from '../../../assets/dashboard/Copy.svg'
 import { ReactComponent as GroupPeople } from '../../../assets/dashboard/GroupPeople.svg'
+import { ReactComponent as EmptyData } from '../../../assets/dashboard/EmptyData.svg'
 import ReferalTable from './ReferalTable'
 
 
@@ -9,7 +10,7 @@ interface Referral {
   address: string;
   dateJoined: number;
   xpEarned: string;
-  profilePic?: string; 
+  profilePic?: string;
 }
 
 const referrals: Referral[] = [
@@ -26,7 +27,8 @@ const referrals: Referral[] = [
 
 
 const Referrals = () => {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
+  const referralCount = 3;
 
   const referralLink = 'https://example.com/referral' // Replace with your referral link
 
@@ -44,31 +46,43 @@ const Referrals = () => {
 
 
   return (
-    <div className="container flex flex-col justify-between mx-auto p-6 bg-white rounded-xl mt-6 min-h-80">
+    <div className="container flex flex-col justify-between mx-auto p-5 bg-white rounded-xl h-full">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-3xl mb-2 font-semibold">My Referrals</h3>
-          <p className="text-sm font-normal text-gray-700 font-inter">
+          <h3 className="text-2xl mb-2 font-semibold">My Referrals</h3>
+          <p className="text-sm font-normal text-[#333F53] font-inter">
             Bring people onboard on Kleo and earn points!
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1 rounded-full bg-gray-100 px-2 py-2">
             <GroupPeople className="w-3.5 h-3.5" />
-            <p className="text-xs font-inter">Referrals: 3</p>
+            <p className="text-[9px] md:text-xs font-inter whitespace-nowrap">Referrals: {referralCount}</p>
           </div>
           <div className="flex items-center space-x-1 rounded-full bg-black px-3 py-2">
             <Copy className="w-3.5 h-3.5" />
             <button onClick={copyToClipboard}>
-              <p className="text-xs text-white font-inter">
+              <p className="text-[9px] md:text-xs text-white font-inter whitespace-nowrap">
                 {copied ? 'Link Copied!' : 'Copy Referral Link'}
               </p>
             </button>
           </div>
         </div>
       </div>
-      <div className="mt-4 max-h-44 overflow-y-auto">
-        <ReferalTable Referral={referrals} />
+      <div className='h-full'>
+        {referralCount === 0 ?
+          <div className='w-full h-full flex flex-col gap-5 items-center justify-center'>
+            <EmptyData />
+            <div className='text-center w-1/2'>
+              <p className='text-[#1D2939] text-lg font-semibold mb-2'>No referrals Yet</p>
+              <p className='text-[#667085] text-sm'>Share the link with your friends, and when they sign up on KLEO you will earn XPs.</p>
+            </div>
+          </div>
+          :
+          <div className="mt-4 max-h-44 overflow-y-auto">
+            <ReferalTable Referral={referrals} />
+          </div>
+        }
       </div>
     </div>
   )

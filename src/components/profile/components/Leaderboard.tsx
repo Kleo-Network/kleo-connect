@@ -39,16 +39,16 @@ const Leaderboard = () => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-xl">
-            <h3 className="text-3xl mb-2 font-semibold">Leaderboard</h3>
-            <p className="text-sm text-gray-500 mb-4 font-inter">
+        <div className="bg-white p-6 rounded-xl h-[438px] lg:h-full w-full">
+            <h3 className="text-[28px] mb-2 font-semibold">Leaderboard</h3>
+            <p className="text-sm text-[#333F53] mb-4 font-inter">
                 Keep up with the team to receive rewards!
             </p>
 
             {/* <!-- Scrollable Leaderboard --> */}
             <ul
-                className="space-y-3  overflow-y-auto"
-                style={{ scrollbarWidth: 'auto', maxHeight: '600px' }}
+                className="flex flex-col gap-3  overflow-y-auto max-h-[304px] lg:max-h-[514px]"
+                style={{ scrollbarWidth: 'auto'}}
             >
                 {leaderboardData.map((data, index) => (
                     <LeaderboardRow

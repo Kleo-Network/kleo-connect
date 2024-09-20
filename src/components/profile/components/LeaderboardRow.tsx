@@ -3,12 +3,12 @@ import React from 'react';
 const LeaderboardRow = ({ data, isSelected, onClick }) => {
     return (
         <li
-            className={`mr-2 flex justify-between items-center p-4 rounded-md cursor-pointer ${isSelected ? 'bg-cyan-950' : 'bg-gray-100'}`}
+            className={`mr-2 flex justify-between items-center p-4 rounded-md cursor-pointer ${isSelected ? 'bg-[#293056]' : 'bg-gray-100'}`}
             onClick={onClick}
         >
             <div className="flex items-center space-x-2">
                 <span
-                    className={`font-normal text-xs w-3 ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                    className={`font-medium text-xs w-3 ${isSelected ? 'text-white' : 'text-gray-700'}`}
                 >
                     {data.id}
                 </span>
@@ -25,10 +25,10 @@ const LeaderboardRow = ({ data, isSelected, onClick }) => {
                 </span>
             </div>
             <span
-                className={`${isSelected ? 'text-white' : 'text-gray-700'} text-base font-medium`}
+                className={`${isSelected ? 'text-white' : 'text-gray-700'} text-sm font-medium`}
             >
                 {data.reward}{' '}
-                <span className={`text-xs ${isSelected ? 'text-white' : 'text-gray-400'}`}>
+                <span className={`text-[10px] ${isSelected ? 'text-white' : 'text-gray-400'}`}>
                     KLEO
                 </span>
             </span>

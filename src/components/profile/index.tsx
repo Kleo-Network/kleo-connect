@@ -32,23 +32,31 @@ function Profile() {
     <div className="bg-slate-100">
       <Navbar />
       {/* <!-- Main Content --> */}
-      <div className="container mx-auto p-6 gap-5 flex  mt-[80px] pt-10">
+      <div className="container w-full mx-auto p-6 pb-0 lg:pb-6 gap-5 grid lg:grid-cols-[30%_30%_40%] grid-cols-[42%_58%] mt-[80px] pt-10 h-[500px]">
         {/*Left Column: Points and Data */}
-        <div style={{ flex: '0 0 25%', width: '25%', marginRight: '0px' }}>
+        <div>
           <PointsAndDataCard />
         </div>
 
         {/* Middle Column: Data Quality */}
-        <div style={{ flex: '0 0 33%', width: '33%' }}>
+        <div className='mr-5 lg:mr-0'>
           <DataQuality />
         </div>
 
         {/* Right Column: Milestones */}
-        <div style={{ flex: '0 0 38%', width: '38%', minHeight: '450px' }}>
+        <div className='lg:flex hidden lg:mr-10'>
           <Milestones />
         </div>
       </div>
-      <div className="container mx-auto p-6 grid lg:grid-cols-3 gap-5 mt-[-10px]">
+      <div className='lg:hidden flex container mx-auto p-6 gap-5 h-[486px]'>
+        <div className='w-1/2'>
+          <Milestones />
+        </div>
+        <div className='w-1/2 '>
+          <Leaderboard />
+        </div>
+      </div>
+      <div className="h-fit  container mx-auto px-6 lg:pt-6 grid lg:grid-cols-3 gap-5">
         {/* <!-- Left Column: Points and Data --> */}
         {/* {PointsAndData()} */}
 
@@ -58,29 +66,34 @@ function Profile() {
         {/* <!-- Milestones --> */}
         {/* {Milestones()} */}
 
-        <div className="space-y-6 col-span-2">
-          {/* <!-- Snapshot Section --> */}
-          <Snapshot />
+        <div className="flex h-full flex-col gap-5 xl:gap-0 justify-between lg:col-span-2 col-span-3">
+          {/* Snapshot Section */}
+          <div className='lg:h-[45%] 2xl:h-[48%]'>
+            <Snapshot />
+          </div>
 
-          {/* <!-- My Referrals Section --> */}
-          <Referrals />
+          {/* My Referrals Section */}
+          <div className='lg:h-[45%] 2xl:h-[48%]'>
+            <Referrals />
+          </div>
         </div>
 
-        {/* <!-- Leaderboard Section with Enhanced Design --> */}
-        <Leaderboard />
+        <div className="lg:flex hidden">
+          {/* <!-- Leaderboard Section with Enhanced Design --> */}
+          <Leaderboard />
+        </div>
 
         {/* <!-- Footer Section --> */}
       </div>
-      <div
-        className="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6"
-        style={{ marginTop: -10 }}
-      >
-        {/* <!-- Privacy Card --> */}
-        <Privacy />
-
-        {/* <!-- Second Leaderboard --> */}
-        <LeaderBoardBanner />
+      <div className='container mx-auto p-6 grid lg:grid-cols-[25%_75%] grid-cols-[35%_65%] gap-5'>
+        <div>
+          <Privacy/>
+        </div>
+        <div className='mr-5'>
+          <LeaderBoardBanner/>
+        </div>
       </div>
+
     </div>
   )
 }

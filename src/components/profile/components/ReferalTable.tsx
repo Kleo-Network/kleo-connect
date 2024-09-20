@@ -29,7 +29,7 @@ const ReferalTable = ({Referral}) => {
             } rounded-lg`}
           >
             <td className="px-4 py-2 flex items-center gap-4 w-16 text-center ">
-              <span className="text-sm font-medium">{index + 1}</span>
+              <span className="text-base font-medium">{index + 1}</span>
               <img
                 src={referral.profilePic}
                 alt="User"
@@ -45,7 +45,7 @@ const ReferalTable = ({Referral}) => {
             {formatDate(referral.dateJoined)}
             </td>
             <td
-              className="gap - 1 text-lg font-semibold w-24 h-8 rounded-full flex items-center justify-center text-center"
+              className="gap-1 text-[15px] font-semibold w-24 h-8 rounded-full flex items-center justify-center text-center"
               style={{
                 backgroundColor: index % 2 === 0 ? 'white' : '#F4EBFF',
                 color: '#7F56D9'
@@ -53,7 +53,7 @@ const ReferalTable = ({Referral}) => {
             >
               {/* >\ */}
               {referral.xpEarned}
-              <sub className="text-purple-600 text-xs ">XP</sub>
+              <sub className="text-purple-600 text-[10px] font-semibold ">XP</sub>
             </td>
           </tr>
           // </div>

@@ -29,7 +29,8 @@ const ListItem: React.FC<ListItemProps> = ({
         {progress !== undefined ? (
           <CircularProgress percentage={progress} />
         ) : (
-          icon
+          <div className="flex items-center space-x-2 w-12">{icon}</div>
+
         )}
         <span className="text-sm font-semibold">{text}</span>
       </div>
@@ -100,12 +101,12 @@ const Milestones = () => {
   ];
 
   return (
-    <div className="bg-white p-5 rounded-xl relative max-h-[450px]">
+    <div className="bg-white p-5 rounded-xl relative h-full flex flex-col justify-between w-full">
       <h3 className="text-2xl mb-2 font-semibold">Milestones</h3>
       <p className="text-sm font-inter">
         Keep up with the team to receive rewards!
       </p>
-      <ul className="mt-4 pb-8 space-y-4">
+      <ul className="mt-4 flex flex-col gap-4">
         {milestones.map((item, index) => (
           <ListItem
             key={index}
