@@ -47,7 +47,8 @@ function Profile() {
         <div className='lg:flex hidden lg:mr-10'>
           <Milestones />
         </div>
-      </div>
+    
+     
       <div className='lg:hidden flex container mx-auto p-6 gap-5 h-[486px]'>
         <div className='w-1/2'>
           <Milestones />
