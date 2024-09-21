@@ -1,63 +1,101 @@
-import useFetch from '../common/hooks/useFetch'
+import React, { useState } from 'react'
+import PointsAndDataCard from './components/PointsAndData'
 import {
-  UserDataProps,
-  fullUserData,
-  PendingCard,
-  PublishedCard
-} from '../common/interface'
-import { useState, useEffect, useContext } from 'react'
-import Modal from '../common/Modal'
-import { NavbarEvents } from '../constants/Events'
-import { EventContext } from '../common/contexts/EventContext'
-import Settings from '../profile/Settings'
-import { useParams, useNavigate } from 'react-router-dom'
-import { ReactComponent as Cat } from '../../assets/images/astronautCat.svg'
-import { ReactComponent as Plus } from '../../assets/images/plus.svg'
-import Dashboard from '../../assets/images/dashboard.png'
-import CountdownTimer from './../utils/countdown' // Assume this is in the same directory
+  Chart as ChartJS,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import DataQuality from './components/DataQuality'
+import Milestones from './components/Milestones'
+import Snapshot from './components/Snapshot'
+import Referrals from './components/Referrals'
+import Leaderboard from './components/Leaderboard'
+import Privacy from './components/Privacy'
+import LeaderBoardBanner from './components/LeaderBoardBanner'
+import Navbar from './components/Navbar'
 
-export default function ProfileV2({ user, setUser }: UserDataProps) {
-  const { event, updateEvent } = useContext(EventContext)
-  const [userFullData, setUserFullData] = useState<fullUserData | null>(null)
-  const { slug } = useParams()
-  const navigate = useNavigate()
-  const endDate = new Date(
-    1726690149000 + 10 * 24 * 60 * 60 * 1000
-  ).toISOString()
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+)
 
-  useEffect(() => {
-    const storedSlug = localStorage.getItem('slug')
-  }, [])
-
+function Profile() {
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Dashboard Image Section */}
-      <div className="relative flex-grow flex items-start overflow-hidden">
-        <img src={Dashboard} className="filter blur-[2px]" alt="Dashboard" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-white p-10 rounded-md shadow-md">
-            <h2 className="text-xl  mb-5 text-gray-800">
-              You have registered for the $VANA pre-mine! <br />Thanks for installing the Kleo Extension
-              <br />
-              <br />
-              <span className="font-bold">Dashboard Launching in...</span>
-            </h2>
-            <CountdownTimer endDate={endDate} isProfilePage={true} />
+    <div className="bg-slate-100">
+      <Navbar />
+      {/* <!-- Main Content --> */}
+      <div className="container w-full mx-auto p-6 pb-0 lg:pb-6 gap-5 grid lg:grid-cols-[30%_30%_40%] grid-cols-[42%_58%] mt-[80px] pt-10 h-[500px]">
+        {/*Left Column: Points and Data */}
+        <div>
+          <PointsAndDataCard />
+        </div>
+
+        {/* Middle Column: Data Quality */}
+        <div className='mr-5 lg:mr-0'>
+          <DataQuality />
+        </div>
+
+        {/* Right Column: Milestones */}
+        <div className='lg:flex hidden lg:mr-10'>
+          <Milestones />
+        </div>
+    
+     
+      <div className='lg:hidden flex container mx-auto p-6 gap-5 h-[486px]'>
+        <div className='w-1/2'>
+          <Milestones />
+        </div>
+        <div className='w-1/2 '>
+          <Leaderboard />
+        </div>
+      </div>
+      <div className="h-fit  container mx-auto px-6 lg:pt-6 grid lg:grid-cols-3 gap-5">
+        {/* <!-- Left Column: Points and Data --> */}
+        {/* {PointsAndData()} */}
+
+        {/* <!-- Middle Column: Data Quality and DataQuality --> */}
+        {/* {DataQuality()} */}
+
+        {/* <!-- Milestones --> */}
+        {/* {Milestones()} */}
+
+        <div className="flex h-full flex-col gap-5 xl:gap-0 justify-between lg:col-span-2 col-span-3">
+          {/* Snapshot Section */}
+          <div className='lg:h-[45%] 2xl:h-[48%]'>
+            <Snapshot />
           </div>
+
+          {/* My Referrals Section */}
+          <div className='lg:h-[45%] 2xl:h-[48%]'>
+            <Referrals />
+          </div>
+        </div>
+
+        <div className="lg:flex hidden">
+          {/* <!-- Leaderboard Section with Enhanced Design --> */}
+          <Leaderboard />
+        </div>
+
+        {/* <!-- Footer Section --> */}
+      </div>
+      <div className='container mx-auto p-6 grid lg:grid-cols-[25%_75%] grid-cols-[35%_65%] gap-5'>
+        <div>
+          <Privacy/>
+        </div>
+        <div className='mr-5'>
+          <LeaderBoardBanner/>
         </div>
       </div>
 
-      {/* Welcome Message */}
-
-      {/* Settings Modal */}
-      <Modal
-        isOpen={event === NavbarEvents.SETTINGS}
-        onClose={() => updateEvent(null)}
-      >
-        <div className="container">
-          <Settings user={user} />
-        </div>
-      </Modal>
     </div>
   )
 }
+export default Profile
