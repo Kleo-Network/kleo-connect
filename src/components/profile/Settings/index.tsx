@@ -224,122 +224,14 @@ const ConnectRight = () => {
               </div>
             </div>
           </li>
-          <li className="mb-10 ml-12">
-            <div
-              className={`absolute left-0 h-3/4 border-l-2 border-solid border-gray-200`}
-            ></div>
-            <span className="absolute mt-3 -left-0 inline-flex items-center justify-center">
-              <span className="absolute flex items-center justify-center w-8 h-8 rounded-full ring-4 ring-purple-100 bg-purple-100">
-                <span className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-500">
-                  <span className="text-white">1</span>
-                </span>
-              </span>
-            </span>
-            <h3 className="font-medium text-black leading-tight">
-              Set your privacy settings.
-            </h3>
-            <div className="ml-4 text-left">
-              <div className="flex items-center mb-2 pt-2">
-                <input
-                  onChange={selectAll}
-                  id="default-checkbox"
-                  type="checkbox"
-                  value=""
-                  checked={keepAnonymous}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 "
-                />
-                <label
-                  htmlFor="default-checkbox"
-                  className="ms-2 text-sm font-medium text-gray-500 "
-                >
-                  Keep me Entirely Anonymous
-                </label>
-              </div>
-              <div className="mt-2 space-y-2">
-                <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg grid grid-cols-2 dark:bg-[#363F72] dark:border-gray-600 dark:text-white">
-                  <li className="w-full border-b border-gray-200 border-r dark:border-gray-600">
-                    <div className="flex items-center ps-3">
-                      <input
-                        id="profile-picture-checkbox"
-                        type="checkbox"
-                        value=""
-                        checked={settings[0]}
-                        onChange={() => onChangeChecked(0)}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="profile-picture-checkbox"
-                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Profile Picture
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full border-b dark:border-gray-600">
-                    <div className="flex items-center ps-3">
-                      <input
-                        id="username-checkbox"
-                        type="checkbox"
-                        value=""
-                        onChange={() => onChangeChecked(1)}
-                        checked={settings[1]}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="username-checkbox"
-                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Username
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full border-r dark:border-gray-600">
-                    <div className="flex items-center ps-3">
-                      <input
-                        id="static-cards-checkbox"
-                        type="checkbox"
-                        value=""
-                        onChange={() => onChangeChecked(2)}
-                        checked={settings[2]}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="static-cards-checkbox"
-                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Static Cards
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full">
-                    <div className="flex items-center ps-3">
-                      <input
-                        id="dynamic-cards-checkbox"
-                        type="checkbox"
-                        value=""
-                        onChange={() => onChangeChecked(3)}
-                        checked={settings[3]}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="dynamic-cards-checkbox"
-                        className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Dynamic Cards
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
+
 
           <li className="ml-12">
             <span className="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white bg-purple-100 text-purple-500">
               2
             </span>
             <h3 className="font-medium text-black leading-tight">
-              Mint your data identity
+              Claim points
             </h3>
             <div className="ml-4">
               <p className="text-sm">
