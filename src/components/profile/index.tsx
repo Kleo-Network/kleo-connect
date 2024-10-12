@@ -26,76 +26,59 @@ ChartJS.register(
   Tooltip,
   Legend
 )
-
 function Profile() {
   return (
     <div className="bg-slate-100">
       <Navbar />
-      {/* <!-- Main Content --> */}
-      <div className="container w-full mx-auto p-6 pb-0 lg:pb-6 gap-5 grid lg:grid-cols-[30%_30%_40%] grid-cols-[42%_58%] mt-[80px] pt-10 h-[500px]">
-        {/*Left Column: Points and Data */}
-        <div>
-          <PointsAndDataCard />
-        </div>
+      {/* Main Content */}
+      <div className="container mx-auto p-6 gap-5 grid grid-cols-1 mt-[80px] pt-10">
 
-        {/* Middle Column: Data Quality */}
-        <div className='mr-5 lg:mr-0'>
-          <DataQuality />
-        </div>
-
-        {/* Right Column: Milestones */}
-        <div className='lg:flex hidden lg:mr-10'>
-          <Milestones />
-        </div>
-    
-     
-      <div className='lg:hidden flex container mx-auto p-6 gap-5 h-[486px]'>
-        <div className='w-1/2'>
-          <Milestones />
-        </div>
-        <div className='w-1/2 '>
-          <Leaderboard />
-        </div>
-      </div>
-      <div className="h-fit  container mx-auto px-6 lg:pt-6 grid lg:grid-cols-3 gap-5">
-        {/* <!-- Left Column: Points and Data --> */}
-        {/* {PointsAndData()} */}
-
-        {/* <!-- Middle Column: Data Quality and DataQuality --> */}
-        {/* {DataQuality()} */}
-
-        {/* <!-- Milestones --> */}
-        {/* {Milestones()} */}
-
-        <div className="flex h-full flex-col gap-5 xl:gap-0 justify-between lg:col-span-2 col-span-3">
-          {/* Snapshot Section */}
-          <div className='lg:h-[45%] 2xl:h-[48%]'>
-            <Snapshot />
+        {/* First Row: Total Points (wide) | Data Quality (medium) | Milestones (narrow) */}
+        <div className="grid grid-cols-[0.245fr_0.333fr_0.422fr] gap-5">
+          <div>
+            <PointsAndDataCard />
           </div>
-
-          {/* My Referrals Section */}
-          <div className='lg:h-[45%] 2xl:h-[48%]'>
-            <Referrals />
+          <div>
+            <DataQuality />
+          </div>
+          <div>
+            <Milestones />
           </div>
         </div>
 
-        <div className="lg:flex hidden">
-          {/* <!-- Leaderboard Section with Enhanced Design --> */}
-          <Leaderboard />
+        {/* Combined Row: Snapshot & Referrals (stacked) | Leaderboard (full height) */}
+        <div className="grid grid-cols-[0.673fr_0.327fr] gap-5">
+          {/* Left Column: Flex container with Snapshot (row 1) and Referrals (row 2) */}
+          <div className="flex flex-col gap-5">
+            <div className="flex-grow">
+              <Snapshot />
+            </div>
+            <div className="flex-grow">
+              <Referrals />
+            </div>
+          </div>
+
+          {/* Right Column: Leaderboard (takes the full height of the left column) */}
+          <div className="flex-grow">
+            <Leaderboard />
+          </div>
         </div>
 
-        {/* <!-- Footer Section --> */}
-      </div>
-      <div className='container mx-auto p-6 grid lg:grid-cols-[25%_75%] grid-cols-[35%_65%] gap-5'>
-        <div>
-          <Privacy/>
-        </div>
-        <div className='mr-5'>
-          <LeaderBoardBanner/>
-        </div>
-      </div>
 
+        {/* Fourth Row: Your Privacy (medium) | App Showcase (medium) */}
+        <div className="grid grid-cols-[0.327fr_0.673fr] gap-5">
+          <div>
+            <Privacy />
+          </div>
+          <div>
+            <LeaderBoardBanner />
+          </div>
+        </div>
+
+      </div>
     </div>
-  )
+  );
 }
-export default Profile
+
+export default Profile;
+
