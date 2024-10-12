@@ -1,8 +1,9 @@
 import React from 'react'
 import { ReactComponent as Twitter } from '../../../assets/dashboard/XLogo.svg'
+import XLogoImage from '../../../assets/dashboard/XLogo.png';
 
 interface ListItemProps {
-  icon: JSX.Element
+  icon: string
   text: string
   xp: number
   progress?: number
@@ -29,8 +30,7 @@ const ListItem: React.FC<ListItemProps> = ({
         {progress !== undefined ? (
           <CircularProgress percentage={progress} />
         ) : (
-          <div className="flex items-center space-x-2 w-12">{icon}</div>
-
+          <img src={icon || ''} className="flex items-center space-x-2 w-12"></img>
         )}
         <span className="text-sm font-semibold">{text}</span>
       </div>
@@ -94,10 +94,10 @@ const CircularProgress: React.FC<CircularProgressProps> = ({ percentage }) => {
 
 const Milestones = () => {
   const milestones = [
-    { icon: <Twitter />, text: "Tweet your activity graph", xp: 120 },
+    { icon: XLogoImage, text: "Tweet your activity graph", xp: 120 },
     { icon: null, text: "Tweet your activity graph", xp: 120, progress: 80 },
     { icon: null, text: "Tweet your activity graph", xp: 120, progress: 10 },
-    { icon: <Twitter />, text: "Tweet your activity graph", xp: 120, opacity: true },
+    { icon: XLogoImage, text: "Tweet your activity graph", xp: 120, opacity: true },
   ];
 
   return (

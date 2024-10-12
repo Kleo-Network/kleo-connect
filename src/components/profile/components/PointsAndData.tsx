@@ -1,6 +1,6 @@
-import React from 'react'
 import { ReactComponent as Data } from '../../../assets/dashboard/Data.svg'
-import { ReactComponent as Reward } from '../../../assets/dashboard/Reward.svg'
+import rewardImage from '../../../assets/dashboard/Reward.png';
+
 const PointsAndDataCard = () => {
   const kleoPoint = '2,400'
   const dataQuantity = 34
@@ -9,7 +9,8 @@ const PointsAndDataCard = () => {
       {/* Total Points Earned */}
       <div className="relative rounded-2xl flex flex-col justify-between text-white p-0 min-h-[200px] bg-[url('/src/assets/dashboard/Grid.svg')] bg-no-repeat bg-cover">
         <div className="relative flex flex-col justify-between z-0 p-6 h-full">
-          <Reward className="w-20 h-20 mb-4"/>
+          {/* <Reward className="w-20 h-20 mb-4" /> */}
+          <img src={rewardImage} className="w-20 h-20 mb-4" />
           <div>
             <h3 className="text-base font-medium font-inter">
               Total Points Earned

@@ -50,7 +50,7 @@ function Profile() {
   }, []);
 
   return (
-    <div className="bg-slate-100">
+    <div className="bg-slate-100 min-h-screen">
       <Navbar />
       {/* Main Content */}
       <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10">
