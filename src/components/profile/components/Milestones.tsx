@@ -7,6 +7,7 @@ interface MileStoneItemProp {
   icon: string | undefined,
   value: string | undefined,
   progress?: number,
+  xp: number;
   conversion?: (value: any) => { value: number | boolean; progress: number }; // Conversion callback
 }
 
@@ -15,6 +16,7 @@ const MileStoneDetailsMap: Record<string, MileStoneItemProp> = {
     label: 'Follow us on Twitter',
     icon: XLogoImage,
     value: undefined,
+    xp: 120,
     conversion: (value: boolean) => ({
       value,
       progress: value ? 100 : 0, // If true -> 100%, false -> 0%
@@ -24,6 +26,7 @@ const MileStoneDetailsMap: Record<string, MileStoneItemProp> = {
     label: 'Tweet your activity graph',
     icon: XLogoImage,
     value: undefined,
+    xp: 120,
     conversion: (value: boolean) => ({
       value,
       progress: value ? 100 : 0, // If true -> 100%, false -> 0%
@@ -33,6 +36,7 @@ const MileStoneDetailsMap: Record<string, MileStoneItemProp> = {
     label: '⁠Own and protect 200 MB of data.',
     icon: undefined,
     value: undefined,
+    xp: 120,
     conversion: (value: number) => {
       const dataOwnedMB = value / (1024 * 1024); // Convert bytes to MB
       const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(2); // Round to 2 decimal places
@@ -43,6 +47,7 @@ const MileStoneDetailsMap: Record<string, MileStoneItemProp> = {
     label: 'Refer 10 friends to join Kleo Network',
     icon: undefined,
     value: undefined,
+    xp: 120,
     conversion: (value: number) => {
       const progress = Math.min((value / 10) * 100, 100).toFixed(2); // Round to 2 decimal places
       return { value, progress: parseFloat(progress) };
@@ -175,7 +180,7 @@ const Milestones = ({ mileStones }: MileStonesProps) => {
               key={index}
               icon={milestone.icon || null}
               text={milestone.label}
-              xp={120} // Assuming XP is static, you can update it dynamically if needed
+              xp={milestone.xp}
               progress={!isBoolean ? progress : undefined}
               opacity={opacity}
             />
