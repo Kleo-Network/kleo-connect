@@ -17,6 +17,7 @@ import Leaderboard from './components/Leaderboard'
 import Privacy from './components/Privacy'
 import LeaderBoardBanner from './components/LeaderBoardBanner'
 import Navbar from './components/Navbar'
+import useFetch from '../common/hooks/useFetch'
 
 ChartJS.register(
   RadialLinearScale,
@@ -28,6 +29,18 @@ ChartJS.register(
 )
 
 function Profile() {
+
+  // Get the user Data.
+  const GET_USER_PATH = 'user/get-user/0x9bdcAeb9443316BbA3998a600Cc30888846A1C45';
+  // State for storing the user data
+  const [userData, setUserData] = useState<any>(null);
+  const { data, status, error, fetchData } = useFetch(GET_USER_PATH, {
+    onSuccessfulFetch: (fetchedData) => {
+      console.log('Fetched User Data:', fetchedData);
+      setUserData(fetchedData);
+    },
+  });
+
   // Define the ref with the type of an HTMLDivElement
   const milestonesRef = useRef<HTMLDivElement | null>(null);
   const [milestonesHeight, setMilestonesHeight] = useState<number>(0);
@@ -60,7 +73,7 @@ function Profile() {
           {/* First Row: PointsAndDataCard (wide) | DataQuality (medium) | Milestones (narrow) */}
           <div className="grid grid-cols-[0.245fr_0.333fr_0.422fr] gap-5">
             <div>
-              <PointsAndDataCard />
+              <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
               <DataQuality />
@@ -88,7 +101,7 @@ function Profile() {
           {/* Third Row: Privacy | LeaderBoardBanner */}
           <div className="grid grid-cols-[0.327fr_0.673fr] gap-5">
             <div>
-              <Privacy />
+              <Privacy pii_removed_count={userData?.pii_removed_count} />
             </div>
             <div>
               <LeaderBoardBanner />
@@ -101,7 +114,7 @@ function Profile() {
           {/* First Row: PointsAndDataCard and DataQuality */}
           <div className="grid grid-cols-[0.412fr_0.588fr] gap-5">
             <div>
-              <PointsAndDataCard />
+              <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
               <DataQuality />
@@ -137,7 +150,7 @@ function Profile() {
           {/* Fifth Row: Privacy and LeaderBoardBanner */}
           <div className="grid grid-cols-[0.412fr_0.588fr] gap-5">
             <div>
-              <Privacy />
+              <Privacy pii_removed_count={userData?.pii_removed_count} />
             </div>
             <div>
               <LeaderBoardBanner />

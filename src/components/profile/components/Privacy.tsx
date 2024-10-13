@@ -1,8 +1,10 @@
 import React from "react";
 
+interface PrivacyProps {
+    pii_removed_count: number
+}
 
-const Privacy = () => {
-    const toatlPiis='2.400'
+const Privacy = ({ pii_removed_count }: PrivacyProps) => {
     return (
         <div className="p-4 rounded-xl bg-gradient-to-l from-[#293056] to-[#5969BC]">
             <h3 className="text-2xl mb-2 text-white font-semibold">Your Privacy</h3>
@@ -14,7 +16,7 @@ const Privacy = () => {
                 <span className="text-white text-lg font-normal">Total PIIS Removed</span>
             </p>
             <p className="text-4xl font-bold text-white  font-inter">
-                {toatlPiis} <span className="text-white text-lg font-normal">PIIS </span>
+                {pii_removed_count} <span className="text-white text-lg font-normal">PIIS </span>
             </p>
         </div>
     )
