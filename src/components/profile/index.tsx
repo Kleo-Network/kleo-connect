@@ -79,7 +79,7 @@ function Profile() {
               <DataQuality />
             </div>
             <div>
-              <Milestones />
+              <Milestones mileStones={userData?.milestones || {}} />
             </div>
           </div>
 
@@ -125,7 +125,7 @@ function Profile() {
           <div className="grid grid-cols-2 gap-5">
             {/* Milestones Column */}
             <div ref={milestonesRef} className="self-start">
-              <Milestones />
+              <Milestones mileStones={userData?.milestones || {}} />
             </div>
 
             {/* Leaderboard Column with Scroll */}
