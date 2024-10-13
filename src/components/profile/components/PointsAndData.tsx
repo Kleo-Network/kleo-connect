@@ -1,9 +1,26 @@
 import { ReactComponent as Data } from '../../../assets/dashboard/Data.svg'
 import rewardImage from '../../../assets/dashboard/Reward.png';
 
-const PointsAndDataCard = () => {
-  const kleoPoint = '2,400'
-  const dataQuantity = 34
+interface PointsAndDataCardProps {
+  kleo_points: number,
+  data_quantity: number,
+}
+
+// Function to format kleo points with commas (e.g., 12,334)
+const formatKleoPoints = (points: number): string => {
+  return points.toLocaleString(); // This adds commas as thousand separators
+}
+
+// Function to convert bytes to MB with 2 decimal places
+const convertBytesToMB = (bytes: number): string => {
+  const megabytes = bytes / (1024 * 1024);
+  return megabytes.toFixed(2); // Converts to MB and rounds to 2 decimal places
+}
+
+const PointsAndDataCard = ({ kleo_points, data_quantity }: PointsAndDataCardProps) => {
+  const formattedKleoPoints = formatKleoPoints(kleo_points);
+  const dataQuantityInMB = convertBytesToMB(data_quantity);
+
   return (
     <div className="flex flex-col justify-between h-full">
       {/* Total Points Earned */}
@@ -16,7 +33,7 @@ const PointsAndDataCard = () => {
               Total Points Earned
             </h3>
             <p className='text-lg font-normal'>
-              <span className="text-5xl font-bold">{kleoPoint} </span>
+              <span className="text-5xl font-bold">{formattedKleoPoints} </span>
               KLEO XP
             </p>
           </div>
@@ -29,7 +46,7 @@ const PointsAndDataCard = () => {
         <div className="flex flex-col">
           <h3 className="text-base font-medium">Total Data Quantity</h3>
           <p className='text-lg font-normal'>
-            <span className="text-5xl font-bold">{dataQuantity} MB </span>
+            <span className="text-5xl font-bold">{dataQuantityInMB} MB </span>
             till date
           </p>
         </div>
@@ -38,4 +55,4 @@ const PointsAndDataCard = () => {
   )
 }
 
-export default PointsAndDataCard
+export default PointsAndDataCard;
