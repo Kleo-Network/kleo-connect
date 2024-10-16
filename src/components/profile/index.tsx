@@ -19,6 +19,17 @@ import LeaderBoardBanner from './components/LeaderBoardBanner'
 import Navbar from './components/Navbar'
 import useFetch from '../common/hooks/useFetch'
 
+interface UserGraphResponse {
+  processing?: boolean;
+  data?: GraphLabelItem[];
+  error?: string
+}
+
+interface GraphLabelItem {
+  label: string;
+  percentage: number;
+}
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -29,10 +40,13 @@ ChartJS.register(
 )
 
 function Profile() {
-
   // Get the user Data.
   const userAddress = localStorage.getItem('address');
   const GET_USER_PATH = `user/get-user/${userAddress || ''}`;
+  // TODO: Stop using the hardCoded one.
+  // const GET_USER_GRAPH = `user/get-user-graph?address=${userAddress || ''}`;
+  const GET_USER_GRAPH = `user/get-user-graph?address=${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
+
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
   const { data, status, error, fetchData } = useFetch(GET_USER_PATH, {
@@ -41,6 +55,10 @@ function Profile() {
       setUserData(fetchedData);
     },
   });
+  const { fetchData: fetchUserGraph, error: graphError } = useFetch<UserGraphResponse>();
+  const [graphData, setGraphData] = useState<any>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Define the ref with the type of an HTMLDivElement
   const milestonesRef = useRef<HTMLDivElement | null>(null);
@@ -63,6 +81,38 @@ function Profile() {
     };
   }, []);
 
+  // Make API call when Address changes.
+  useEffect(() => {
+    if (!isLoading) {
+      setIsLoading(true);
+      fetchUserGraph(GET_USER_GRAPH, {
+        onSuccessfulFetch(data) {
+          if (data?.error) {
+            setIsProcessing(true);
+          } else if (data?.processing) {
+            setIsProcessing(true);
+          } else {
+            setIsProcessing(false);
+            if (graphData) {
+              setGraphData(data?.data);
+              console.log('Data : ', data);
+            }
+          }
+          setIsLoading(false);
+        },
+      });
+    }
+  }, []);
+
+  // Listening to error if any errors set all flags accordingly.
+  useEffect(() => {
+    if (graphError) {
+      setIsProcessing(true);
+      setIsLoading(false);
+      setGraphData(null);
+    }
+  }, [graphError])
+
   return (
     <div className="bg-slate-100">
       <Navbar />
@@ -77,7 +127,7 @@ function Profile() {
               <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
-              <DataQuality />
+              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} />
             </div>
             <div>
               <Milestones mileStones={userData?.milestones || {}} />
@@ -116,7 +166,7 @@ function Profile() {
               <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
-              <DataQuality />
+              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} />
             </div>
           </div>
 
