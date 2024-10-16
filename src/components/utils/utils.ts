@@ -150,3 +150,21 @@ export function updateCardTypeToRenderInAllCards(data: PendingCard[] | Published
 
   return updatedData;
 }
+
+// text = '1234567890', maxLength = 8 => output: '12...890'
+export function truncateText(text: string, maxLength: number) {
+  const textLength = text.length;
+
+  if (textLength > maxLength) {
+    // Calculate the number of characters to show from the start
+    const charsToShowFromStart = maxLength - 8;
+
+    // Get the start and end parts of the string
+    const startPart = text.substring(0, charsToShowFromStart);
+    const endPart = text.substring(textLength - 5);
+
+    return `${startPart}...${endPart}`;
+  }
+
+  return text;
+}
