@@ -31,7 +31,8 @@ ChartJS.register(
 function Profile() {
 
   // Get the user Data.
-  const GET_USER_PATH = 'user/get-user/0x9bdcAeb9443316BbA3998a600Cc30888846A1C45';
+  const userAddress = localStorage.getItem('address');
+  const GET_USER_PATH = `user/get-user/${userAddress || ''}`;
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
   const { data, status, error, fetchData } = useFetch(GET_USER_PATH, {
@@ -63,7 +64,7 @@ function Profile() {
   }, []);
 
   return (
-    <div className="bg-slate-100 min-h-screen">
+    <div className="bg-slate-100">
       <Navbar />
       {/* Main Content */}
       <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10">
@@ -84,7 +85,7 @@ function Profile() {
           </div>
 
           {/* Second Row: Snapshot & Referrals (stacked) | Leaderboard (full height) */}
-          <div className="grid grid-cols-[0.673fr_0.327fr] gap-5">
+          <div className="grid grid-cols-[2fr_1fr] gap-5">
             <div className="flex flex-col gap-5">
               <div className="flex-grow">
                 <Snapshot />
@@ -93,9 +94,7 @@ function Profile() {
                 <Referrals />
               </div>
             </div>
-            <div className="flex-grow">
-              <Leaderboard />
-            </div>
+            <Leaderboard userAddress={userAddress || ''} />
           </div>
 
           {/* Third Row: Privacy | LeaderBoardBanner */}
@@ -133,7 +132,7 @@ function Profile() {
               className="overflow-y-auto"
               style={{ maxHeight: milestonesHeight }}
             >
-              <Leaderboard />
+              <Leaderboard userAddress={userAddress || ''} />
             </div>
           </div>
 
