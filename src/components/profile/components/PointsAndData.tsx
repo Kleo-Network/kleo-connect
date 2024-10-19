@@ -22,9 +22,9 @@ const PointsAndDataCard = ({ kleo_points, data_quantity }: PointsAndDataCardProp
   const dataQuantityInMB = convertBytesToMB(data_quantity);
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between h-full gap-5">
       {/* Total Points Earned */}
-      <div className="relative rounded-2xl flex flex-col justify-between text-white p-0 min-h-[200px] bg-[url('/src/assets/dashboard/Grid.svg')] bg-no-repeat bg-cover">
+      <div className="relative rounded-2xl flex flex-col justify-between text-white p-0 bg-[url('/src/assets/dashboard/Grid.svg')] bg-no-repeat bg-cover h-full">
         <div className="relative flex flex-col justify-between z-0 p-6 h-full">
           {/* <Reward className="w-20 h-20 mb-4" /> */}
           <img src={rewardImage} className="w-20 h-20 mb-4" />
@@ -41,7 +41,7 @@ const PointsAndDataCard = ({ kleo_points, data_quantity }: PointsAndDataCardProp
       </div>
 
       {/* Total Data Quantity */}
-      <div className="p-5 rounded-lg flex flex-col justify-between bg-white text-black min-h-[215px]">
+      <div className="p-5 rounded-lg flex flex-col justify-between bg-white text-black h-full">
         <Data className="w-20 h-20 mb-4" />
         <div className="flex flex-col">
           <h3 className="text-base font-medium">Total Data Quantity</h3>
