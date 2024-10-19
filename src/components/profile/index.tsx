@@ -141,7 +141,7 @@ function Profile() {
                 <Snapshot />
               </div>
               <div className="flex-1 h-full">
-                <Referrals />
+                <Referrals userAddress={userAddress || ''} />
               </div>
             </div>
             <Leaderboard userAddress={userAddress || ''} />
@@ -193,7 +193,7 @@ function Profile() {
 
           {/* Fourth Row: Referrals */}
           <div className="grid grid-cols-1">
-            <Referrals />
+            <Referrals userAddress={userAddress || ''} />
           </div>
 
           {/* Fifth Row: Privacy and LeaderBoardBanner */}

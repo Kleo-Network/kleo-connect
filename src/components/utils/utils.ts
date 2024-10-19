@@ -101,13 +101,13 @@ export function parseUrl(url: string): string {
   }
 }
 
-export function formatDate (epoch: number): string {
-  const date = new Date(epoch * 1000) // Convert epoch to milliseconds
+export function formatDate (date: number): string {
+  const formattedDate = new Date(date) // Convert epoch to milliseconds
 
-  const day = String(date.getDate()).padStart(2, '0') // Ensure two digits for day
-  const year = date.getFullYear()
+  const day = String(formattedDate.getDate()).padStart(2, '0') // Ensure two digits for day
+  const year = formattedDate.getFullYear()
 
-  return `${day} ${new Date(epoch * 1000).toLocaleDateString('en-US', {
+  return `${day} ${new Date(date).toLocaleDateString('en-US', {
     month: 'long'
   })} ${year}`
 }
