@@ -20,11 +20,13 @@ const Leaderboard = ({ userAddress, setHighestKleoPoints }: LeaderboardProps) =>
 
     // State for storing the leaderboard data
     const [leaderboardData, setLeaderboardData] = useState<ILeaderboardData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Fetch top users including the user's own rank
     const { data: topUsersData, status: topUsersStatus, fetchData: fetchTopUsers } = useFetch();
 
     useEffect(() => {
+        setIsLoading(true);
         // Fetch the leaderboard data when the component mounts or userAddress changes
         fetchTopUsers(GET_TOP_USERS);
     }, [userAddress]);
@@ -36,6 +38,7 @@ const Leaderboard = ({ userAddress, setHighestKleoPoints }: LeaderboardProps) =>
             const topUserIndex = (topUsersData as ILeaderboardData[])[0].address === userAddress ? 1 : 0;
             setHighestKleoPoints((topUsersData as ILeaderboardData[])[topUserIndex].kleo_points);
         }
+        setIsLoading(false);
     }, [topUsersData]);
 
     return (
@@ -45,8 +48,13 @@ const Leaderboard = ({ userAddress, setHighestKleoPoints }: LeaderboardProps) =>
                 Keep up with the team to receive rewards!
             </p>
 
+            {isLoading && (
+                <div className="h-full w-full flex items-center justify-center">
+                    <div className="w-8 h-8 border-4 border-t-4 border-gray-200 border-t-purple-500 rounded-full animate-spin"></div>
+                </div>
+            )}
             {/* Scrollable Leaderboard */}
-            <ul className="flex flex-col gap-3 overflow-y-auto max-h-[304px] lg:max-h-[554px] flex-1">
+            {!isLoading && <ul className="flex flex-col gap-3 overflow-y-auto max-h-[304px] lg:max-h-[554px] flex-1">
                 {leaderboardData.map((data, index) => (
                     <LeaderboardRow
                         key={data.address}
@@ -56,7 +64,7 @@ const Leaderboard = ({ userAddress, setHighestKleoPoints }: LeaderboardProps) =>
                         isUser={index === 0}
                     />
                 ))}
-            </ul>
+            </ul>}
         </div>
     );
 };

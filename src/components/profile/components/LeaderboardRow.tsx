@@ -14,7 +14,7 @@ const LeaderboardRow = ({ address, kleoPoints, rank, isUser }: LeaderboardRowPro
 
     return (
         <li
-            className={`mr-2 flex justify-between items-center p-4 rounded-md cursor-pointer ${isUser ? 'bg-[#293056]' : 'bg-gray-100'}`}
+            className={`mr-2 flex justify-between items-center p-4 rounded-md ${isUser ? 'bg-[#293056]' : 'bg-gray-100'}`}
         >
             <div className="flex items-center space-x-2">
                 <span
