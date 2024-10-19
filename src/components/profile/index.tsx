@@ -59,6 +59,7 @@ function Profile() {
   const [graphData, setGraphData] = useState<any>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [highestKleoPoints, setHighestKleoPoints] = useState(0);
 
   // Define the ref with the type of an HTMLDivElement
   const milestonesRef = useRef<HTMLDivElement | null>(null);
@@ -127,7 +128,7 @@ function Profile() {
               <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
-              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} />
+              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
             </div>
             <div>
               <Milestones mileStones={userData?.milestones || {}} />
@@ -144,7 +145,7 @@ function Profile() {
                 <Referrals userAddress={userAddress || ''} />
               </div>
             </div>
-            <Leaderboard userAddress={userAddress || ''} />
+            <Leaderboard userAddress={userAddress || ''} setHighestKleoPoints={setHighestKleoPoints} />
           </div>
 
           {/* Third Row: Privacy | LeaderBoardBanner */}
@@ -166,7 +167,7 @@ function Profile() {
               <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
-              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} />
+              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
             </div>
           </div>
 
@@ -182,7 +183,7 @@ function Profile() {
               className="overflow-y-auto"
               style={{ maxHeight: milestonesHeight }}
             >
-              <Leaderboard userAddress={userAddress || ''} />
+              <Leaderboard userAddress={userAddress || ''} setHighestKleoPoints={setHighestKleoPoints} />
             </div>
           </div>
 

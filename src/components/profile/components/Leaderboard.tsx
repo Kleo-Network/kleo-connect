@@ -10,11 +10,12 @@ export interface ILeaderboardData {
 
 interface LeaderboardProps {
     userAddress: string;
+    setHighestKleoPoints: React.Dispatch<React.SetStateAction<number>>
 }
 
 const LEADER_BOARD_LENGTH = 20;
 
-const Leaderboard = ({ userAddress }: LeaderboardProps) => {
+const Leaderboard = ({ userAddress, setHighestKleoPoints }: LeaderboardProps) => {
     const GET_TOP_USERS = `user/top-users?limit=${LEADER_BOARD_LENGTH}&address=${userAddress}`;
 
     // State for storing the leaderboard data
@@ -32,6 +33,8 @@ const Leaderboard = ({ userAddress }: LeaderboardProps) => {
     useEffect(() => {
         if (topUsersData) {
             setLeaderboardData(topUsersData as ILeaderboardData[]);
+            const topUserIndex = (topUsersData as ILeaderboardData[])[0].address === userAddress ? 1 : 0;
+            setHighestKleoPoints((topUsersData as ILeaderboardData[])[topUserIndex].kleo_points);
         }
     }, [topUsersData]);
 

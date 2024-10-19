@@ -64,14 +64,14 @@ export const RadarChartData = {
         },
     ],
 };
-const percentage = 87;
-const dataQualityPercentage = 64;
 
 interface DataQualityProps {
     address: string;
     isLoading: boolean;
     isProcessing: boolean;
     graphData: any;
+    userKleoPoints: number;
+    highestKleoPoints: number;
 }
 
 interface GraphLabelItem {
@@ -90,11 +90,12 @@ interface RadarChartDataset {
     }[];
 }
 
-const DataQuality = ({ address, isLoading, isProcessing, graphData }: DataQualityProps) => {
+const DataQuality = ({ address, isLoading, isProcessing, graphData, userKleoPoints, highestKleoPoints }: DataQualityProps) => {
     const [highestLabel, setHighestLabel] = useState<string>('');
     const [highestValue, setHighestValue] = useState<number>(-1);
     const [highestValueIndex, setHighestValueIndex] = useState<number>(-1);
     const [radarChartData, setRadarChartData] = useState<RadarChartDataset>(RadarChartData);
+    const [dataQualityPercentage, setDataQualityPercentage] = useState(0);
 
     // Reset the Data for RadarChart when data is changed.
     useEffect(() => {
@@ -122,6 +123,15 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData }: DataQualit
         }
     }, [radarChartData, isLoading]);
 
+    useEffect(() => {
+        if (userKleoPoints && highestKleoPoints) {
+            const percentage = (userKleoPoints / highestKleoPoints) * 100;
+            setDataQualityPercentage(Number(percentage.toFixed(1)));
+        } else {
+            setDataQualityPercentage(0);
+        }
+    }, [highestKleoPoints, userKleoPoints])
+
     return (
         <div className="flex flex-col justify-between bg-white p-5 rounded-xl h-full">
             <div className="flex flex-col justify-between h-full">
@@ -134,7 +144,7 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData }: DataQualit
                         </p>
                     </div>
                     <div className="text-2xl flex items-center rounded-xl justify-center font-bold w-20 h-16 text-white p-10 bg-[#7f56d9]">
-                        {percentage}%
+                        {dataQualityPercentage}%
                     </div>
                 </div>
                 {/* Processing Banner */}
