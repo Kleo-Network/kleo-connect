@@ -138,7 +138,7 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData }: DataQualit
                     </div>
                 </div>
                 {/* Processing Banner */}
-                {isProcessing && !isLoading && <div className="max-h-[320px] mt-4 w-full bg-[F2F4F7] rounded-lg overflow-hidden">
+                {isProcessing && !isLoading && <div className="max-h-[320px] mt-4 w-full bg-[#F2F4F7] rounded-lg overflow-hidden flex items-center justify-center">
                     <ProcessingMessage />
                 </div>}
                 {/* Radar Activity Chart + Max Contribution banner */}
