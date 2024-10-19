@@ -42,10 +42,10 @@ ChartJS.register(
 function Profile() {
   // Get the user Data.
   const userAddress = localStorage.getItem('address');
-  const GET_USER_PATH = `user/get-user/${userAddress || ''}`;
+  const GET_USER_PATH = `user/get-user/${userAddress}`;
   // TODO: Stop using the hardCoded one.
-  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
-  // const GET_USER_GRAPH = `user/get-user-graph/${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
+  // const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
+  const GET_USER_GRAPH = `user/get-user-graph/${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
 
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
@@ -137,10 +137,10 @@ function Profile() {
           {/* Second Row: Snapshot & Referrals (stacked) | Leaderboard (full height) */}
           <div className="grid grid-cols-[2fr_1fr] gap-5">
             <div className="flex flex-col gap-5">
-              <div className="flex-grow">
+              <div className="flex-1 h-full">
                 <Snapshot />
               </div>
-              <div className="flex-grow">
+              <div className="flex-1 h-full">
                 <Referrals />
               </div>
             </div>
@@ -199,7 +199,7 @@ function Profile() {
           {/* Fifth Row: Privacy and LeaderBoardBanner */}
           <div className="grid grid-cols-[0.412fr_0.588fr] gap-5">
             <div>
-              <Privacy pii_removed_count={userData?.pii_removed_count} />
+              <Privacy pii_removed_count={userData?.pii_removed_count || 0} />
             </div>
             <div>
               <LeaderBoardBanner />
