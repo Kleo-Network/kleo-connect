@@ -43,9 +43,8 @@ function Profile() {
   // Get the user Data.
   const userAddress = localStorage.getItem('address');
   const GET_USER_PATH = `user/get-user/${userAddress}`;
-  // TODO: Stop using the hardCoded one.
-  // const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
-  const GET_USER_GRAPH = `user/get-user-graph/${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
+  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
+  // const GET_USER_GRAPH = `user/get-user-graph/${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
 
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
