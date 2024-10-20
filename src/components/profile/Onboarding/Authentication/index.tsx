@@ -42,33 +42,12 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
     }
   }, [])
 
-  const USER_LOGIN_PATH = 'user/create-user'
-  const handleUserLogin = () => {
-    setIsCreatingAccount(true)
-    fetchCreateAndFetchUserData(USER_LOGIN_PATH, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        walletAddress: walletAddress
-      }),
-      onSuccessfulFetch: (data) => {
-        if ((data as any)?.message == 'Please sign up') {
-          navigate('/signup/1')
-          setCurrentStep(1)
-        } else if (data?.address && data?.token) {
-          localStorage.setItem('address', data.address)
-          localStorage.setItem('token', data.token)
-            ; (window as any).signIn(data.address, data.token)
-          setLogin(true)
-          setUser(data)
-          navigate('/profile/' + walletAddress)
-        } else {
-          navigate('/signup/1')
-        }
-      }
-    })
+  const handleUserLogin = async () => {
+    const result = await (window as any).signIn();
+    localStorage.setItem('address', result.address);
+    localStorage.setItem('token', result.token);
+    setLogin(true);
+    navigate('/profile/' + result.address)
   }
 
   return (
@@ -76,10 +55,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
       {(currentStep == 1 || currentStep == 0) && (
         <>
           <div className="flex flex-row items-start justify-center px-2 py-2 bg-white shadow-lg rounded-lg w-full">
-            <div className="w-full grid grid-cols-2 p-2 container mx-auto">
-              <div className="place-self-start h-full">
-                <MediaBanner />
-              </div>
+            <div className="w-full p-2 container mx-auto h-screen flex items-center justify-center">
               <div className="flex w-full h-full items-center justify-center">
                 <div className="flex flex-col w-[493px]">
                   <div className="mb-[50px] text-lg w-full font-medium text-gray-900 border-gray-200 flex-col justify-center items-center">
@@ -153,50 +129,17 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                       )}
                     </div>
                   </div>
-                  <div className="flex flex-row items-start gap-4 w-full mb-[50px]">
-                    <div className="bg-gray-100 p-3 rounded-2xl">
-                      <MetamaskLogo className="w-12 h-12" />
-                    </div>
-                    <div>
-                      <div className="flex items-start justify-between w-full">
-                        <div className="flex flex-col items-start justify-center">
-                          <span className="text-gray-900 text-base font-medium">
-                            Connect Wallet
-                          </span>
-                          <span className="text-gray-400 text-sm font-regular">
-                            To get started, we use Google Account or Email, this
-                            will be default authentication
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-center mt-2 text-sm font-medium">
-                        {pluginState == PluginState.INSTALLED ? (
-                          <ConnectWallet
-                            style={{
-                              width: '100%',
-                              textAlign: 'center'
-                            }}
-                            className="w-[200px]"
-                          />
-                        ) : (
-                          <p className="mb-4">
-                            Install Kleo Plugin to Create Account!
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
                   <button
                     disabled={!walletAddress || isCreatingAccount}
                     className={`w-full py-3 ${walletAddress && !isCreatingAccount
-                        ? 'bg-violet-600 text-white'
-                        : 'bg-gray-100 text-gray-500'
+                      ? 'bg-violet-600 text-white'
+                      : 'bg-gray-100 text-gray-500'
                       } rounded-lg shadow mx-auto block`}
                     onClick={handleUserLogin}
                   >
                     {isCreatingAccount
                       ? 'Creating Account...'
-                      : 'Create Account'}
+                      : 'Sign In'}
                   </button>
                   {login && (
                     <div className="m-3">
