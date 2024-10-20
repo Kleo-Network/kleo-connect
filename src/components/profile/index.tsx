@@ -19,6 +19,17 @@ import LeaderBoardBanner from './components/LeaderBoardBanner'
 import Navbar from './components/Navbar'
 import useFetch from '../common/hooks/useFetch'
 
+interface UserGraphResponse {
+  processing?: boolean;
+  data?: GraphLabelItem[];
+  error?: string
+}
+
+interface GraphLabelItem {
+  label: string;
+  percentage: number;
+}
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -29,9 +40,12 @@ ChartJS.register(
 )
 
 function Profile() {
-
   // Get the user Data.
-  const GET_USER_PATH = 'user/get-user/0x9bdcAeb9443316BbA3998a600Cc30888846A1C45';
+  const userAddress = localStorage.getItem('address');
+  const GET_USER_PATH = `user/get-user/${userAddress}`;
+  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
+  // const GET_USER_GRAPH = `user/get-user-graph/${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
+
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
   const { data, status, error, fetchData } = useFetch(GET_USER_PATH, {
@@ -40,6 +54,11 @@ function Profile() {
       setUserData(fetchedData);
     },
   });
+  const { fetchData: fetchUserGraph, error: graphError } = useFetch<UserGraphResponse>();
+  const [graphData, setGraphData] = useState<any>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [highestKleoPoints, setHighestKleoPoints] = useState(0);
 
   // Define the ref with the type of an HTMLDivElement
   const milestonesRef = useRef<HTMLDivElement | null>(null);
@@ -62,8 +81,40 @@ function Profile() {
     };
   }, []);
 
+  // Make API call when Address changes.
+  useEffect(() => {
+    if (!isLoading) {
+      setIsLoading(true);
+      fetchUserGraph(GET_USER_GRAPH, {
+        onSuccessfulFetch(data) {
+          if (data?.error) {
+            setIsProcessing(true);
+          } else if (data?.processing) {
+            setIsProcessing(true);
+          } else {
+            setIsProcessing(false);
+            if (graphData) {
+              setGraphData(data?.data);
+              console.log('Data : ', data);
+            }
+          }
+          setIsLoading(false);
+        },
+      });
+    }
+  }, []);
+
+  // Listening to error if any errors set all flags accordingly.
+  useEffect(() => {
+    if (graphError) {
+      setIsProcessing(true);
+      setIsLoading(false);
+      setGraphData(null);
+    }
+  }, [graphError])
+
   return (
-    <div className="bg-slate-100 min-h-screen">
+    <div className="bg-slate-100">
       <Navbar />
       {/* Main Content */}
       <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10">
@@ -76,26 +127,24 @@ function Profile() {
               <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
-              <DataQuality />
+              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
             </div>
             <div>
-              <Milestones />
+              <Milestones mileStones={userData?.milestones || {}} />
             </div>
           </div>
 
           {/* Second Row: Snapshot & Referrals (stacked) | Leaderboard (full height) */}
-          <div className="grid grid-cols-[0.673fr_0.327fr] gap-5">
+          <div className="grid grid-cols-[2fr_1fr] gap-5">
             <div className="flex flex-col gap-5">
-              <div className="flex-grow">
+              <div className="flex-1 h-full">
                 <Snapshot />
               </div>
-              <div className="flex-grow">
-                <Referrals />
+              <div className="flex-1 h-full">
+                <Referrals userAddress={userAddress || ''} />
               </div>
             </div>
-            <div className="flex-grow">
-              <Leaderboard />
-            </div>
+            <Leaderboard userAddress={userAddress || ''} setHighestKleoPoints={setHighestKleoPoints} />
           </div>
 
           {/* Third Row: Privacy | LeaderBoardBanner */}
@@ -117,7 +166,7 @@ function Profile() {
               <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
             </div>
             <div>
-              <DataQuality />
+              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
             </div>
           </div>
 
@@ -125,7 +174,7 @@ function Profile() {
           <div className="grid grid-cols-2 gap-5">
             {/* Milestones Column */}
             <div ref={milestonesRef} className="self-start">
-              <Milestones />
+              <Milestones mileStones={userData?.milestones || {}} />
             </div>
 
             {/* Leaderboard Column with Scroll */}
@@ -133,7 +182,7 @@ function Profile() {
               className="overflow-y-auto"
               style={{ maxHeight: milestonesHeight }}
             >
-              <Leaderboard />
+              <Leaderboard userAddress={userAddress || ''} setHighestKleoPoints={setHighestKleoPoints} />
             </div>
           </div>
 
@@ -144,13 +193,13 @@ function Profile() {
 
           {/* Fourth Row: Referrals */}
           <div className="grid grid-cols-1">
-            <Referrals />
+            <Referrals userAddress={userAddress || ''} />
           </div>
 
           {/* Fifth Row: Privacy and LeaderBoardBanner */}
           <div className="grid grid-cols-[0.412fr_0.588fr] gap-5">
             <div>
-              <Privacy pii_removed_count={userData?.pii_removed_count} />
+              <Privacy pii_removed_count={userData?.pii_removed_count || 0} />
             </div>
             <div>
               <LeaderBoardBanner />

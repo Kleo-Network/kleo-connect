@@ -101,13 +101,13 @@ export function parseUrl(url: string): string {
   }
 }
 
-export function formatDate (epoch: number): string {
-  const date = new Date(epoch * 1000) // Convert epoch to milliseconds
+export function formatDate (date: number): string {
+  const formattedDate = new Date(date) // Convert epoch to milliseconds
 
-  const day = String(date.getDate()).padStart(2, '0') // Ensure two digits for day
-  const year = date.getFullYear()
+  const day = String(formattedDate.getDate()).padStart(2, '0') // Ensure two digits for day
+  const year = formattedDate.getFullYear()
 
-  return `${day} ${new Date(epoch * 1000).toLocaleDateString('en-US', {
+  return `${day} ${new Date(date).toLocaleDateString('en-US', {
     month: 'long'
   })} ${year}`
 }
@@ -149,4 +149,22 @@ export function updateCardTypeToRenderInAllCards(data: PendingCard[] | Published
   });
 
   return updatedData;
+}
+
+// text = '1234567890', maxLength = 8 => output: '12...890'
+export function truncateText(text: string, maxLength: number) {
+  const textLength = text.length;
+
+  if (textLength > maxLength) {
+    // Calculate the number of characters to show from the start
+    const charsToShowFromStart = maxLength - 8;
+
+    // Get the start and end parts of the string
+    const startPart = text.substring(0, charsToShowFromStart);
+    const endPart = text.substring(textLength - 5);
+
+    return `${startPart}...${endPart}`;
+  }
+
+  return text;
 }

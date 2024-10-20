@@ -1,34 +1,45 @@
-import React from 'react';
+import { MetaMaskAvatar } from 'react-metamask-avatar';
+import KleoUserImage from '../../../assets/images/KleoToken.svg'
+import { truncateText } from '../../utils/utils';
 
-const LeaderboardRow = ({ data, isSelected, onClick }) => {
+interface LeaderboardRowProps {
+    address: string,
+    kleoPoints: number,
+    rank: number,
+    isUser: boolean
+}
+
+const LeaderboardRow = ({ address, kleoPoints, rank, isUser }: LeaderboardRowProps) => {
+    const isWalletAddress = /^0x[a-fA-F0-9]{40}$/.test(address);
+
     return (
         <li
-            className={`mr-2 flex justify-between items-center p-4 rounded-md cursor-pointer ${isSelected ? 'bg-[#293056]' : 'bg-gray-100'}`}
-            onClick={onClick}
+            className={`mr-2 flex justify-between items-center p-4 rounded-md ${isUser ? 'bg-[#293056]' : 'bg-gray-100'}`}
         >
             <div className="flex items-center space-x-2">
                 <span
-                    className={`font-medium text-xs w-3 ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                    className={`font-medium text-xs w-3 ${isUser ? 'text-white' : 'text-gray-700'}`}
                 >
-                    {data.id}
+                    {rank}
                 </span>
                 <hr className="w-6 rotate-90 border-white p-0" />
-                <img
-                    src={data.profilePic}
-                    alt="User image"
-                    className="w-6 h-6 rounded-full"
-                />
+                {isWalletAddress ?
+                    <MetaMaskAvatar address={address} size={24} />
+                    : <img src={KleoUserImage}
+                        alt="User image"
+                        className="w-6 h-6 rounded-full" />
+                }
                 <span
-                    className={`text-xs font-medium ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                    className={`text-xs font-medium ${isUser ? 'text-white' : 'text-gray-700'}`}
                 >
-                    {data.name}
+                    {isWalletAddress ? truncateText(address, 20) : address}
                 </span>
             </div>
             <span
-                className={`${isSelected ? 'text-white' : 'text-gray-700'} text-sm font-medium`}
+                className={`${isUser ? 'text-white' : 'text-gray-700'} text-sm font-medium`}
             >
-                {data.reward}{' '}
-                <span className={`text-[10px] ${isSelected ? 'text-white' : 'text-gray-400'}`}>
+                {kleoPoints}
+                <span className={`text-[10px] ${isUser ? 'text-white' : 'text-gray-400'} ml-1`}>
                     KLEO
                 </span>
             </span>

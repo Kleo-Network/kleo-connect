@@ -1,7 +1,17 @@
 import React from "react";
 import KleoMate from "../../../assets/dashboard/KleoMate.jsx";
 
-const Card = ({ title, description, buttonColor, backgroundColor, textColor, iconColor, iconBgColor }) => {
+interface SnapShotCardprops {
+  title: string;
+  description: string;
+  buttonColor: string;
+  backgroundColor: string;
+  textColor: string;
+  iconColor: string;
+  iconBgColor: string;
+}
+
+const Card = ({ title, description, buttonColor, backgroundColor, textColor, iconColor, iconBgColor }: SnapShotCardprops) => {
   return (
     <div
       className="p-5 rounded-lg flex flex-col justify-between gap-2 h-full"
@@ -60,12 +70,12 @@ const Snapshot = () => {
   ];
 
   return (
-    <div className="bg-white p-5 rounded-xl mx-auto h-fit flex flex-col gap-2">
+    <div className="bg-white p-5 rounded-xl mx-auto h-full flex flex-col gap-2">
       <p className="text-2xl font-semibold">Snapshot</p>
       <p className="text-gray-500 text-sm">
         Vote and be eligible to earn more KLEO XP!
       </p>
-      <div className="grid grid-cols-3 gap-4 mt-1">
+      <div className="grid grid-cols-3 gap-4 mt-1 flex-grow">
         {cardsData.map((card, index) => (
           <Card key={index} {...card} />
         ))}
