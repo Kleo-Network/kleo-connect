@@ -18,6 +18,7 @@ import {
   coinbaseWallet,
   walletConnect
 } from '@thirdweb-dev/react'
+import { MyData } from './components/myData'
 function App(): ReactElement {
   const emptyStringArray: string[] = []
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -118,15 +119,16 @@ function App(): ReactElement {
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route
                 path="/profile/:address"
-                element={<Profile user={user} setUser={setUser} />}
+                element={<Profile />}
               />
               <Route path="/badges" element={<BadgesList />} />
 
               <Route path="/setting" element={<Settings user={user} />} />
+              {isLoggedIn && <Route path='my-data/:address' element={<MyData />} />}
               {isLoggedIn ? (
                 <Route
                   path="*"
-                  element={<Profile user={user} setUser={setUser} />}
+                  element={<Profile />}
                 />
               ) : (
                 <Route path="*" element={<Navigate to="/" />} />
