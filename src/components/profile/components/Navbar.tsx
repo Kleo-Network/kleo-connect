@@ -20,9 +20,6 @@ const Navbar = ({ userAddress, page }: NavbarProps) => {
       : 'bg-[#f8f9fc] text-gray-700 hover:bg-gray-700 hover:text-white'
     }`;
 
-  console.log('IsActive : ', page === PAGE_NAMES.MY_DATA);
-
-
   return (
     <div className="w-full bg-[#f8f9fc] fixed z-10 shadow-md">
       <div className="container mx-auto p-4 flex justify-between items-center">

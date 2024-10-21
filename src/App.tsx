@@ -18,7 +18,7 @@ import {
   coinbaseWallet,
   walletConnect
 } from '@thirdweb-dev/react'
-import { MyData } from './components/myData'
+import { MyData } from './components/profile/components/MyData'
 function App(): ReactElement {
   const emptyStringArray: string[] = []
   const [isLoggedIn, setIsLoggedIn] = useState(false)
