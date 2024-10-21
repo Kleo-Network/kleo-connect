@@ -1,5 +1,5 @@
 import Navbar, { PAGE_NAMES } from "./Navbar";
-import { ReactComponent as Clock } from '../../../assets/myData/clock.svg';
+import { ReactComponent as SpaceCat } from '../../../assets/myData/spaceCat.svg';
 
 interface MyDataComponentProps { }
 
@@ -13,8 +13,8 @@ export const MyData = ({ }: MyDataComponentProps) => {
     />
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-lg">
-        <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-[#8257e6] rounded-full">
-          <Clock className="w-8 h-8 text-white" />
+        <div className="flex items-center justify-center w-full h-fit mb-4">
+          <SpaceCat />
         </div>
         <h1 className="mb-4 text-3xl font-bold text-center text-[#1e2536]">Coming Soon...</h1>
         <p className="text-center text-gray-600">
