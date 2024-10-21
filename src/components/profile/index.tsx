@@ -16,7 +16,7 @@ import Referrals from './components/Referrals'
 import Leaderboard from './components/Leaderboard'
 import Privacy from './components/Privacy'
 import LeaderBoardBanner from './components/LeaderBoardBanner'
-import Navbar from './components/Navbar'
+import Navbar, { PAGE_NAMES } from './components/Navbar'
 import useFetch from '../common/hooks/useFetch'
 
 interface UserGraphResponse {
@@ -115,7 +115,7 @@ function Profile() {
 
   return (
     <div className="bg-slate-100">
-      <Navbar />
+      <Navbar userAddress={userAddress || ''} page={PAGE_NAMES.PROFILE} />
       {/* Main Content */}
       <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10">
 

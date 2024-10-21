@@ -1,41 +1,42 @@
-import React from 'react'
-import KLEO from '../../../assets/images/.png'
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../../assets/images/nameLogo.svg'
 
-export const MOCK_USER = {
-  badges: [],
-  content_tags: [],
-  first_time_user: false,
-  identity_tags: [],
-  kleo_points: 1234,
-  data_quality: 87,
-  slug: '0x573aFF24788A7c28dE5E94C945e7b46a6f16f7C1',
-  verified: false,
-  last_minted: 1722523989,
-  total_data_quantity: 34,
-};
+export enum PAGE_NAMES {
+  PROFILE = 'PROFILE',
+  MY_DATA = 'MY_DATA'
+}
 
-const Navbar = () => {
-  const user = MOCK_USER;  
-  const avatarUrl = `https://api.dicebear.com/9.x/identicon/svg?seed=${user.slug}`;
+interface NavbarProps {
+  userAddress: string;
+  page: PAGE_NAMES
+}
+
+const Navbar = ({ userAddress, page }: NavbarProps) => {
+  const navigate = useNavigate();
+
+  const getButtonClasses = (isActive: boolean) =>
+    `py-2 px-4 rounded-lg font-medium transition duration-300 ${isActive
+      ? 'bg-gray-800 text-white'
+      : 'bg-[#f8f9fc] text-gray-700 hover:bg-gray-700 hover:text-white'
+    }`;
 
   return (
-    <div className="w-full bg-[#f8f9fc] fixed z-10">
+    <div className="w-full bg-[#f8f9fc] fixed z-10 shadow-md">
       <div className="container mx-auto p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <Logo/>
-        </div>
+        <Logo />
         <div className="flex space-x-6">
-          <button className="bg-gray-800 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-800">
+          <button
+            className={getButtonClasses(page === PAGE_NAMES.PROFILE)}
+            onClick={() => navigate(`/profile/${userAddress}`)}
+          >
             Dashboard
           </button>
-          <button className="text-gray-700">My Data</button>
-          {/* <MetaMaskAvatar address={user.slug} size={36} /> */}
-          <img
-            src={avatarUrl}
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full object-cover"
-          />
+          <button
+            className={getButtonClasses(page === PAGE_NAMES.MY_DATA)}
+            onClick={() => navigate(`/my-data/${userAddress}`)}
+          >
+            My Data
+          </button>
         </div>
       </div>
     </div>
