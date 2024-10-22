@@ -5,19 +5,13 @@ import PrivacyPolicy from './components/home/sections/PrivacyPolicy'
 import SignUp from './components/signup'
 import BadgesList from './components/BadgesList'
 import { UserData } from './components/constants/SignupData'
-import { EventProvider } from './components/common/contexts/EventContext'
 import Privacy from './components/profile/Settings/Privacy'
 import useFetch, { FetchStatus } from './components/common/hooks/useFetch'
 import Settings from './components/profile/Settings'
 import Profile from './components/profile'
 import config from './components/common/config'
 
-import {
-  ThirdwebProvider,
-  metamaskWallet,
-  coinbaseWallet,
-  walletConnect
-} from '@thirdweb-dev/react'
+
 import { MyData } from './components/profile/components/MyData'
 function App(): ReactElement {
   const emptyStringArray: string[] = []
@@ -70,21 +64,10 @@ function App(): ReactElement {
   }
 
   return (
-    <ThirdwebProvider
-      activeChain="polygon"
-      supportedWallets={[
-        metamaskWallet({
-          recommended: true
-        }),
-        coinbaseWallet(),
-        walletConnect()
-      ]}
-      clientId={config.thirdweb.client}
-    >
-      <EventProvider>
-        <div className="h-full w-full">
-          <div className="flex flex-col font-inter self-stretch h-full">
-            {/* {isLoggedIn && (
+
+    <div className="h-full w-full">
+      <div className="flex flex-col font-inter self-stretch h-full">
+        {/* {isLoggedIn && (
               <header className="flex flex-row self-stretch items-center">
                 <Navbar
                   handleLogout={handleLogout}
@@ -94,50 +77,49 @@ function App(): ReactElement {
               </header>
             )} */}
 
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  user.token ? (
-                    <Navigate to={`/profile/${user.address}`} />
-                  ) : (
-                    /*<Navigate to={`/profile/${user.address}`} />*/
-                    <Navigate to={`/signup/0`} />
-                  )
-                }
-              />
-              <Route
-                path="/signup/:step"
-                element={
-                  <SignUp
-                    user={user}
-                    setUser={setUser}
-                    setIsLoggedIn={setIsLoggedIn}
-                  />
-                }
-              />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route
-                path="/profile/:address"
-                element={<Profile />}
-              />
-              <Route path="/badges" element={<BadgesList />} />
-
-              <Route path="/setting" element={<Settings user={user} />} />
-              {isLoggedIn && <Route path='my-data/:address' element={<MyData />} />}
-              {isLoggedIn ? (
-                <Route
-                  path="*"
-                  element={<Profile />}
-                />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              user.token ? (
+                <Navigate to={`/profile/${user.address}`} />
               ) : (
-                <Route path="*" element={<Navigate to="/" />} />
-              )}
-            </Routes>
-          </div>
-        </div>
-      </EventProvider>
-    </ThirdwebProvider>
+                /*<Navigate to={`/profile/${user.address}`} />*/
+                <Navigate to={`/signup/0`} />
+              )
+            }
+          />
+          <Route
+            path="/signup/:step"
+            element={
+              <SignUp
+                user={user}
+                setUser={setUser}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
+          />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route
+            path="/profile/:address"
+            element={<Profile />}
+          />
+          <Route path="/badges" element={<BadgesList />} />
+
+          <Route path="/setting" element={<Settings user={user} />} />
+          {isLoggedIn && <Route path='my-data/:address' element={<MyData />} />}
+          {isLoggedIn ? (
+            <Route
+              path="*"
+              element={<Profile />}
+            />
+          ) : (
+            <Route path="*" element={<Navigate to="/" />} />
+          )}
+        </Routes>
+      </div>
+    </div>
+
   )
 }
 

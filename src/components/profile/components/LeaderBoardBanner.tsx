@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactComponent as BigStar } from '../../../assets/dashboard/BigStar.svg'
+import { ReactComponent as BigStar } from '../../../assets/dashboard/Bigstar.svg'
 import { ReactComponent as MediumStar } from '../../../assets/dashboard/MediumStar.svg'
 import { ReactComponent as SmallStar } from '../../../assets/dashboard/SmallStar.svg'
 
