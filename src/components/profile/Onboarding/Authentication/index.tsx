@@ -136,7 +136,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                   } rounded-lg shadow mx-auto block`}
                 onClick={handleUserLogin}
               >
-                'Sign In'
+                Sign In
               </button>
 
               {/* Show error message if login fails */}
