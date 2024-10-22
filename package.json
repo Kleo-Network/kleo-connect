@@ -13,6 +13,7 @@
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@irys/sdk": "^0.1.21",
     "@metamask/detect-provider": "^2.0.0",
