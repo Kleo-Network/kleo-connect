@@ -33,7 +33,7 @@ export default defineConfig({
   envPrefix: 'VITE_',
   build: {
     rollupOptions: {
-      external: ['@emotion/styled']
+      external: ['@emotion/styled', 'chart.js']
     }
   }
   // build: {
