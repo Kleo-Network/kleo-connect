@@ -30,12 +30,7 @@ export default defineConfig({
       protocolImports: true
     })
   ],
-  envPrefix: 'VITE_',
-  build: {
-    rollupOptions: {
-      external: ['@emotion/styled', 'chart.js']
-    }
-  }
+  envPrefix: 'VITE_'
   // build: {
   //   assetsInlineLimit: 1000000,
   //   assetsInclude: ['**/*.svg'],
