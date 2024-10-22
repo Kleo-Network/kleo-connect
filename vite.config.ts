@@ -30,7 +30,12 @@ export default defineConfig({
       protocolImports: true
     })
   ],
-  envPrefix: 'VITE_'
+  envPrefix: 'VITE_',
+  build: {
+    rollupOptions: {
+      external: ['@emotion/styled']
+    }
+  }
   // build: {
   //   assetsInlineLimit: 1000000,
   //   assetsInclude: ['**/*.svg'],

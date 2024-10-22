@@ -6,7 +6,6 @@ import Alert from '../../../common/Alerts'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ReactComponent as MetamaskLogo } from '../../../../assets/images/metaMaskWithoutBg.svg'
-import { ConnectWallet, useAddress } from '@thirdweb-dev/react'
 import { MediaBanner } from '../Common/MediaBanner'
 import useFetch from '../../../common/hooks/useFetch'
 import { UserData } from '../../../constants/SignupData'
@@ -25,7 +24,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
 
   const [login, setLogin] = useState(false)
   const navigate = useNavigate()
-  const walletAddress = useAddress()
+  const walletAddress = ""
 
   const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
     useFetch<UserData>()

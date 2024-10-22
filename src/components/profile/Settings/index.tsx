@@ -1,15 +1,11 @@
 import { useMemo, useState, useEffect } from 'react'
 import { UserData } from '../../constants/SignupData'
-import { ConnectWallet } from '@thirdweb-dev/react'
-import { createThirdwebClient, getContract, resolveMethod } from 'thirdweb'
-import { defineChain } from 'thirdweb/chains'
 import { ReactComponent as Explorer } from '../../../assets/images/claim.svg'
 import { ReactComponent as ThirdParty } from '../../../assets/images/third.svg'
 import { ReactComponent as Airdrop } from '../../../assets/images/airdrop.svg'
 import useFetch from '../../common/hooks/useFetch'
 import { fullUserData } from '../../common/interface'
 import { contract_address, contractABI } from "../../contracts/mint";
-import { Web3Button, useAddress } from "@thirdweb-dev/react";
 import config from '../../common/config'
 
 interface User {
@@ -123,7 +119,7 @@ const ConnectRight = () => {
 
 
   const [userAddress, setUserAddress] = useState<string | undefined>(undefined);
-  const address = useAddress();
+  const address = "";
 
   useEffect(() => {
     setUserAddress(address);
@@ -216,12 +212,7 @@ const ConnectRight = () => {
                 Connect with your tribe . Earn from your profile and connect
                 different applications!
               </p>
-              <div className="content-center w-full">
-                <ConnectWallet
-                  style={{ width: '100%', textAlign: 'center' }}
-                  className="w-[200px]"
-                />
-              </div>
+
             </div>
           </li>
 
@@ -237,50 +228,7 @@ const ConnectRight = () => {
               <p className="text-sm">
                 This ensures your data is safe, decentralised and owned by you!
               </p>
-              {contract_address && userAddress && <Web3Button
-                connectWallet={{
-                  btnTitle: "Connect your wallet!",
-                }}
-                contractAddress={contract_address || ''}
-                theme={"light"}
-                style={{ "background": "rgb(168 85 247 / var(--tw-bg-opacity)) !important" }}
-                className="px-4 py-2 w-full mt-4 font-semibold text-white bg-purple-500 rounded-md hover:bg-purple-600"
-                contractAbi={contractABI} // Your smart contract address
-                action={async (contract) => {
-                  if (userAddress) {
-                    try {
-                      console.log("Starting minting process for user:", userAddress);
-                      const url = await handleMint();
-                      console.log("URL from handleMint:", url);
-                      if (url) {
-                        // Get the current gas price
-                        // const gasPrice = await contract.getProvider().getGasPrice();
 
-                        // // Increase the gas price by 20% (you can adjust this percentage)
-                        // const increasedGasPrice = gasPrice.mul(120).div(100);
-
-                        // // Estimate gas limit
-                        // const gasLimit = await contract.estimateGas.safeMint(userAddress, url);
-
-                        // // Increase gas limit by 20% to be safe
-                        // const increasedGasLimit = gasLimit.mul(120).div(100);
-
-                        const mintResult = await contract.call(
-                          "safeMint",
-                          [userAddress, url]
-                        );
-                        console.log("Minting result:", mintResult);
-                      } else {
-                        console.error("Failed to get URL from handleMint");
-                      }
-                    } catch (error) {
-                      console.error("Error in minting process:", error);
-                    }
-                  }
-                }}
-              >
-                Mint my data identity
-              </Web3Button>}
 
 
             </div>
