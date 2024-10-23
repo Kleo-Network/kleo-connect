@@ -134,13 +134,13 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData, userKleoPoin
 
     return (
         <div className="flex flex-col justify-between bg-white p-5 rounded-xl h-full">
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex flex-col justify-start h-full gap-4">
                 {/* My Quality + Quality Index */}
                 <div className="flex items-center justify-between">
                     <div>
                         <h3 className="text-2xl mb-2 font-semibold">My Data Quality</h3>
                         <p className="w-5/6 font-inter text-sm">
-                            Data quality is defined by lorem ipusm dolor sit amit
+                            Data quality score is based on <a href="https://docs.kleo.network/kleo_network/rewards/" target="_blank"><u className="text-[#7f56d9]">uniqueness</u></a> of your activity.
                         </p>
                     </div>
                     <div className="text-2xl flex items-center rounded-xl justify-center font-bold w-20 h-16 text-white p-10 bg-[#7f56d9]">
@@ -148,11 +148,11 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData, userKleoPoin
                     </div>
                 </div>
                 {/* Processing Banner */}
-                {isProcessing && !isLoading && <div className="max-h-[320px] mt-4 w-full bg-[#F2F4F7] rounded-lg overflow-hidden flex items-center justify-center">
+                {isProcessing && !isLoading && <div className="w-full bg-[#F2F4F7] rounded-lg overflow-hidden flex items-center justify-center flex-1">
                     <ProcessingMessage />
                 </div>}
                 {/* Radar Activity Chart + Max Contribution banner */}
-                {!isProcessing && <>
+                {!isProcessing && <div className="flex-1">
                     {/* Radar Activity Chart */}
                     <div className="mt-4 relative flex items-center justify-between h-full">
                         <div className="relative bg-gray-100 rounded-lg flex items-center justify-center w-full h-full">
@@ -185,7 +185,7 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData, userKleoPoin
                             )}
                         </div>
                     </div>
-                </>}
+                </div>}
             </div>
         </div>
     );
