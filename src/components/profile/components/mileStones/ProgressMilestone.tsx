@@ -7,17 +7,21 @@ interface ProgressMilestoneProps {
 }
 
 const ProgressMilestone = ({ label, progress, xp }: ProgressMilestoneProps) => {
+  const isCompleted = progress === 100;
+
   return (
-    <li className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+    <li
+      className={`flex items-center justify-between p-4 rounded-lg bg-gray-100 ${isCompleted ? 'opacity-50 pointer-events-none' : ''}`}
+    >
       <div className="flex items-center space-x-3">
         <CircularProgress percentage={progress} />
         <span className="text-sm font-semibold">{label}</span>
       </div>
-      <span className="text-purple-600 font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center">
+      <span className="text-[#7f56d9] font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center">
         +{xp} XP
       </span>
     </li>
-  )
+  );
 }
 
 export default ProgressMilestone;

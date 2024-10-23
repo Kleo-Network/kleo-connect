@@ -26,18 +26,19 @@ const Milestones = ({ mileStones }: MilestonesProps) => {
 
   const convertDataSizeToPercentage = (value: number) => {
     const dataOwnedMB = value / (1024 * 1024); // Convert bytes to MB
-    const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(2); // Round to 2 decimal places
+    const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(2); // Cap progress at 100%
     return { value: dataOwnedMB, progress: parseFloat(progress) };
-  }
+  };
 
   const convertReferredCountsToPercentage = (value: number) => {
-    const progress = Math.min((value / 10) * 100, 100).toFixed(2); // Round to 2 decimal places
+    const progress = Math.min((value / 10) * 100, 100).toFixed(2); // Cap progress at 100%
     return { value, progress: parseFloat(progress) };
-  }
+  };
 
   // TODO: Prince: Remove this hardcoded values.
   mileStones.data_owned = 123456789
-  mileStones.referred_count = 3
+  mileStones.referred_count = 1
+  mileStones.followed_on_twitter = true;
 
   return (
     <div className="bg-white p-5 rounded-xl flex flex-col w-full h-full">
