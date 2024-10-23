@@ -17,8 +17,12 @@ const ProgressMilestone = ({ label, progress, xp }: ProgressMilestoneProps) => {
         <CircularProgress percentage={progress} />
         <span className="text-sm font-semibold">{label}</span>
       </div>
-      <span className="text-[#7f56d9] font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center">
+      <span className="text-[#7f56d9] font-bold bg-white w-24 h-8 rounded-full flex items-center justify-center relative">
         +{xp} XP
+        {/* Green circle with white checkmark */}
+        {isCompleted &&
+          <span className="absolute top-[-4px] right-[-4px] bg-green-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">✓</span>
+        }
       </span>
     </li>
   );

@@ -37,7 +37,7 @@ const Milestones = ({ mileStones }: MilestonesProps) => {
 
   // TODO: Prince: Remove this hardcoded values.
   mileStones.data_owned = 123456789
-  mileStones.referred_count = 1
+  mileStones.referred_count = 3
   mileStones.followed_on_twitter = true;
 
   return (
