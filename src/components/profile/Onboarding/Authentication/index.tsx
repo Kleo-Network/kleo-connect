@@ -54,8 +54,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
               <div className="mb-[50px] text-lg w-full font-medium text-gray-900 border-gray-200 flex-col justify-center items-center">
                 <h1 className="text-4xl leading-10 pb-2">
                   Create Account To Get
-                  <br /> Started On
-                  <span className="text-primary">Kleo</span>
+                  <br /> Started On <span className="text-primary">Kleo</span>
                 </h1>
                 <p className="font-inter text-left text-sm text-md leading-md text-gray-500 pb-5">
                   Install Kleo and connect to get started! KLEO is a{' '}
@@ -64,10 +63,9 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                     target="_blank"
                   >
                     <u> VANA DLP</u>
-                  </a>{' '}
-                  aimed <br />
-                  at using chrome extension to help you own a piece of AI
-                  models.
+                  </a> aimed
+                  <br />
+                  at using chrome extension to help you own a piece of AI models.
                 </p>
               </div>
 
