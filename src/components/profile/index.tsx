@@ -10,7 +10,7 @@ import {
   Legend
 } from 'chart.js'
 import DataQuality from './components/DataQuality'
-import Milestones from './components/Milestones'
+import Milestones from './components/mileStones/Milestones'
 import Snapshot from './components/Snapshot'
 import Referrals from './components/Referrals'
 import Leaderboard from './components/Leaderboard'
