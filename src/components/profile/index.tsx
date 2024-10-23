@@ -117,7 +117,7 @@ function Profile() {
     <div className="bg-slate-100">
       <Navbar userAddress={userAddress || ''} page={PAGE_NAMES.PROFILE} />
       {/* Main Content */}
-      <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10">
+      <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10 scrollbar-thin">
 
         {/* Layout for >xl */}
         <div className="hidden xl:grid gap-5">
