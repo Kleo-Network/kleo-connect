@@ -17,8 +17,8 @@ interface MilestonesProps {
 
 const Milestones = ({ mileStones }: MilestonesProps) => {
   const handleFollowClick = () => {
-    console.log('Followed.');
-  }
+    window.open('https://x.com/kleo_network', '_blank');
+  };
 
   const handleShareGraphClick = () => {
     console.log('Sharing graph.');
@@ -38,7 +38,6 @@ const Milestones = ({ mileStones }: MilestonesProps) => {
   // TODO: Prince: Remove this hardcoded values.
   mileStones.data_owned = 123456789
   mileStones.referred_count = 3
-  mileStones.followed_on_twitter = true;
 
   return (
     <div className="bg-white p-5 rounded-xl flex flex-col w-full h-full">
