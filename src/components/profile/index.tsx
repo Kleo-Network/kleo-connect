@@ -10,7 +10,7 @@ import {
   Legend
 } from 'chart.js'
 import DataQuality from './components/DataQuality'
-import Milestones from './components/Milestones'
+import Milestones from './components/mileStones/Milestones'
 import Snapshot from './components/Snapshot'
 import Referrals from './components/Referrals'
 import Leaderboard from './components/Leaderboard'
@@ -18,6 +18,7 @@ import Privacy from './components/Privacy'
 import LeaderBoardBanner from './components/LeaderBoardBanner'
 import Navbar, { PAGE_NAMES } from './components/Navbar'
 import useFetch from '../common/hooks/useFetch'
+import { Method } from 'axios'
 
 interface UserGraphResponse {
   processing?: boolean;
@@ -29,6 +30,14 @@ interface GraphLabelItem {
   label: string;
   percentage: number;
 }
+
+interface UploadResponse {
+  url?: string;
+  error?: string;
+  // Add other fields as needed
+}
+
+type CanvasSource = HTMLCanvasElement | HTMLImageElement;
 
 ChartJS.register(
   RadialLinearScale,
@@ -43,8 +52,9 @@ function Profile() {
   // Get the user Data.
   const userAddress = localStorage.getItem('address');
   const GET_USER_PATH = `user/get-user/${userAddress}`;
+  const UPLOAD_IMGUR_ENDPOINT = 'user/upload_activity_chart';
   const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
-  // const GET_USER_GRAPH = `user/get-user-graph/${'0x412F737f233895db386bc84139e861f7180b1f0F'}`;
+  // const GET_USER_GRAPH = `user/get-user-graph/${'0xC0cFAB5AFc7a951c510eA20DDD1eCCA31731e574'}`;
 
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
@@ -59,10 +69,68 @@ function Profile() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [highestKleoPoints, setHighestKleoPoints] = useState(0);
+  const { fetchData: uploadImageFetch } = useFetch<any>();
 
   // Define the ref with the type of an HTMLDivElement
   const milestonesRef = useRef<HTMLDivElement | null>(null);
   const [milestonesHeight, setMilestonesHeight] = useState<number>(0);
+
+  // ------------ Start : Share Graph on Twitter ------------ //
+  const createCanvasWithWhiteBackground = (canvas: CanvasSource): string => {
+    const tempCanvas = document.createElement('canvas') as HTMLCanvasElement;
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+
+    if (tempCtx) {
+      tempCtx.fillStyle = 'white';
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      tempCtx.drawImage(canvas, 0, 0);
+    }
+
+    return tempCanvas.toDataURL('image/png', 1).split(',')[1]; // Return base64 image data
+  };
+
+  const constructTweetText = (imageUrl: string): string => {
+    const top3Activities = graphData
+      .slice(0, 3)
+      .map((activity: { label: any; }) => activity.label)
+      .join(", ");
+    return `Check out my Activity! My top 3 activities are ${top3Activities}. My current kleo points are ${userData.kleo_points || 0}.
+     Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl} `; // Add a space after URL
+  };
+
+  const handleShareGraphClick = async () => {
+    try {
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const imageData = createCanvasWithWhiteBackground(canvas);
+
+      const options = {
+        method: 'POST' as Method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageData }),
+        onSuccessfulFetch: (data: UploadResponse) => {
+          if (data && data.url) {
+            const imageUrlWithoutExtension = data.url?.replace('.png', '');
+
+            const tweetText = constructTweetText(imageUrlWithoutExtension);
+
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+            window.open(twitterUrl, '_blank');
+          } else {
+            console.error('Failed to upload image.');
+          }
+        }
+      };
+
+      uploadImageFetch(UPLOAD_IMGUR_ENDPOINT, options);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+  // ------------ End : Share Graph on Twitter ------------ //
 
   useEffect(() => {
     const updateHeight = () => {
@@ -130,7 +198,7 @@ function Profile() {
               <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
             </div>
             <div>
-              <Milestones mileStones={userData?.milestones || {}} />
+              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} isGraphAvailable={!isProcessing} />
             </div>
           </div>
 
@@ -174,7 +242,7 @@ function Profile() {
           <div className="grid grid-cols-2 gap-5">
             {/* Milestones Column */}
             <div ref={milestonesRef} className="self-start">
-              <Milestones mileStones={userData?.milestones || {}} />
+              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} isGraphAvailable={!isProcessing} />
             </div>
 
             {/* Leaderboard Column with Scroll */}

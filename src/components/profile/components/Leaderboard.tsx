@@ -57,7 +57,7 @@ const Leaderboard = ({ userAddress, setHighestKleoPoints }: LeaderboardProps) =>
             {!isLoading && <ul className="flex flex-col gap-3 overflow-y-auto max-h-[304px] lg:max-h-[554px] flex-1">
                 {leaderboardData.map((data, index) => (
                     <LeaderboardRow
-                        key={data.address}
+                        key={index == 0 ? `self` : data.address}
                         address={data.address}
                         kleoPoints={data.kleo_points}
                         rank={data.rank}
