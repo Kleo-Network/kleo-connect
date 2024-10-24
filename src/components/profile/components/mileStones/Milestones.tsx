@@ -29,12 +29,12 @@ const Milestones = ({ mileStones, handleShareGraph, isGraphAvailable }: Mileston
 
   const convertDataSizeToPercentage = (value: number) => {
     const dataOwnedMB = value / (1024 * 1024); // Convert bytes to MB
-    const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(2); // Cap progress at 100%
+    const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(1); // Cap progress at 100%
     return { value: dataOwnedMB, progress: parseFloat(progress) };
   };
 
   const convertReferredCountsToPercentage = (value: number) => {
-    const progress = Math.min((value / 10) * 100, 100).toFixed(2); // Cap progress at 100%
+    const progress = Math.min((value / 10) * 100, 100).toFixed(1); // Cap progress at 100%
     return { value, progress: parseFloat(progress) };
   };
 
