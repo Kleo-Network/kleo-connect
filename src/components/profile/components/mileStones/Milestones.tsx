@@ -5,6 +5,7 @@ import { useCallback, useMemo } from "react";
 
 interface MilestonesProps {
   mileStones: Record<string, number | boolean>
+  handleShareGraph: () => Promise<void>
   /* Example mileStones object.
     {
       "data_owned": 0,
@@ -15,13 +16,14 @@ interface MilestonesProps {
   */
 }
 
-const Milestones = ({ mileStones }: MilestonesProps) => {
+const Milestones = ({ mileStones, handleShareGraph }: MilestonesProps) => {
   const handleFollowClick = () => {
     window.open('https://x.com/kleo_network', '_blank');
   };
 
   const handleShareGraphClick = () => {
     console.log('Sharing graph.');
+    handleShareGraph();
   }
 
   const convertDataSizeToPercentage = (value: number) => {
