@@ -152,9 +152,9 @@ const DataQuality = ({ address, isLoading, isProcessing, graphData, userKleoPoin
                     <ProcessingMessage />
                 </div>}
                 {/* Radar Activity Chart + Max Contribution banner */}
-                {!isProcessing && <div className="flex-1">
+                {!isProcessing && <div className="flex-1 h-full flex flex-col justify-start">
                     {/* Radar Activity Chart */}
-                    <div className="mt-4 relative flex items-center justify-between h-full">
+                    <div className="relative flex items-center justify-between flex-1">
                         <div className="relative bg-gray-100 rounded-lg flex items-center justify-center w-full h-full">
                             <div className="">
                                 {isLoading && (
