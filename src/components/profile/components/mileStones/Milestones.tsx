@@ -52,13 +52,15 @@ const Milestones = ({ mileStones, handleShareGraph, isGraphAvailable }: Mileston
           xp={120}
           completed={mileStones.followed_on_twitter as boolean}
         />
-        {isGraphAvailable && <ActionableMileStone
-          label="Tweet your activity graph"
-          icon={XLogoImage}
-          onClick={handleShareGraphClick}
-          xp={120}
-          completed={mileStones.tweet_activity_graph as boolean}
-        />}
+        {(mileStones.tweet_activity_graph || isGraphAvailable) && (
+          <ActionableMileStone
+            label="Tweet your activity graph"
+            icon={XLogoImage}
+            onClick={handleShareGraphClick}
+            xp={120}
+            completed={mileStones.tweet_activity_graph as boolean}
+          />
+        )}
 
         {/* Progress-based milestones */}
         <ProgressMilestone

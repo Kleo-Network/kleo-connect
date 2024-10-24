@@ -53,8 +53,8 @@ function Profile() {
   const userAddress = localStorage.getItem('address');
   const GET_USER_PATH = `user/get-user/${userAddress}`;
   const UPLOAD_IMGUR_ENDPOINT = 'user/upload_activity_chart';
-  // const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
-  const GET_USER_GRAPH = `user/get-user-graph/${'0xC0cFAB5AFc7a951c510eA20DDD1eCCA31731e574'}`;
+  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
+  // const GET_USER_GRAPH = `user/get-user-graph/${'0xC0cFAB5AFc7a951c510eA20DDD1eCCA31731e574'}`;
 
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
