@@ -6,6 +6,7 @@ import { useCallback, useMemo } from "react";
 interface MilestonesProps {
   mileStones: Record<string, number | boolean>
   handleShareGraph: () => Promise<void>
+  isGraphAvailable: boolean
   /* Example mileStones object.
     {
       "data_owned": 0,
@@ -16,7 +17,7 @@ interface MilestonesProps {
   */
 }
 
-const Milestones = ({ mileStones, handleShareGraph }: MilestonesProps) => {
+const Milestones = ({ mileStones, handleShareGraph, isGraphAvailable }: MilestonesProps) => {
   const handleFollowClick = () => {
     window.open('https://x.com/kleo_network', '_blank');
   };
@@ -37,10 +38,6 @@ const Milestones = ({ mileStones, handleShareGraph }: MilestonesProps) => {
     return { value, progress: parseFloat(progress) };
   };
 
-  // TODO: Prince: Remove this hardcoded values.
-  mileStones.data_owned = 123456789
-  mileStones.referred_count = 3
-
   return (
     <div className="bg-white p-5 rounded-xl flex flex-col w-full h-full">
       <h3 className="text-2xl mb-2 font-semibold">Milestones</h3>
@@ -55,13 +52,13 @@ const Milestones = ({ mileStones, handleShareGraph }: MilestonesProps) => {
           xp={120}
           completed={mileStones.followed_on_twitter as boolean}
         />
-        <ActionableMileStone
+        {isGraphAvailable && <ActionableMileStone
           label="Tweet your activity graph"
           icon={XLogoImage}
           onClick={handleShareGraphClick}
           xp={120}
           completed={mileStones.tweet_activity_graph as boolean}
-        />
+        />}
 
         {/* Progress-based milestones */}
         <ProgressMilestone

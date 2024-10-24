@@ -38,7 +38,6 @@ interface UploadResponse {
 }
 
 type CanvasSource = HTMLCanvasElement | HTMLImageElement;
-const UPLOAD_IMGUR_ENDPOINT = 'user/upload_activity_chart';
 
 ChartJS.register(
   RadialLinearScale,
@@ -53,8 +52,9 @@ function Profile() {
   // Get the user Data.
   const userAddress = localStorage.getItem('address');
   const GET_USER_PATH = `user/get-user/${userAddress}`;
-  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
-  // const GET_USER_GRAPH = `user/get-user-graph/${'0xC0cFAB5AFc7a951c510eA20DDD1eCCA31731e574'}`;
+  const UPLOAD_IMGUR_ENDPOINT = 'user/upload_activity_chart';
+  // const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
+  const GET_USER_GRAPH = `user/get-user-graph/${'0xC0cFAB5AFc7a951c510eA20DDD1eCCA31731e574'}`;
 
   // State for storing the user data
   const [userData, setUserData] = useState<any>(null);
@@ -198,7 +198,7 @@ function Profile() {
               <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
             </div>
             <div>
-              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} />
+              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} isGraphAvailable={!isProcessing} />
             </div>
           </div>
 
@@ -242,7 +242,7 @@ function Profile() {
           <div className="grid grid-cols-2 gap-5">
             {/* Milestones Column */}
             <div ref={milestonesRef} className="self-start">
-              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} />
+              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} isGraphAvailable={!isProcessing} />
             </div>
 
             {/* Leaderboard Column with Scroll */}
