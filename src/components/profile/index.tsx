@@ -49,9 +49,40 @@ ChartJS.register(
   Legend
 )
 
+const ONE_HOUR_IN_MS = 60 * 60 * 1000;
+
+const canUpload = () => {
+  const lastUploadTime = localStorage.getItem('lastUploadTime');
+  if (lastUploadTime) {
+    const timeSinceLastUpload = Date.now() - parseInt(lastUploadTime);
+    return timeSinceLastUpload > ONE_HOUR_IN_MS;
+  }
+  return true;
+};
+
+const cacheImageUrl = (url: string) => {
+  localStorage.setItem('cachedImageUrl', url);
+  localStorage.setItem('lastUploadTime', Date.now().toString());
+};
+
+const getCachedImageUrl = () => {
+  const cachedUrl = localStorage.getItem('cachedImageUrl');
+  const lastUploadTime = localStorage.getItem('lastUploadTime');
+
+  if (cachedUrl && lastUploadTime) {
+    const timeSinceLastUpload = Date.now() - parseInt(lastUploadTime);
+    if (timeSinceLastUpload <= ONE_HOUR_IN_MS) {
+      return cachedUrl;
+    }
+  }
+
+  return null;
+};
+
 function Profile() {
   const [userAddress, setUserAddress] = useState<string | null>(localStorage.getItem('address'));
   const [isKleoConnectReady, setIsKleoConnectReady] = useState(false);
+  let isRequestInProgress = false;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -157,6 +188,20 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
   };
 
   const handleShareGraphClick = async () => {
+    // First, check if a valid cached URL exists
+    const cachedUrl = getCachedImageUrl();
+
+    if (cachedUrl) {
+      // console.log('Using cached URL:', cachedUrl);
+      const tweetText = constructTweetText(cachedUrl);
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+      window.open(twitterUrl, '_blank');
+      return;
+    }
+
+    // Set request as in progress
+    isRequestInProgress = true;
+
     try {
       const canvas = document.getElementsByTagName('canvas')[0];
       const imageData = createCanvasWithWhiteBackground(canvas);
@@ -175,15 +220,22 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
 
             const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
             window.open(twitterUrl, '_blank');
+
+            // Set the last upload time after a successful response
+            cacheImageUrl(data.url);
           } else {
             console.error('Failed to upload image.');
+            console.log('Failed to upload the image. Please try again.');
           }
+          isRequestInProgress = false;
         }
       };
 
       uploadImageFetch(UPLOAD_IMGUR_ENDPOINT, options);
     } catch (error) {
       console.error('Error uploading image:', error);
+      console.log('An error occurred while uploading graph. Please try again later.');
+      isRequestInProgress = false;
     }
   };
   // ------------ End : Share Graph on Twitter ------------ //
@@ -330,7 +382,6 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
