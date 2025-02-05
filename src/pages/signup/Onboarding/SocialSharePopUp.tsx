@@ -39,9 +39,9 @@ const SocialShare: React.FC<SocialShareProps> = ({ profileUrl }) => {
     )
   }
 
-  const shareToTwitter = () => {
+  const shareTo = () => {
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      `https://.com/intent/tweet?text=${encodeURIComponent(
         shareMessage
       )}`
     )
@@ -82,13 +82,13 @@ const SocialShare: React.FC<SocialShareProps> = ({ profileUrl }) => {
           />
           {/* Instagram */}
         </button>
-        <button onClick={shareToTwitter}>
+        <button onClick={shareTo}>
           <img
-            src="https://www.google.com/s2/favicons?domain=twitter.com&sz=48"
-            alt="Twitter"
+            src="https://www.google.com/s2/favicons?domain=.com&sz=48"
+            alt=""
             className="w-10 h-10"
           />
-          {/* Twitter */}
+          {/*  */}
         </button>
         <button onClick={shareToLinkedIn}>
           <img
@@ -96,7 +96,7 @@ const SocialShare: React.FC<SocialShareProps> = ({ profileUrl }) => {
             alt="LinkedIn"
             className="w-10 h-10"
           />
-          {/* Twitter */}
+          {/*  */}
         </button>
       </div>
       <button
