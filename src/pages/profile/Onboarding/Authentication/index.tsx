@@ -3,8 +3,6 @@ import { ReactComponent as Kleo } from '../../../../assets/images/kleoLogo.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
 import { useNavigate } from 'react-router-dom'
-import { UserData } from '../../../../common/constants/SignupData'
-import useFetch from '../../../../common/hooks/useFetch'
 import Alert from '../../../../common/components/Alerts'
 
 enum PluginState {
@@ -13,13 +11,10 @@ enum PluginState {
   INSTALLED
 }
 
-export default function Onboarding({ handleLogin, user, setUser }: any) {
+export default function Onboarding() {
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
   const [login, setLogin] = useState(false)
   const navigate = useNavigate()
-
-  const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
-    useFetch<UserData>()
 
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
@@ -63,9 +58,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                     target="_blank"
                   >
                     <u> VANA DLP</u>
-                  </a> aimed
+                  </a>{' '}
+                  aimed
                   <br />
-                  at using chrome extension to help you own a piece of AI models.
+                  at using chrome extension to help you own a piece of AI
+                  models.
                 </p>
               </div>
 
@@ -128,10 +125,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
               {/* Sign In button - disabled if plugin is not installed */}
               <button
                 disabled={pluginState !== PluginState.INSTALLED}
-                className={`w-full py-3 ${pluginState === PluginState.INSTALLED
-                  ? 'bg-violet-600 text-white'
-                  : 'bg-gray-100 text-gray-500'
-                  } rounded-lg shadow mx-auto block`}
+                className={`w-full py-3 ${
+                  pluginState === PluginState.INSTALLED
+                    ? 'bg-violet-600 text-white'
+                    : 'bg-gray-100 text-gray-500'
+                } rounded-lg shadow mx-auto block`}
                 onClick={handleUserLogin}
               >
                 Sign In

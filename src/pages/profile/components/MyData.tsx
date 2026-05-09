@@ -1,49 +1,49 @@
-import Navbar, { PAGE_NAMES } from "../../../common/components/Navbar";
-import { ReactComponent as SpaceCat } from '../../../assets/myData/spaceCat.svg';
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Navbar, { PAGE_NAMES } from '../../../common/components/Navbar'
+import { ReactComponent as SpaceCat } from '../../../assets/myData/spaceCat.svg'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-interface MyDataComponentProps { }
-
-export const MyData = ({ }: MyDataComponentProps) => {
+export const MyData = () => {
   // --------------- Validate UserAddress Logic --------------- //
-  const [userAddress, setUserAddress] = useState<string | null>(localStorage.getItem('address'));
-  const [isKleoConnectReady, setIsKleoConnectReady] = useState(false);
-  const navigate = useNavigate();
+  const [userAddress, setUserAddress] = useState<string | null>(
+    localStorage.getItem('address')
+  )
+  const [isKleoConnectReady, setIsKleoConnectReady] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const checkKleoConnect = () => {
       // Poll for the availability of window.kleoConnect
       if ((window as any).kleoConnect) {
-        setIsKleoConnectReady(true);
-        console.log('kleoConnect is ready:', (window as any).kleoConnect);
+        setIsKleoConnectReady(true)
+        console.log('kleoConnect is ready:', (window as any).kleoConnect)
 
         // Assign signIn method if not already assigned
         if (!(window as any).signIn) {
-          (window as any).signIn = (window as any).kleoConnect.signIn;
+          ;(window as any).signIn = (window as any).kleoConnect.signIn
         }
       } else {
-        console.log('Waiting for kleoConnect...');
-        setTimeout(checkKleoConnect, 100); // Poll every 100ms
+        console.log('Waiting for kleoConnect...')
+        setTimeout(checkKleoConnect, 100) // Poll every 100ms
       }
-    };
+    }
 
-    checkKleoConnect(); // Start polling
-  }, []);
+    checkKleoConnect() // Start polling
+  }, [])
 
   useEffect(() => {
-    if (!isKleoConnectReady) return; // Wait until kleoConnect is ready
+    if (!isKleoConnectReady) return // Wait until kleoConnect is ready
 
     const validateAddresses = async () => {
       try {
-        const pathname = window.location.pathname;
-        let urlAddress = pathname.split('/profile/')[1]; // Address from URL
-        urlAddress = String(userAddress).replace('/', '');
-        const localStorageAddress = localStorage.getItem('address');
+        const pathname = window.location.pathname
+        let urlAddress = pathname.split('/profile/')[1] // Address from URL
+        urlAddress = String(userAddress).replace('/', '')
+        const localStorageAddress = localStorage.getItem('address')
 
         // Call signIn to get the address from the extension
-        const result = await (window as any).signIn();
-        const extensionAddress = result.address;
+        const result = await (window as any).signIn()
+        const extensionAddress = result.address
 
         // Check if all three addresses match
         if (
@@ -51,36 +51,37 @@ export const MyData = ({ }: MyDataComponentProps) => {
           urlAddress !== extensionAddress ||
           localStorageAddress !== extensionAddress
         ) {
-          navigate('/signup/0'); // Redirect to signup if addresses don't match
+          navigate('/signup/0') // Redirect to signup if addresses don't match
         } else {
-          setUserAddress(localStorageAddress);
+          setUserAddress(localStorageAddress)
         }
       } catch (error) {
-        console.error('Error during signIn or address check:', error);
-        navigate('/signup/0'); // Redirect on error
+        console.error('Error during signIn or address check:', error)
+        navigate('/signup/0') // Redirect on error
       }
-    };
+    }
 
-    validateAddresses(); // Call the validation function
-  }, [isKleoConnectReady]);
+    validateAddresses() // Call the validation function
+  }, [isKleoConnectReady])
 
   // --------------- END: Validate UserAddress Logic --------------- //
 
-  return <div className="bg-slate-100">
-    <Navbar
-      userAddress={userAddress || ''}
-      page={PAGE_NAMES.MY_DATA}
-    />
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-lg">
-        <div className="flex items-center justify-center w-full h-fit mb-4">
-          <SpaceCat />
+  return (
+    <div className="bg-slate-100">
+      <Navbar userAddress={userAddress || ''} page={PAGE_NAMES.MY_DATA} />
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-lg">
+          <div className="flex items-center justify-center w-full h-fit mb-4">
+            <SpaceCat />
+          </div>
+          <h1 className="mb-4 text-3xl font-bold text-center text-[#1e2536]">
+            Coming Soon...
+          </h1>
+          <p className="text-center text-gray-600">
+            We're working hard to bring you something amazing. Stay tuned!
+          </p>
         </div>
-        <h1 className="mb-4 text-3xl font-bold text-center text-[#1e2536]">Coming Soon...</h1>
-        <p className="text-center text-gray-600">
-          We're working hard to bring you something amazing. Stay tuned!
-        </p>
       </div>
     </div>
-  </div>
+  )
 }
