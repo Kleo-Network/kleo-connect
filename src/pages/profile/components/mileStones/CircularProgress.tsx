@@ -1,21 +1,21 @@
-import { useMemo } from "react";
+import { useMemo } from 'react'
 
 interface CircularProgressProps {
-  percentage: number;
-  radius?: number; // Allow radius to be customizable with a default
-  strokeWidth?: number; // Allow stroke width to be customizable
+  percentage: number
+  radius?: number // Allow radius to be customizable with a default
+  strokeWidth?: number // Allow stroke width to be customizable
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
   percentage,
   radius = 45,
-  strokeWidth = 10,
+  strokeWidth = 10
 }) => {
-  const circumference = useMemo(() => 2 * Math.PI * radius, [radius]);
+  const circumference = useMemo(() => 2 * Math.PI * radius, [radius])
   const strokeDashoffset = useMemo(
     () => circumference - (percentage / 100) * circumference,
     [circumference, percentage]
-  );
+  )
 
   return (
     <svg
@@ -63,7 +63,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
         {Math.round(percentage)}%
       </text>
     </svg>
-  );
-};
+  )
+}
 
-export default CircularProgress;
+export default CircularProgress
