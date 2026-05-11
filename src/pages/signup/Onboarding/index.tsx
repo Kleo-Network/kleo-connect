@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ReactComponent as Kleo } from '../../../assets/images/kleoWithBg.svg'
 import { ReactComponent as PhantomLogo } from '../../../assets/images/phantom.svg'
 import { ReactComponent as Arrow } from '../../../assets/images/arrow.svg'
@@ -36,14 +36,13 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     signature: Uint8Array
     publicKey: PublicKey
   } | null>(null)
-  const { fetchData, error: loginError, data: loginData } = useFetch<any>()
+  const { fetchData, error: loginError } = useFetch<any>()
   const [login, setLogin] = useState(false)
 
   const handleSign = async () => {
     if (message) {
       const result = await signMessage(message)
       setSignedData(result)
-      console.log('result', result)
       fetchData(AUTH_API, {
         method: 'POST',
         headers: {
