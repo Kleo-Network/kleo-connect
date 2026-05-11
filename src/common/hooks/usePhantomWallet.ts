@@ -12,12 +12,31 @@ type PhantomWallet = {
   ) => Promise<{ signature: Uint8Array; publicKey: PublicKey }>
 }
 
+type PhantomProvider = {
+  isPhantom?: boolean
+  isConnected?: boolean
+  publicKey?: PublicKey | string
+  connect: () => Promise<boolean>
+  disconnect: () => Promise<void>
+  signAndSendTransaction: (transaction: Transaction) => Promise<void>
+  signMessage: (
+    message: Uint8Array,
+    display?: string
+  ) => Promise<{ signature: Uint8Array; publicKey: PublicKey | string }>
+}
+
+type PhantomWindow = Window & {
+  solana?: PhantomProvider
+}
+
+const getPhantomProvider = () => (window as PhantomWindow).solana
+
 export const usePhantomWallet = (): PhantomWallet => {
   const [connected, setConnected] = useState<boolean>(false)
   const [publicKey, setPublicKey] = useState<PublicKey | null>(null)
 
   const connect = async () => {
-    const phantom = (window as any).solana
+    const phantom = getPhantomProvider()
     if (phantom && phantom.isPhantom) {
       const isConnected = await phantom.connect()
       setConnected(isConnected)
@@ -26,7 +45,7 @@ export const usePhantomWallet = (): PhantomWallet => {
   }
 
   const disconnect = async () => {
-    const phantom = (window as any).solana
+    const phantom = getPhantomProvider()
     if (phantom && phantom.isPhantom) {
       await phantom.disconnect()
       setConnected(false)
@@ -35,7 +54,7 @@ export const usePhantomWallet = (): PhantomWallet => {
   }
 
   const signAndSendTransaction = async (transaction: Transaction) => {
-    const phantom = (window as any).solana
+    const phantom = getPhantomProvider()
     if (phantom && phantom.isPhantom) {
       const txid = await phantom.signAndSendTransaction(transaction)
       return txid
@@ -46,7 +65,7 @@ export const usePhantomWallet = (): PhantomWallet => {
   const signMessage = async (
     message: string
   ): Promise<{ signature: Uint8Array; publicKey: PublicKey }> => {
-    const phantom = (window as any).solana
+    const phantom = getPhantomProvider()
     if (phantom && phantom.isPhantom) {
       const arrayMessage = new TextEncoder().encode(message) // Convert message string to Uint8Array
       const signed = await phantom.signMessage(arrayMessage, 'hex') // "hex" is an example of an encoding format, you can adjust as necessary.
@@ -59,7 +78,7 @@ export const usePhantomWallet = (): PhantomWallet => {
   }
 
   useEffect(() => {
-    const phantom = (window as any).solana
+    const phantom = getPhantomProvider()
     if (phantom && phantom.isPhantom) {
       setConnected(phantom.isConnected)
       if (phantom.isConnected) {

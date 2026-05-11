@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { ReactComponent as Kleo } from '../../../../assets/images/kleoLogo.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
-import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
-import { useNavigate } from 'react-router-dom'
-import { UserData } from '../../../../common/constants/SignupData'
-import useFetch from '../../../../common/hooks/useFetch'
-import Alert from '../../../../common/components/Alerts'
+
+interface OnboardingProps {
+  handleLogin: (address: string) => void
+}
+
+type KleoAuthResult = {
+  address: string
+  token: string
+}
+
+type KleoWindow = Window & {
+  kleoConnect?: unknown
+  signIn?: () => Promise<KleoAuthResult>
+}
+
+const getKleoWindow = () => window as KleoWindow
 
 enum PluginState {
   CHECKING,
@@ -13,19 +24,14 @@ enum PluginState {
   INSTALLED
 }
 
-export default function Onboarding({ handleLogin, user, setUser }: any) {
+export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
-  const [login, setLogin] = useState(false)
-  const navigate = useNavigate()
-
-  const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
-    useFetch<UserData>()
 
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
         // Check if plugin (kleoConnect) is installed
-        if ((window as any).kleoConnect) {
+        if (getKleoWindow().kleoConnect) {
           setPluginState(PluginState.INSTALLED)
         } else {
           setPluginState(PluginState.NOT_INSTALLED)
@@ -36,11 +42,13 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
 
   // Handle user login when Sign In button is clicked
   const handleUserLogin = async () => {
-    const result = await (window as any).signIn()
+    const result = await getKleoWindow().signIn?.()
+    if (!result) {
+      return
+    }
     localStorage.setItem('address', result.address)
     localStorage.setItem('token', result.token)
-    setLogin(true)
-    navigate('/profile/' + result.address)
+    handleLogin(result.address)
   }
 
   return (
@@ -63,9 +71,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                     target="_blank"
                   >
                     <u> VANA DLP</u>
-                  </a> aimed
+                  </a>{' '}
+                  aimed
                   <br />
-                  at using chrome extension to help you own a piece of AI models.
+                  at using chrome extension to help you own a piece of AI
+                  models.
                 </p>
               </div>
 
@@ -128,27 +138,15 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
               {/* Sign In button - disabled if plugin is not installed */}
               <button
                 disabled={pluginState !== PluginState.INSTALLED}
-                className={`w-full py-3 ${pluginState === PluginState.INSTALLED
-                  ? 'bg-violet-600 text-white'
-                  : 'bg-gray-100 text-gray-500'
-                  } rounded-lg shadow mx-auto block`}
+                className={`w-full py-3 ${
+                  pluginState === PluginState.INSTALLED
+                    ? 'bg-violet-600 text-white'
+                    : 'bg-gray-100 text-gray-500'
+                } rounded-lg shadow mx-auto block`}
                 onClick={handleUserLogin}
               >
                 Sign In
               </button>
-
-              {/* Show error message if login fails */}
-              {login && (
-                <div className="m-3">
-                  <Alert
-                    type="danger"
-                    message="Could not authenticate user, please try again later."
-                    icon={
-                      <AlertIcon className="w-5 h-5 fill-red-200 stroke-red-600" />
-                    }
-                  />
-                </div>
-              )}
             </div>
           </div>
         </div>

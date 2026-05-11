@@ -1,7 +1,6 @@
-import ActionableMileStone from "./ActionableMileStone";
-import XLogoImage from '../../../../assets/dashboard/XLogo.png';
-import ProgressMilestone from "./ProgressMilestone";
-import { useCallback, useMemo } from "react";
+import ActionableMileStone from './ActionableMileStone'
+import XLogoImage from '../../../../assets/dashboard/XLogo.png'
+import ProgressMilestone from './ProgressMilestone'
 
 interface MilestonesProps {
   mileStones: Record<string, number | boolean>
@@ -17,31 +16,37 @@ interface MilestonesProps {
   */
 }
 
-const Milestones = ({ mileStones, handleShareGraph, isGraphAvailable }: MilestonesProps) => {
+const Milestones = ({
+  mileStones,
+  handleShareGraph,
+  isGraphAvailable
+}: MilestonesProps) => {
   const handleFollowClick = () => {
-    window.open('https://x.com/kleo_network', '_blank');
-  };
+    window.open('https://x.com/kleo_network', '_blank')
+  }
 
   const handleShareGraphClick = () => {
-    console.log('Sharing graph.');
-    handleShareGraph();
+    console.log('Sharing graph.')
+    handleShareGraph()
   }
 
   const convertDataSizeToPercentage = (value: number) => {
-    const dataOwnedMB = value / (1024 * 1024); // Convert bytes to MB
-    const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(1); // Cap progress at 100%
-    return { value: dataOwnedMB, progress: parseFloat(progress) };
-  };
+    const dataOwnedMB = value / (1024 * 1024) // Convert bytes to MB
+    const progress = Math.min((dataOwnedMB / 200) * 100, 100).toFixed(1) // Cap progress at 100%
+    return { value: dataOwnedMB, progress: parseFloat(progress) }
+  }
 
   const convertReferredCountsToPercentage = (value: number) => {
-    const progress = Math.min((value / 10) * 100, 100).toFixed(1); // Cap progress at 100%
-    return { value, progress: parseFloat(progress) };
-  };
+    const progress = Math.min((value / 10) * 100, 100).toFixed(1) // Cap progress at 100%
+    return { value, progress: parseFloat(progress) }
+  }
 
   return (
     <div className="bg-white p-5 rounded-xl flex flex-col w-full h-full">
       <h3 className="text-2xl mb-2 font-semibold">Milestones</h3>
-      <p className="text-sm font-inter">Keep up with the team to receive rewards!</p>
+      <p className="text-sm font-inter">
+        Keep up with the team to receive rewards!
+      </p>
 
       <ul className="mt-4 flex flex-1 flex-col gap-4">
         {/* Twitter milestones */}
@@ -65,12 +70,19 @@ const Milestones = ({ mileStones, handleShareGraph, isGraphAvailable }: Mileston
         {/* Progress-based milestones */}
         <ProgressMilestone
           label="Own and protect 200 MB of data."
-          progress={convertDataSizeToPercentage(Number(mileStones.data_owned) || 0).progress}
+          progress={
+            convertDataSizeToPercentage(Number(mileStones.data_owned) || 0)
+              .progress
+          }
           xp={200}
         />
         <ProgressMilestone
           label="Refer 10 friends to join Kleo Network"
-          progress={convertReferredCountsToPercentage(Number(mileStones.referred_count) || 0).progress}
+          progress={
+            convertReferredCountsToPercentage(
+              Number(mileStones.referred_count) || 0
+            ).progress
+          }
           xp={200}
         />
       </ul>
@@ -78,4 +90,4 @@ const Milestones = ({ mileStones, handleShareGraph, isGraphAvailable }: Mileston
   )
 }
 
-export default Milestones;
+export default Milestones
