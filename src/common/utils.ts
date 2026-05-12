@@ -20,29 +20,32 @@ export function replaceSlugInURL(url: string, slug?: string) {
 }
 
 // Constant for milliseconds in a day
-const MILLISECONDS_IN_A_DAY = 1000 * 3600 * 24;
+const MILLISECONDS_IN_A_DAY = 1000 * 3600 * 24
 
-export function getDaysAgo(date: string | number, currentTimestamp: number = Date.now()): string {
-  const givenDate = new Date(date);
-  const differenceInTime = currentTimestamp - givenDate.getTime(); // date is already a timestamp
-  const differenceInDays = Math.floor(differenceInTime / MILLISECONDS_IN_A_DAY);
+export function getDaysAgo(
+  date: string | number,
+  currentTimestamp: number = Date.now()
+): string {
+  const givenDate = new Date(date)
+  const differenceInTime = currentTimestamp - givenDate.getTime() // date is already a timestamp
+  const differenceInDays = Math.floor(differenceInTime / MILLISECONDS_IN_A_DAY)
 
   if (differenceInDays === 0) {
-    return 'Today';
+    return 'Today'
   } else if (differenceInDays === 1) {
-    return '1 day ago';
+    return '1 day ago'
   } else if (differenceInDays <= 30) {
-    return `${differenceInDays} days ago`;
+    return `${differenceInDays} days ago`
   } else {
     return givenDate.toLocaleDateString('default', {
       month: 'long',
       day: 'numeric',
-      year: 'numeric',
-    });
+      year: 'numeric'
+    })
   }
 }
 
-export function getDateAndMonth (date: number | undefined) {
+export function getDateAndMonth(date: number | undefined) {
   if (date) {
     const givenDate = new Date(date * 1000)
     return `${givenDate.getDate()} ${givenDate.toLocaleString('default', {
@@ -52,54 +55,46 @@ export function getDateAndMonth (date: number | undefined) {
 }
 
 export const extractThumbNailURL = (videoURL: string) => {
-    let videoId: string | undefined;
-    if (videoURL.includes("youtu.be")) {
-        // Handle the shortened youtu.be URLs
-        videoId = videoURL.split("youtu.be/")[1]?.split("?")[0];
-    } else if (videoURL.includes("youtube.com")) {
-        // Handle the standard youtube.com URLs
-        videoId = videoURL.split("v=")[1]?.split("&")[0];
-    }
-    const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
-    return thumbUrl;
-}
-
-// Helper function to extract the video ID from a YouTube URL
-const extractVideoId = (url: string): string | undefined => {
-  let videoId: string | undefined;
-
-  if (url.includes("youtu.be")) {
-    videoId = url.split("youtu.be/")[1]?.split("?")[0];
-  } else if (url.includes("youtube.com/watch")) {
-    videoId = url.split("v=")[1]?.split("&")[0];
+  let videoId: string | undefined
+  if (videoURL.includes('youtu.be')) {
+    // Handle the shortened youtu.be URLs
+    videoId = videoURL.split('youtu.be/')[1]?.split('?')[0]
+  } else if (videoURL.includes('youtube.com')) {
+    // Handle the standard youtube.com URLs
+    videoId = videoURL.split('v=')[1]?.split('&')[0]
   }
-
-  return videoId;
-};
+  const thumbUrl = videoId
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    : ''
+  return thumbUrl
+}
 
 export function parseUrl(url: string): string {
   try {
     // Ensure the URL starts with http:// or https://
-    const formattedUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `http://${url}`;
+    const formattedUrl =
+      url.startsWith('http://') || url.startsWith('https://')
+        ? url
+        : `http://${url}`
 
     // Parse the URL
-    const { hostname } = new URL(formattedUrl);
-    const hostParts = hostname.split('.');
-    const n = hostParts.length;
+    const { hostname } = new URL(formattedUrl)
+    const hostParts = hostname.split('.')
+    const n = hostParts.length
 
     // Determine the domain
-    if (n < 2) return hostname; // If there are less than 2 parts, return the hostname as is
+    if (n < 2) return hostname // If there are less than 2 parts, return the hostname as is
 
     return n === 4 || (n === 3 && hostParts[n - 2].length <= 3)
       ? `${hostParts[n - 3]}.${hostParts[n - 2]}.${hostParts[n - 1]}`
-      : `${hostParts[n - 2]}.${hostParts[n - 1]}`;
+      : `${hostParts[n - 2]}.${hostParts[n - 1]}`
   } catch (error) {
-    console.error('Invalid URL:', url, error);
-    return ''; // Return an empty string or handle as needed
+    console.error('Invalid URL:', url, error)
+    return '' // Return an empty string or handle as needed
   }
 }
 
-export function formatDate (date: number): string {
+export function formatDate(date: number): string {
   const formattedDate = new Date(date) // Convert epoch to milliseconds
 
   const day = String(formattedDate.getDate()).padStart(2, '0') // Ensure two digits for day
@@ -112,18 +107,18 @@ export function formatDate (date: number): string {
 
 // text = '1234567890', maxLength = 8 => output: '12...890'
 export function truncateText(text: string, maxLength: number) {
-  const textLength = text.length;
+  const textLength = text.length
 
   if (textLength > maxLength) {
     // Calculate the number of characters to show from the start
-    const charsToShowFromStart = maxLength - 8;
+    const charsToShowFromStart = maxLength - 8
 
     // Get the start and end parts of the string
-    const startPart = text.substring(0, charsToShowFromStart);
-    const endPart = text.substring(textLength - 5);
+    const startPart = text.substring(0, charsToShowFromStart)
+    const endPart = text.substring(textLength - 5)
 
-    return `${startPart}...${endPart}`;
+    return `${startPart}...${endPart}`
   }
 
-  return text;
+  return text
 }
