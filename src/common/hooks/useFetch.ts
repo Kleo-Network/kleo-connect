@@ -35,7 +35,6 @@ export enum FetchStatus {
 }
 
 function useFetch<T>(url?: string, options?: Options<T>): FetchResponse<T> {
-
   const navigate = useNavigate()
 
   const [data, setData] = useState<T | null>(null)

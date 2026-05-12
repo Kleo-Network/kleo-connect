@@ -63,9 +63,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                     target="_blank"
                   >
                     <u> VANA DLP</u>
-                  </a> aimed
+                  </a>{' '}
+                  aimed
                   <br />
-                  at using chrome extension to help you own a piece of AI models.
+                  at using chrome extension to help you own a piece of AI
+                  models.
                 </p>
               </div>
 
@@ -128,10 +130,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
               {/* Sign In button - disabled if plugin is not installed */}
               <button
                 disabled={pluginState !== PluginState.INSTALLED}
-                className={`w-full py-3 ${pluginState === PluginState.INSTALLED
-                  ? 'bg-violet-600 text-white'
-                  : 'bg-gray-100 text-gray-500'
-                  } rounded-lg shadow mx-auto block`}
+                className={`w-full py-3 ${
+                  pluginState === PluginState.INSTALLED
+                    ? 'bg-violet-600 text-white'
+                    : 'bg-gray-100 text-gray-500'
+                } rounded-lg shadow mx-auto block`}
                 onClick={handleUserLogin}
               >
                 Sign In
