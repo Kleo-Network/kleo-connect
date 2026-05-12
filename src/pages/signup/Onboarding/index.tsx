@@ -36,7 +36,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     signature: Uint8Array
     publicKey: PublicKey
   } | null>(null)
-  const { fetchData, error: loginError, data: loginData } = useFetch<any>()
+  const { fetchData, error: loginError } = useFetch<any>()
   const [login, setLogin] = useState(false)
 
   const handleSign = async () => {
