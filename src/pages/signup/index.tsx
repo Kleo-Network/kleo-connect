@@ -1,4 +1,3 @@
-
 import { UserData } from '../../common/interface'
 import Onboarding from './Onboarding/Authentication'
 import { useNavigate } from 'react-router-dom'
