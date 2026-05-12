@@ -43,7 +43,6 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     if (message) {
       const result = await signMessage(message)
       setSignedData(result)
-      console.log('result', result)
       fetchData(AUTH_API, {
         method: 'POST',
         headers: {

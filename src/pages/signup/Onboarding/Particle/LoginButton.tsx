@@ -1,8 +1,6 @@
-import { ConnectButton, useAccountInfo } from '@particle-network/connectkit'
+import { ConnectButton } from '@particle-network/connectkit'
 import { ReactComponent as Logout } from '../../../../assets/images/logout.svg'
 import '@particle-network/connectkit/dist/index.css'
-import { isEVMProvider } from '@particle-network/connectors'
-import bs58 from 'bs58'
 
 export const KleoExtensionExists = () => {
   return (window as any)?.kleoConnect === true
@@ -50,46 +48,7 @@ type LoginButtonProps = {
 export const LoginButton: React.FC<LoginButtonProps> = ({ txt }) => {
   return (
     <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openConnectModal,
-        openChainModal,
-        accountLoading
-      }) => {
-        //const { particleProvider } = useAccountInfo()
-
-        // const onLogin = async () => {
-        //   openConnectModal()
-
-        //   console.log(particleProvider)
-        //   if (!particleProvider) {
-        //     throw new Error('Please connect wallet first!')
-        //   }
-        //   try {
-        //     let signature
-        //     if (isEVMProvider(particleProvider)) {
-        //       signature = await particleProvider.request({
-        //         method: 'personal_sign',
-        //         params: [
-        //           `0x${Buffer.from('signedMessage').toString('hex')}`,
-        //           account
-        //         ]
-        //       })
-        //       console.log('signature', signature)
-        //     } else {
-        //       const result = await particleProvider.signMessage(
-        //         Buffer.from('signedMessage')
-        //       )
-        //       signature = bs58.encode(result)
-        //       console.log('signature', signature)
-        //     }
-        //   } catch (error: any) {
-        //     console.log('error', error)
-        //   }
-        // }
-
+      {({ account, openConnectModal }) => {
         return (
           <div>
             {!account && (
