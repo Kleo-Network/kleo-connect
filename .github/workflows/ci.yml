@@ -3,10 +3,10 @@ name: UI CI
 on:
   pull_request:
     branches:
-      - main
+      - production
   push:
     branches:
-      - main
+      - production
 
 # Default-deny: jobs that need write scopes must opt up explicitly.
 # Prevents the GitHub Actions Cache poisoning + OIDC-token-write attack chain
