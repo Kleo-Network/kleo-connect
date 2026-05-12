@@ -1,8 +1,6 @@
-import { ConnectButton, useAccountInfo } from '@particle-network/connectkit'
+import { ConnectButton } from '@particle-network/connectkit'
 import { ReactComponent as Logout } from '../../../../assets/images/logout.svg'
 import '@particle-network/connectkit/dist/index.css'
-import { isEVMProvider } from '@particle-network/connectors'
-import bs58 from 'bs58'
 
 export const KleoExtensionExists = () => {
   return (window as any)?.kleoConnect === true
@@ -50,14 +48,7 @@ type LoginButtonProps = {
 export const LoginButton: React.FC<LoginButtonProps> = ({ txt }) => {
   return (
     <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openConnectModal,
-        openChainModal,
-        accountLoading
-      }) => {
+      {({ account, openConnectModal }) => {
         //const { particleProvider } = useAccountInfo()
 
         // const onLogin = async () => {

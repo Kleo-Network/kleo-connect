@@ -18,27 +18,27 @@ import Privacy from './components/Privacy'
 import LeaderBoardBanner from './components/LeaderBoardBanner'
 import Navbar, { PAGE_NAMES } from '../../common/components/Navbar'
 import { Method } from 'axios'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'
 import useFetch from '../../common/hooks/useFetch'
 
 interface UserGraphResponse {
-  processing?: boolean;
-  data?: GraphLabelItem[];
+  processing?: boolean
+  data?: GraphLabelItem[]
   error?: string
 }
 
 interface GraphLabelItem {
-  label: string;
-  percentage: number;
+  label: string
+  percentage: number
 }
 
 interface UploadResponse {
-  url?: string;
-  error?: string;
+  url?: string
+  error?: string
   // Add other fields as needed
 }
 
-type CanvasSource = HTMLCanvasElement | HTMLImageElement;
+type CanvasSource = HTMLCanvasElement | HTMLImageElement
 
 ChartJS.register(
   RadialLinearScale,
@@ -51,41 +51,43 @@ ChartJS.register(
 
 function Profile() {
   // --------------- Validate UserAddress Logic --------------- //
-  const { address: urlAddress } = useParams<{ address: string }>(); // Extract the address from the URL
-  const [userAddress, setUserAddress] = useState<string | null>(localStorage.getItem('address'));
-  const [isKleoConnectReady, setIsKleoConnectReady] = useState(false);
-  const navigate = useNavigate();
+  const { address: urlAddress } = useParams<{ address: string }>() // Extract the address from the URL
+  const [userAddress, setUserAddress] = useState<string | null>(
+    localStorage.getItem('address')
+  )
+  const [isKleoConnectReady, setIsKleoConnectReady] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const checkKleoConnect = () => {
       // Poll for the availability of window.kleoConnect
       if ((window as any).kleoConnect) {
-        setIsKleoConnectReady(true);
-        console.log('kleoConnect is ready:', (window as any).kleoConnect);
+        setIsKleoConnectReady(true)
+        console.log('kleoConnect is ready:', (window as any).kleoConnect)
 
         // Assign signIn method if not already assigned
         if (!(window as any).signIn) {
-          (window as any).signIn = (window as any).kleoConnect.signIn;
+          ;(window as any).signIn = (window as any).kleoConnect.signIn
         }
       } else {
-        console.log('Waiting for kleoConnect...');
-        setTimeout(checkKleoConnect, 100); // Poll every 100ms
+        console.log('Waiting for kleoConnect...')
+        setTimeout(checkKleoConnect, 100) // Poll every 100ms
       }
-    };
+    }
 
-    checkKleoConnect(); // Start polling
-  }, []);
+    checkKleoConnect() // Start polling
+  }, [])
 
   useEffect(() => {
-    if (!isKleoConnectReady) return; // Wait until kleoConnect is ready
+    if (!isKleoConnectReady) return // Wait until kleoConnect is ready
 
     const validateAddresses = async () => {
       try {
-        const localStorageAddress = localStorage.getItem('address');
+        const localStorageAddress = localStorage.getItem('address')
 
         // Call signIn to get the address from the extension
-        const result = await (window as any).signIn();
-        const extensionAddress = result.address;
+        const result = await (window as any).signIn()
+        const extensionAddress = result.address
 
         // Check if all three addresses match
         if (
@@ -93,148 +95,153 @@ function Profile() {
           urlAddress !== extensionAddress ||
           localStorageAddress !== extensionAddress
         ) {
-          navigate('/signup/0'); // Redirect to signup if addresses don't match
+          navigate('/signup/0') // Redirect to signup if addresses don't match
         } else {
-          setUserAddress(localStorageAddress);
+          setUserAddress(localStorageAddress)
         }
       } catch (error) {
-        console.error('Error during signIn or address check:', error);
-        navigate('/signup/0'); // Redirect on error
+        console.error('Error during signIn or address check:', error)
+        navigate('/signup/0') // Redirect on error
       }
-    };
+    }
 
-    validateAddresses(); // Call the validation function
-  }, [isKleoConnectReady, urlAddress]); // Re-run when URL changes
+    validateAddresses() // Call the validation function
+  }, [isKleoConnectReady, urlAddress]) // Re-run when URL changes
 
   // --------------- END: Validate UserAddress Logic --------------- //
 
-  const GET_USER_PATH = `user/get-user/${userAddress}`;
-  const UPLOAD_IMGUR_ENDPOINT = 'user/upload_activity_chart';
-  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`;
+  const GET_USER_PATH = `user/get-user/${userAddress}`
+  const UPLOAD_IMGUR_ENDPOINT = 'user/upload_activity_chart'
+  const GET_USER_GRAPH = `user/get-user-graph/${userAddress || ''}`
   // const GET_USER_GRAPH = `user/get-user-graph/${'0xC0cFAB5AFc7a951c510eA20DDD1eCCA31731e574'}`;
 
   // State for storing the user data
-  const [userData, setUserData] = useState<any>(null);
-  const { data, status, error, fetchData } = useFetch(GET_USER_PATH, {
+  const [userData, setUserData] = useState<any>(null)
+  useFetch(GET_USER_PATH, {
     onSuccessfulFetch: (fetchedData) => {
-      console.log('Fetched User Data:', fetchedData);
-      setUserData(fetchedData);
-    },
-  });
-  const { fetchData: fetchUserGraph, error: graphError } = useFetch<UserGraphResponse>();
-  const [graphData, setGraphData] = useState<any>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [highestKleoPoints, setHighestKleoPoints] = useState(0);
-  const { fetchData: uploadImageFetch } = useFetch<any>();
+      console.log('Fetched User Data:', fetchedData)
+      setUserData(fetchedData)
+    }
+  })
+  const { fetchData: fetchUserGraph, error: graphError } =
+    useFetch<UserGraphResponse>()
+  const [graphData, setGraphData] = useState<any>([])
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [highestKleoPoints, setHighestKleoPoints] = useState(0)
+  const { fetchData: uploadImageFetch } = useFetch<any>()
 
   // Define the ref with the type of an HTMLDivElement
-  const milestonesRef = useRef<HTMLDivElement | null>(null);
-  const [milestonesHeight, setMilestonesHeight] = useState<number>(0);
+  const milestonesRef = useRef<HTMLDivElement | null>(null)
+  const [milestonesHeight, setMilestonesHeight] = useState<number>(0)
 
   // ------------ Start : Share Graph on Twitter ------------ //
   const createCanvasWithWhiteBackground = (canvas: CanvasSource): string => {
-    const tempCanvas = document.createElement('canvas') as HTMLCanvasElement;
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
+    const tempCanvas = document.createElement('canvas') as HTMLCanvasElement
+    tempCanvas.width = canvas.width
+    tempCanvas.height = canvas.height
+    const tempCtx = tempCanvas.getContext('2d')
 
     if (tempCtx) {
-      tempCtx.fillStyle = 'white';
-      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-      tempCtx.drawImage(canvas, 0, 0);
+      tempCtx.fillStyle = 'white'
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+      tempCtx.drawImage(canvas, 0, 0)
     }
 
-    return tempCanvas.toDataURL('image/png', 1).split(',')[1]; // Return base64 image data
-  };
+    return tempCanvas.toDataURL('image/png', 1).split(',')[1] // Return base64 image data
+  }
 
   const constructTweetText = (imageUrl: string): string => {
     const top3Activities = graphData
       .slice(0, 3)
-      .map((activity: { label: any; }) => activity.label)
-      .join(", ");
-    return `Check out my Activity! My top 3 activities are ${top3Activities}. My current kleo points are ${userData.kleo_points || 0}.
-Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
-  };
+      .map((activity: { label: any }) => activity.label)
+      .join(', ')
+    return `Check out my Activity! My top 3 activities are ${top3Activities}. My current kleo points are ${
+      userData.kleo_points || 0
+    }.
+Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`
+  }
 
   const handleShareGraphClick = async () => {
     try {
-      const canvas = document.getElementsByTagName('canvas')[0];
-      const imageData = createCanvasWithWhiteBackground(canvas);
+      const canvas = document.getElementsByTagName('canvas')[0]
+      const imageData = createCanvasWithWhiteBackground(canvas)
 
       const options = {
         method: 'POST' as Method,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ image: imageData }),
         onSuccessfulFetch: (data: UploadResponse) => {
           if (data && data.url) {
-            const imageUrlWithoutExtension = data.url?.replace('.png', '');
+            const imageUrlWithoutExtension = data.url?.replace('.png', '')
 
-            const tweetText = constructTweetText(imageUrlWithoutExtension);
+            const tweetText = constructTweetText(imageUrlWithoutExtension)
 
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-            window.open(twitterUrl, '_blank');
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              tweetText
+            )}`
+            window.open(twitterUrl, '_blank')
           } else {
-            console.error('Failed to upload image.');
+            console.error('Failed to upload image.')
           }
         }
-      };
+      }
 
-      uploadImageFetch(UPLOAD_IMGUR_ENDPOINT, options);
+      uploadImageFetch(UPLOAD_IMGUR_ENDPOINT, options)
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error uploading image:', error)
     }
-  };
+  }
   // ------------ End : Share Graph on Twitter ------------ //
 
   useEffect(() => {
     const updateHeight = () => {
       if (milestonesRef.current) {
-        setMilestonesHeight(milestonesRef.current.clientHeight);
+        setMilestonesHeight(milestonesRef.current.clientHeight)
       }
-    };
+    }
 
-    updateHeight();
+    updateHeight()
     // Add event listener for resizing in case window size changes
-    window.addEventListener('resize', updateHeight);
+    window.addEventListener('resize', updateHeight)
 
     // Clean up the event listener on unmount
     return () => {
-      window.removeEventListener('resize', updateHeight);
-    };
-  }, []);
+      window.removeEventListener('resize', updateHeight)
+    }
+  }, [])
 
   // Make API call when Address changes.
   useEffect(() => {
     if (!isLoading) {
-      setIsLoading(true);
+      setIsLoading(true)
       fetchUserGraph(GET_USER_GRAPH, {
         onSuccessfulFetch(data) {
           if (data?.error) {
-            setIsProcessing(true);
+            setIsProcessing(true)
           } else if (data?.processing) {
-            setIsProcessing(true);
+            setIsProcessing(true)
           } else {
-            setIsProcessing(false);
+            setIsProcessing(false)
             if (graphData) {
-              setGraphData(data?.data);
-              console.log('Data : ', data);
+              setGraphData(data?.data)
+              console.log('Data : ', data)
             }
           }
-          setIsLoading(false);
-        },
-      });
+          setIsLoading(false)
+        }
+      })
     }
-  }, []);
+  }, [])
 
   // Listening to error if any errors set all flags accordingly.
   useEffect(() => {
     if (graphError) {
-      setIsProcessing(true);
-      setIsLoading(false);
-      setGraphData(null);
+      setIsProcessing(true)
+      setIsLoading(false)
+      setGraphData(null)
     }
   }, [graphError])
 
@@ -243,19 +250,31 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
       <Navbar userAddress={userAddress || ''} page={PAGE_NAMES.PROFILE} />
       {/* Main Content */}
       <div className="container mx-auto p-6 gap-5 grid grid-cols-1 xl:grid-cols-1 mt-[80px] pt-10 scrollbar-thin">
-
         {/* Layout for >xl */}
         <div className="hidden xl:grid gap-5">
           {/* First Row: PointsAndDataCard (wide) | DataQuality (medium) | Milestones (narrow) */}
           <div className="grid grid-cols-[0.245fr_0.333fr_0.422fr] gap-5">
             <div>
-              <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
+              <PointsAndDataCard
+                kleo_points={userData?.kleo_points || 0}
+                data_quantity={userData?.total_data_quantity || 0}
+              />
             </div>
             <div>
-              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
+              <DataQuality
+                isLoading={isLoading}
+                isProcessing={isProcessing}
+                graphData={graphData}
+                userKleoPoints={userData?.kleo_points || 0}
+                highestKleoPoints={highestKleoPoints || 0}
+              />
             </div>
             <div>
-              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} isGraphAvailable={!isProcessing} />
+              <Milestones
+                mileStones={userData?.milestones || {}}
+                handleShareGraph={handleShareGraphClick}
+                isGraphAvailable={!isProcessing}
+              />
             </div>
           </div>
 
@@ -269,7 +288,10 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
                 <Referrals userAddress={userAddress || ''} />
               </div>
             </div>
-            <Leaderboard userAddress={userAddress || ''} setHighestKleoPoints={setHighestKleoPoints} />
+            <Leaderboard
+              userAddress={userAddress || ''}
+              setHighestKleoPoints={setHighestKleoPoints}
+            />
           </div>
 
           {/* Third Row: Privacy | LeaderBoardBanner */}
@@ -288,10 +310,19 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
           {/* First Row: PointsAndDataCard and DataQuality */}
           <div className="grid grid-cols-[0.412fr_0.588fr] gap-5">
             <div>
-              <PointsAndDataCard kleo_points={userData?.kleo_points || 0} data_quantity={userData?.total_data_quantity || 0} />
+              <PointsAndDataCard
+                kleo_points={userData?.kleo_points || 0}
+                data_quantity={userData?.total_data_quantity || 0}
+              />
             </div>
             <div>
-              <DataQuality address={userAddress || ''} isLoading={isLoading} isProcessing={isProcessing} graphData={graphData} userKleoPoints={userData?.kleo_points || 0} highestKleoPoints={highestKleoPoints || 0} />
+              <DataQuality
+                isLoading={isLoading}
+                isProcessing={isProcessing}
+                graphData={graphData}
+                userKleoPoints={userData?.kleo_points || 0}
+                highestKleoPoints={highestKleoPoints || 0}
+              />
             </div>
           </div>
 
@@ -299,7 +330,11 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
           <div className="grid grid-cols-2 gap-5">
             {/* Milestones Column */}
             <div ref={milestonesRef} className="self-start">
-              <Milestones mileStones={userData?.milestones || {}} handleShareGraph={handleShareGraphClick} isGraphAvailable={!isProcessing} />
+              <Milestones
+                mileStones={userData?.milestones || {}}
+                handleShareGraph={handleShareGraphClick}
+                isGraphAvailable={!isProcessing}
+              />
             </div>
 
             {/* Leaderboard Column with Scroll */}
@@ -307,7 +342,10 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
               className="overflow-y-auto"
               style={{ maxHeight: milestonesHeight }}
             >
-              <Leaderboard userAddress={userAddress || ''} setHighestKleoPoints={setHighestKleoPoints} />
+              <Leaderboard
+                userAddress={userAddress || ''}
+                setHighestKleoPoints={setHighestKleoPoints}
+              />
             </div>
           </div>
 
@@ -331,11 +369,9 @@ Create your profile and get Kleo points! @kleo_network #KLEO ${imageUrl}`;
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  );
+  )
 }
 
-export default Profile;
-
+export default Profile
