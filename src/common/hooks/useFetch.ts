@@ -1,6 +1,5 @@
 import { Method } from 'axios'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 type Options<T> = {
   method?: Method
@@ -35,9 +34,6 @@ export enum FetchStatus {
 }
 
 function useFetch<T>(url?: string, options?: Options<T>): FetchResponse<T> {
-
-  const navigate = useNavigate()
-
   const [data, setData] = useState<T | null>(null)
   const [status, setStatus] = useState(FetchStatus.IDLE)
   const [error, setError] = useState(null)

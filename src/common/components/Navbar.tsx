@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { ReactComponent as Logo } from '../../assets/images/nameLogo.svg'
 
 export enum PAGE_NAMES {
@@ -7,18 +7,19 @@ export enum PAGE_NAMES {
 }
 
 interface NavbarProps {
-  userAddress: string;
+  userAddress: string
   page: PAGE_NAMES
 }
 
 const Navbar = ({ userAddress, page }: NavbarProps) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const getButtonClasses = (isActive: boolean) =>
-    `py-2 px-4 rounded-lg font-medium transition duration-300 ${isActive
-      ? 'bg-gray-800 text-white'
-      : 'bg-[#f8f9fc] text-gray-700 hover:bg-gray-700 hover:text-white'
-    }`;
+    `py-2 px-4 rounded-lg font-medium transition duration-300 ${
+      isActive
+        ? 'bg-gray-800 text-white'
+        : 'bg-[#f8f9fc] text-gray-700 hover:bg-gray-700 hover:text-white'
+    }`
 
   return (
     <div className="w-full bg-[#f8f9fc] fixed z-10 shadow-md">
