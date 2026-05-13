@@ -1,6 +1,5 @@
 import { Method } from 'axios'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 type Options<T> = {
   method?: Method
@@ -20,7 +19,7 @@ type Options<T> = {
 type FetchResponse<T> = {
   data: T | null
   status: FetchStatus
-  error: any
+  error: string | null
   fetchData: (url: string, options?: Options<T>) => void
 }
 export const baseUrl = 'https://fastapi.kleo.network/api/v1'
@@ -35,12 +34,9 @@ export enum FetchStatus {
 }
 
 function useFetch<T>(url?: string, options?: Options<T>): FetchResponse<T> {
-
-  const navigate = useNavigate()
-
   const [data, setData] = useState<T | null>(null)
   const [status, setStatus] = useState(FetchStatus.IDLE)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [controller, setController] = useState<AbortController | null>(null)
 
   function getToken(): string | undefined {
@@ -92,9 +88,9 @@ function useFetch<T>(url?: string, options?: Options<T>): FetchResponse<T> {
           options.onSuccessfulFetch(data)
         }
       })
-      .catch((err) => {
-        if (err.name !== 'AbortError') {
-          setError(err.message)
+      .catch((err: unknown) => {
+        if (!(err instanceof DOMException && err.name === 'AbortError')) {
+          setError(err instanceof Error ? err.message : String(err))
           setStatus(FetchStatus.ERROR)
         }
       })

@@ -22,6 +22,10 @@ enum PluginState {
 
 const AUTH_API = 'auth/create_jwt_authentication'
 
+interface AuthResponse {
+  accessToken: string
+}
+
 export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [infoExpanded, setInfoExpanded] = useState(false)
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
@@ -36,7 +40,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     signature: Uint8Array
     publicKey: PublicKey
   } | null>(null)
-  const { fetchData, error: loginError, data: loginData } = useFetch<any>()
+  const { fetchData, error: loginError } = useFetch<AuthResponse>()
   const [login, setLogin] = useState(false)
 
   const handleSign = async () => {
@@ -55,8 +59,10 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
           chain: 'solana'
         }),
         onSuccessfulFetch(data) {
-          localStorage.setItem('token', data.accessToken)
-          setLogin(true)
+          if (data?.accessToken) {
+            localStorage.setItem('token', data.accessToken)
+            setLogin(true)
+          }
         }
       })
     }
@@ -65,10 +71,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
-        if (
-          (window as any).kleoConnect &&
-          (window as any).kleoConnect.extension
-        ) {
+        if (window.kleoConnect && window.kleoConnect.extension) {
           setPluginState(PluginState.INSTALLED)
         } else {
           setPluginState(PluginState.NOT_INSTALLED)

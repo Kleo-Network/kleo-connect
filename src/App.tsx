@@ -5,12 +5,11 @@ import SignUp from './pages/signup'
 import { UserData } from './common/constants/SignupData'
 import Profile from './pages/profile'
 
-
 import { MyData } from './pages/profile/components/MyData'
 import useFetch from './common/hooks/useFetch'
 function App(): ReactElement {
   const emptyStringArray: string[] = []
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<UserData>({
     about: '',
@@ -30,13 +29,13 @@ function App(): ReactElement {
     token: ''
   })
   const GET_USER_API = 'user/get-user/{address}'
-  const { fetchData: fetchUser, data: userDataFromDB } = useFetch<UserData>()
+  const { fetchData: fetchUser } = useFetch<UserData>()
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token); // Update isLoggedIn based on token presence
-    setIsLoading(false); // Mark loading as complete
-  }, []);
+    const token = localStorage.getItem('token')
+    setIsLoggedIn(!!token) // Update isLoggedIn based on token presence
+    setIsLoading(false) // Mark loading as complete
+  }, [])
 
   function makeUserUpdationUrl(address_string: string): string {
     const address = localStorage.getItem('address') || ''
@@ -56,12 +55,16 @@ function App(): ReactElement {
         }
       }
     })
-    setIsLoggedIn(!!token); // Set isLoggedIn based on token presence
-    setIsLoading(false); // Indicate loading is complete
+    setIsLoggedIn(!!token) // Set isLoggedIn based on token presence
+    setIsLoading(false) // Indicate loading is complete
   }, []) // Empty dependency array: run only on initial render
 
   if (isLoading) {
-    return <div className='h-screen w-screen flex justify-center items-center'><div className="w-8 h-8 border-4 border-t-4 border-gray-200 border-t-purple-500 rounded-full animate-spin"></div></div>;
+    return (
+      <div className="h-screen w-screen flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-t-4 border-gray-200 border-t-purple-500 rounded-full animate-spin"></div>
+      </div>
+    )
   }
 
   return (
@@ -89,35 +92,19 @@ function App(): ReactElement {
               )
             }
           />
-          <Route
-            path="/signup/:step"
-            element={
-              <SignUp
-                user={user}
-                setUser={setUser}
-                setIsLoggedIn={setIsLoggedIn}
-              />
-            }
-          />
+          <Route path="/signup/:step" element={<SignUp />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route
-            path="/profile/:address"
-            element={<Profile />}
-          />
+          <Route path="/profile/:address" element={<Profile />} />
 
-          {isLoggedIn && <Route path='my-data/:address' element={<MyData />} />}
+          {isLoggedIn && <Route path="my-data/:address" element={<MyData />} />}
           {isLoggedIn ? (
-            <Route
-              path="*"
-              element={<Profile />}
-            />
+            <Route path="*" element={<Profile />} />
           ) : (
             <Route path="*" element={<Navigate to="/" />} />
           )}
         </Routes>
       </div>
     </div>
-
   )
 }
 

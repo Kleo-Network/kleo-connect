@@ -1,11 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 const useBodyScroll = (isOpen: boolean) => {
-  const bodyRef = useRef(document.querySelector('body'))
+  const bodyRef = useRef(document.body)
 
   useEffect(() => {
     const updatePageScroll = () => {
-      bodyRef.current!.style.overflow = isOpen ? 'hidden' : ''
+      if (bodyRef.current) {
+        bodyRef.current.style.overflow = isOpen ? 'hidden' : ''
+      }
     }
 
     updatePageScroll()
