@@ -7,13 +7,13 @@ export interface UserData {
   last_cards_marked: number
   name: string
   pfp: string
-  profile_metadata: any
-  settings: any
+  profile_metadata: Record<string, unknown>
+  settings: Record<string, unknown>
   address: string
   stage: number
   verified: boolean
   email: string
-  token: any
+  token: string
 }
 
 export interface UserDataProps {

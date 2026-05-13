@@ -22,6 +22,16 @@ enum PluginState {
 
 const AUTH_API = 'auth/create_jwt_authentication'
 
+type AuthResponse = {
+  accessToken: string
+}
+
+const hasKleoExtension = (): boolean => {
+  const kleoConnect = (window as unknown as { kleoConnect?: unknown })
+    .kleoConnect as { extension?: unknown } | undefined
+  return Boolean(kleoConnect && kleoConnect.extension)
+}
+
 export default function Onboarding({ handleLogin }: OnboardingProps) {
   const [infoExpanded, setInfoExpanded] = useState(false)
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
@@ -36,7 +46,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
     signature: Uint8Array
     publicKey: PublicKey
   } | null>(null)
-  const { fetchData, error: loginError, data: loginData } = useFetch<any>()
+  const { fetchData, error: loginError } = useFetch<AuthResponse>()
   const [login, setLogin] = useState(false)
 
   const handleSign = async () => {
@@ -65,10 +75,7 @@ export default function Onboarding({ handleLogin }: OnboardingProps) {
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
-        if (
-          (window as any).kleoConnect &&
-          (window as any).kleoConnect.extension
-        ) {
+        if (hasKleoExtension()) {
           setPluginState(PluginState.INSTALLED)
         } else {
           setPluginState(PluginState.NOT_INSTALLED)

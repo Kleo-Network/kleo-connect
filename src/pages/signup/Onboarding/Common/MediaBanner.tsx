@@ -33,15 +33,18 @@ export const MediaBanner = () => {
       <div className="absolute bottom-[3%] left-[33%] z-50">
         <div
           key={`1`}
-          className={`h-2 bg-white rounded-full mx-2 cursor-pointer active relative ${activeIndex == 0 ? 'w-14' : 'w-3 bg-opacity-50'
-            }`}
+          className={`h-2 bg-white rounded-full mx-2 cursor-pointer active relative ${
+            activeIndex == 0 ? 'w-14' : 'w-3 bg-opacity-50'
+          }`}
           onClick={() => goToSlide(0)}
         ></div>
         <div
           key={`2`}
-          className={`bottom-[8px] relative h-2 bg-white rounded-full ${activeIndex == 0 ? 'left-[63px]' : 'left-[18px]'
-            } mx-2 cursor-pointer ${1 === activeIndex ? 'active bg-white w-14' : 'bg-opacity-50 w-3'
-            }`}
+          className={`bottom-[8px] relative h-2 bg-white rounded-full ${
+            activeIndex == 0 ? 'left-[63px]' : 'left-[18px]'
+          } mx-2 cursor-pointer ${
+            1 === activeIndex ? 'active bg-white w-14' : 'bg-opacity-50 w-3'
+          }`}
           onClick={() => goToSlide(1)}
         ></div>
       </div>
