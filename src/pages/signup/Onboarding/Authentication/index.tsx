@@ -1,11 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ReactComponent as Kleo } from '../../../../assets/images/kleoLogo.svg'
 import { ReactComponent as Tick } from '../../../../assets/images/check.svg'
 import { ReactComponent as AlertIcon } from '../../../../assets/images/alert.svg'
 import { useNavigate } from 'react-router-dom'
-import { UserData } from '../../../../common/constants/SignupData'
-import useFetch from '../../../../common/hooks/useFetch'
 import Alert from '../../../../common/components/Alerts'
+
+type SignInResult = {
+  address: string
+  token: string
+}
+
+const getKleoConnect = (): unknown => {
+  return (window as unknown as { kleoConnect?: unknown }).kleoConnect
+}
+
+const signIn = async (): Promise<SignInResult> => {
+  const maybeSignIn = (window as unknown as { signIn?: unknown }).signIn
+  if (typeof maybeSignIn !== 'function') {
+    throw new Error('signIn is not available')
+  }
+  return (maybeSignIn as () => Promise<SignInResult>)()
+}
 
 enum PluginState {
   CHECKING,
@@ -13,19 +28,16 @@ enum PluginState {
   INSTALLED
 }
 
-export default function Onboarding({ handleLogin, user, setUser }: any) {
+export default function Onboarding() {
   const [pluginState, setPluginState] = useState(PluginState.CHECKING)
   const [login, setLogin] = useState(false)
   const navigate = useNavigate()
-
-  const { fetchData: fetchCreateAndFetchUserData, data: userFromDB } =
-    useFetch<UserData>()
 
   useEffect(() => {
     if (pluginState === PluginState.CHECKING) {
       setTimeout(() => {
         // Check if plugin (kleoConnect) is installed
-        if ((window as any).kleoConnect) {
+        if (getKleoConnect()) {
           setPluginState(PluginState.INSTALLED)
         } else {
           setPluginState(PluginState.NOT_INSTALLED)
@@ -36,7 +48,7 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
 
   // Handle user login when Sign In button is clicked
   const handleUserLogin = async () => {
-    const result = await (window as any).signIn()
+    const result = await signIn()
     localStorage.setItem('address', result.address)
     localStorage.setItem('token', result.token)
     setLogin(true)
@@ -63,9 +75,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
                     target="_blank"
                   >
                     <u> VANA DLP</u>
-                  </a> aimed
+                  </a>{' '}
+                  aimed
                   <br />
-                  at using chrome extension to help you own a piece of AI models.
+                  at using chrome extension to help you own a piece of AI
+                  models.
                 </p>
               </div>
 
@@ -128,10 +142,11 @@ export default function Onboarding({ handleLogin, user, setUser }: any) {
               {/* Sign In button - disabled if plugin is not installed */}
               <button
                 disabled={pluginState !== PluginState.INSTALLED}
-                className={`w-full py-3 ${pluginState === PluginState.INSTALLED
-                  ? 'bg-violet-600 text-white'
-                  : 'bg-gray-100 text-gray-500'
-                  } rounded-lg shadow mx-auto block`}
+                className={`w-full py-3 ${
+                  pluginState === PluginState.INSTALLED
+                    ? 'bg-violet-600 text-white'
+                    : 'bg-gray-100 text-gray-500'
+                } rounded-lg shadow mx-auto block`}
                 onClick={handleUserLogin}
               >
                 Sign In

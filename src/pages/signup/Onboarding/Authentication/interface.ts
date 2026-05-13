@@ -1,5 +1,5 @@
 export interface UserResponse {
-  privacy: any
+  privacy: Record<string, unknown>
   gitcoin_passport: boolean
   id: string
   nonce: string
